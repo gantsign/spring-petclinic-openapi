@@ -10,13 +10,11 @@ public class PetRequest {
   private Integer id;
 
   @JsonFormat(pattern = "yyyy/MM/dd")
-  @NotNull
-  private LocalDate birthDate;
+  private @NotNull LocalDate birthDate;
 
-  @Size(min = 2, max = 14)
-  private String name;
+  private @Size(min = 2, max = 14) String name;
 
-  Integer typeId;
+  private Integer typeId;
 
   public LocalDate getBirthDate() {
     return birthDate;
@@ -52,7 +50,7 @@ public class PetRequest {
 
   @JsonProperty("isNew")
   public boolean isNew() {
-    return this.id == null;
+    return id == null;
   }
 
   @Override
@@ -65,6 +63,6 @@ public class PetRequest {
         + name
         + ", typeId="
         + typeId
-        + "]";
+        + ']';
   }
 }

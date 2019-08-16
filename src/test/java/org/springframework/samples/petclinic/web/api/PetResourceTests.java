@@ -42,7 +42,7 @@ public class PetResourceTests {
         .andExpect(jsonPath("$.typeId").value(6));
   }
 
-  private Pet setupPet() {
+  private static Pet setupPet() {
     Owner owner = new Owner();
     owner.setFirstName("George");
     owner.setLastName("Bush");

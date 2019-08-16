@@ -1,7 +1,6 @@
 package org.springframework.samples.petclinic.config;
 
 import java.util.concurrent.TimeUnit;
-import javax.cache.CacheManager;
 import org.ehcache.config.CacheConfiguration;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
@@ -21,20 +20,18 @@ import org.springframework.context.annotation.Profile;
 @Profile("production")
 public class CacheConfig {
 
+  @SuppressWarnings({"MagicNumber", "resource"})
   @Bean
   public JCacheManagerCustomizer cacheManagerCustomizer() {
-    return new JCacheManagerCustomizer() {
-      @Override
-      public void customize(CacheManager cacheManager) {
-        CacheConfiguration<Object, Object> config =
-            CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                    Object.class,
-                    Object.class,
-                    ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES))
-                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(60, TimeUnit.SECONDS)))
-                .build();
-        cacheManager.createCache("vets", Eh107Configuration.fromEhcacheCacheConfiguration(config));
-      }
+    return cacheManager -> {
+      CacheConfiguration<Object, Object> config =
+          CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                  Object.class,
+                  Object.class,
+                  ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES))
+              .withExpiry(Expirations.timeToLiveExpiration(Duration.of(60, TimeUnit.SECONDS)))
+              .build();
+      cacheManager.createCache("vets", Eh107Configuration.fromEhcacheCacheConfiguration(config));
     };
   }
 }

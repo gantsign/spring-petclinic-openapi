@@ -40,10 +40,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ClinicServiceImpl implements ClinicService {
 
-  private PetRepository petRepository;
-  private VetRepository vetRepository;
-  private OwnerRepository ownerRepository;
-  private VisitRepository visitRepository;
+  private final PetRepository petRepository;
+  private final VetRepository vetRepository;
+  private final OwnerRepository ownerRepository;
+  private final VisitRepository visitRepository;
 
   @Autowired
   public ClinicServiceImpl(
@@ -101,7 +101,7 @@ public class ClinicServiceImpl implements ClinicService {
 
   @Override
   @Transactional(readOnly = true)
-  @Cacheable(value = "vets")
+  @Cacheable("vets")
   public Collection<Vet> findVets() throws DataAccessException {
     return vetRepository.findAll();
   }

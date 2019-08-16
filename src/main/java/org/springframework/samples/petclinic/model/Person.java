@@ -29,17 +29,15 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class Person extends BaseEntity {
 
   @Column(name = "first_name")
-  @NotEmpty
-  @Pattern(regexp = "[a-z-A-Z]*", message = "First name has invalid characters")
-  protected String firstName;
+  private @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "First name has invalid characters")
+  String firstName;
 
   @Column(name = "last_name")
-  @NotEmpty
-  @Pattern(regexp = "[a-z-A-Z]*", message = "Last name has invalid characters")
-  protected String lastName;
+  protected @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "Last name has invalid characters")
+  String lastName;
 
   public String getFirstName() {
-    return this.firstName;
+    return firstName;
   }
 
   public void setFirstName(String firstName) {
@@ -47,7 +45,7 @@ public class Person extends BaseEntity {
   }
 
   public String getLastName() {
-    return this.lastName;
+    return lastName;
   }
 
   public void setLastName(String lastName) {

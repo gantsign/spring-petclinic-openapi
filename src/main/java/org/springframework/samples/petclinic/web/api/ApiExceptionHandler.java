@@ -1,7 +1,7 @@
 package org.springframework.samples.petclinic.web.api;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  @ExceptionHandler({SuperFatalErrorException.class})
+  @ExceptionHandler(SuperFatalErrorException.class)
   public ResponseEntity<?> badRequest(HttpServletRequest req, Exception exception) {
-    Map<String, Object> result = new Hashtable<>();
+    Map<String, Object> result = new HashMap<>();
     result.put("status", HttpStatus.BAD_REQUEST);
     result.put("message", exception.getMessage());
     return ResponseEntity.badRequest().body(result);
@@ -35,7 +35,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
    *
    * @author Willie Wheeler (@williewheeler)
    */
-  @ExceptionHandler({InvalidRequestException.class})
+  @ExceptionHandler(InvalidRequestException.class)
   protected ResponseEntity<Object> handleInvalidRequest(
       InvalidRequestException ire, WebRequest request) {
     logger.info("InvalidRequestException caught", ire);
@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ire, error, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
   }
 
-  @ExceptionHandler({BadRequestException.class})
+  @ExceptionHandler(BadRequestException.class)
   protected ResponseEntity<Object> handleBadRequest(BadRequestException bre, WebRequest request) {
     logger.info("BadRequestException caught", bre);
 

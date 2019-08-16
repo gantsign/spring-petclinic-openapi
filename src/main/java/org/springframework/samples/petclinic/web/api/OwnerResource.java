@@ -46,8 +46,9 @@ public class OwnerResource extends AbstractResourceController {
     this.clinicService = clinicService;
   }
 
+  @SuppressWarnings("IfCanBeAssertion")
   private Owner retrieveOwner(int ownerId) {
-    Owner owner = this.clinicService.findOwnerById(ownerId);
+    Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
       throw new BadRequestException("Owner with Id '" + ownerId + "' is unknown.");
     }
@@ -55,6 +56,7 @@ public class OwnerResource extends AbstractResourceController {
   }
 
   /** Create Owner */
+  @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   public Owner createOwner(@RequestBody @Valid Owner owner, BindingResult bindingResult) {
@@ -62,7 +64,7 @@ public class OwnerResource extends AbstractResourceController {
       throw new InvalidRequestException("Invalid Owner", bindingResult);
     }
 
-    this.clinicService.saveOwner(owner);
+    clinicService.saveOwner(owner);
 
     return owner;
   }
@@ -81,10 +83,11 @@ public class OwnerResource extends AbstractResourceController {
       ownerLastName = "";
     }
 
-    return this.clinicService.findOwnerByLastName(ownerLastName);
+    return clinicService.findOwnerByLastName(ownerLastName);
   }
 
   /** Update Owner */
+  @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.PUT)
   public Owner updateOwner(
       @PathVariable("ownerId") int ownerId,
@@ -102,7 +105,7 @@ public class OwnerResource extends AbstractResourceController {
     ownerModel.setCity(ownerRequest.getCity());
     ownerModel.setAddress(ownerRequest.getAddress());
     ownerModel.setTelephone(ownerRequest.getTelephone());
-    this.clinicService.saveOwner(ownerModel);
+    clinicService.saveOwner(ownerModel);
     return ownerModel;
   }
 }

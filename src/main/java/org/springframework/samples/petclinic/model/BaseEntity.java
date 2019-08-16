@@ -44,6 +44,6 @@ public class BaseEntity {
 
   @JsonProperty("isNew")
   public boolean isNew() {
-    return this.id == null;
+    return id == null;
   }
 }

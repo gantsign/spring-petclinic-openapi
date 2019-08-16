@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -71,19 +70,19 @@ public class OwnerResourceTests {
         .andExpect(jsonPath("$.[1].id").value(2)); //
   }
 
+  @SuppressWarnings("SameReturnValue")
   @Test
   public void shouldCreateOwner() throws Exception {
 
     doAnswer(
-            new Answer<Void>() {
-              public Void answer(InvocationOnMock invocation) {
-                Owner receivedOwner = (Owner) invocation.getArguments()[0];
-                receivedOwner.setId(666);
-                return null;
-              }
-            })
+            (Answer<Void>)
+                invocation -> {
+                  Owner receivedOwner = (Owner) invocation.getArguments()[0];
+                  receivedOwner.setId(666);
+                  return null;
+                })
         .when(clinicService)
-        .saveOwner((Owner) anyObject());
+        .saveOwner(anyObject());
 
     final Owner newOwner = setupOwners().get(0);
     newOwner.setId(null);
@@ -123,9 +122,10 @@ public class OwnerResourceTests {
     ;
   }
 
-  private List<Owner> setupOwners() {
+  private static List<Owner> setupOwners() {
 
-    final List<Owner> owners = new LinkedList<Owner>();
+    @SuppressWarnings("TooBroadScope")
+    final List<Owner> owners = new LinkedList<>();
 
     Owner owner = new Owner();
     owner.setId(0);

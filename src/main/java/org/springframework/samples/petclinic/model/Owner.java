@@ -43,23 +43,19 @@ import org.springframework.core.style.ToStringCreator;
 @Table(name = "owners")
 public class Owner extends Person {
   @Column(name = "address")
-  @NotEmpty
-  private String address;
+  private @NotEmpty String address;
 
   @Column(name = "city")
-  @NotEmpty
-  private String city;
+  private @NotEmpty String city;
 
   @Column(name = "telephone")
-  @NotEmpty
-  @Digits(fraction = 0, integer = 10)
-  private String telephone;
+  private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private Set<Pet> pets;
 
   public String getAddress() {
-    return this.address;
+    return address;
   }
 
   public void setAddress(String address) {
@@ -67,7 +63,7 @@ public class Owner extends Person {
   }
 
   public String getCity() {
-    return this.city;
+    return city;
   }
 
   public void setCity(String city) {
@@ -75,7 +71,7 @@ public class Owner extends Person {
   }
 
   public String getTelephone() {
-    return this.telephone;
+    return telephone;
   }
 
   public void setTelephone(String telephone) {
@@ -83,10 +79,10 @@ public class Owner extends Person {
   }
 
   protected Set<Pet> getPetsInternal() {
-    if (this.pets == null) {
-      this.pets = new HashSet<>();
+    if (pets == null) {
+      pets = new HashSet<>();
     }
-    return this.pets;
+    return pets;
   }
 
   protected void setPetsInternal(Set<Pet> pets) {
@@ -139,13 +135,13 @@ public class Owner extends Person {
   @Override
   public String toString() {
     return new ToStringCreator(this)
-        .append("id", this.getId())
-        .append("new", this.isNew())
-        .append("lastName", this.getLastName())
-        .append("firstName", this.getFirstName())
-        .append("address", this.address)
-        .append("city", this.city)
-        .append("telephone", this.telephone)
+        .append("id", getId())
+        .append("new", isNew())
+        .append("lastName", getLastName())
+        .append("firstName", getFirstName())
+        .append("address", address)
+        .append("city", city)
+        .append("telephone", telephone)
         .toString();
   }
 }

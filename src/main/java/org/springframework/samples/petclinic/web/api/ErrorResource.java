@@ -56,7 +56,7 @@ public class ErrorResource {
 
   public void addGlobalError(String message) {
     if (globalErrors == null) {
-      globalErrors = new LinkedList<String>();
+      globalErrors = new LinkedList<>();
     }
 
     globalErrors.add(message);

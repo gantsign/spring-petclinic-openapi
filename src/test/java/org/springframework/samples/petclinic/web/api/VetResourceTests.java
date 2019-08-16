@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class VetResourceTests {
     Vet vet = new Vet();
     vet.setId(1);
 
-    given(clinicService.findVets()).willReturn(Arrays.asList(vet));
+    given(clinicService.findVets()).willReturn(Collections.singletonList(vet));
 
     mvc.perform(get("/api/vets").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

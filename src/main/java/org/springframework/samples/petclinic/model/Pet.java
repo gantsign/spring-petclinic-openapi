@@ -62,7 +62,7 @@ public class Pet extends NamedEntity {
   private Set<Visit> visits;
 
   public LocalDate getBirthDate() {
-    return this.birthDate;
+    return birthDate;
   }
 
   public void setBirthDate(LocalDate birthDate) {
@@ -70,7 +70,7 @@ public class Pet extends NamedEntity {
   }
 
   public PetType getType() {
-    return this.type;
+    return type;
   }
 
   public void setType(PetType type) {
@@ -78,7 +78,7 @@ public class Pet extends NamedEntity {
   }
 
   public Owner getOwner() {
-    return this.owner;
+    return owner;
   }
 
   protected void setOwner(Owner owner) {
@@ -86,10 +86,10 @@ public class Pet extends NamedEntity {
   }
 
   protected Set<Visit> getVisitsInternal() {
-    if (this.visits == null) {
-      this.visits = new HashSet<>();
+    if (visits == null) {
+      visits = new HashSet<>();
     }
-    return this.visits;
+    return visits;
   }
 
   protected void setVisitsInternal(Set<Visit> visits) {

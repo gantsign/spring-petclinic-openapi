@@ -44,6 +44,7 @@ public class VisitResource extends AbstractResourceController {
     this.clinicService = clinicService;
   }
 
+  @SuppressWarnings("IfCanBeAssertion")
   @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void createÏ(

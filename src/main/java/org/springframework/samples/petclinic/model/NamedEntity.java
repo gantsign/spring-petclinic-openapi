@@ -19,8 +19,8 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as a base
- * class for objects needing these properties.
+ * Simple JavaBean domain object adds a name property to {@code BaseEntity}. Used as a base class
+ * for objects needing these properties.
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
@@ -32,7 +32,7 @@ public class NamedEntity extends BaseEntity {
   private String name;
 
   public String getName() {
-    return this.name;
+    return name;
   }
 
   public void setName(String name) {
@@ -41,6 +41,6 @@ public class NamedEntity extends BaseEntity {
 
   @Override
   public String toString() {
-    return this.getName();
+    return getName();
   }
 }

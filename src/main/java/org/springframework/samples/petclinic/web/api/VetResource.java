@@ -32,8 +32,8 @@ public class VetResource extends AbstractResourceController {
     this.clinicService = clinicService;
   }
 
-  @GetMapping(value = "/vets")
+  @GetMapping("/vets")
   public Collection<Vet> showResourcesVetList() {
-    return this.clinicService.findVets();
+    return clinicService.findVets();
   }
 }

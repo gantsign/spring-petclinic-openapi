@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,11 +50,12 @@ public class PetResource extends AbstractResourceController {
     return clinicService.findPetTypes();
   }
 
+  @SuppressWarnings("IfCanBeAssertion")
   @PostMapping("/owners/{ownerId}/pets")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void addNewPet(
-      final @PathVariable("ownerId") int ownerId,
-      final @Valid @RequestBody PetRequest petRequest,
+      @PathVariable("ownerId") final int ownerId,
+      @RequestBody final @Valid PetRequest petRequest,
       final BindingResult bindingResult) {
 
     logger.info("PetRequest: {}", petRequest);
@@ -65,7 +65,7 @@ public class PetResource extends AbstractResourceController {
     }
 
     Pet pet = new Pet();
-    Owner owner = this.clinicService.findOwnerById(ownerId);
+    Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
       throw new BadRequestException("Owner with Id '" + ownerId + "' is unknown.");
     }
@@ -74,11 +74,12 @@ public class PetResource extends AbstractResourceController {
     save(pet, petRequest);
   }
 
+  @SuppressWarnings("IfCanBeAssertion")
   @PutMapping("/owners/{ownerId}/pets/{petId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
-      final @PathVariable("petId") int petId,
-      final @Valid @RequestBody PetRequest petRequest,
+      @PathVariable("petId") final int petId,
+      @RequestBody final @Valid PetRequest petRequest,
       final BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
@@ -93,19 +94,17 @@ public class PetResource extends AbstractResourceController {
     pet.setName(petRequest.getName());
     pet.setBirthDate(petRequest.getBirthDate());
 
-    for (PetType petType : clinicService.findPetTypes()) {
-      if (petType.getId() == petRequest.getTypeId()) {
-        pet.setType(petType);
-        break;
-      }
-    }
+    clinicService.findPetTypes().stream()
+        .filter(petType -> petType.getId() == petRequest.getTypeId())
+        .findFirst()
+        .ifPresent(pet::setType);
 
     clinicService.savePet(pet);
   }
 
   @GetMapping("/owners/*/pets/{petId}")
   public PetRequest findPet(@PathVariable("petId") int petId) {
-    final Pet pet = this.clinicService.findPetById(petId);
+    final Pet pet = clinicService.findPetById(petId);
 
     final PetRequest petRequest = new PetRequest();
     petRequest.setId(pet.getId());
