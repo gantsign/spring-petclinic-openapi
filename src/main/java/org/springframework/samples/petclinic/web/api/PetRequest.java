@@ -1,65 +1,70 @@
 package org.springframework.samples.petclinic.web.api;
 
-import java.time.LocalDate;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class PetRequest {
-	private Integer		id;
-	@JsonFormat(pattern = "yyyy/MM/dd")
-	
-	@NotNull
-	private LocalDate	birthDate;
-	@Size(min = 2, max = 14 )
-	private String		name;
-	
-	Integer	typeId;  
+  private Integer id;
 
-	
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
+  @JsonFormat(pattern = "yyyy/MM/dd")
+  @NotNull
+  private LocalDate birthDate;
 
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
+  @Size(min = 2, max = 14)
+  private String name;
 
-	public String getName() {
-		return name;
-	}
+  Integer typeId;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public LocalDate getBirthDate() {
+    return birthDate;
+  }
 
-	public int getTypeId() {
-		return typeId;
-	}
+  public void setBirthDate(LocalDate birthDate) {
+    this.birthDate = birthDate;
+  }
 
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public String getName() {
+    return name;
+  }
 
-	@JsonProperty("isNew")
-	public boolean isNew() {
-		return this.id == null;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public String toString() {
-		return "PetRequest [id=" + id + ", birthDate=" + birthDate + ", name=" + name + ", typeId=" + typeId + "]";
-	}
+  public int getTypeId() {
+    return typeId;
+  }
 
+  public void setTypeId(int typeId) {
+    this.typeId = typeId;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  @JsonProperty("isNew")
+  public boolean isNew() {
+    return this.id == null;
+  }
+
+  @Override
+  public String toString() {
+    return "PetRequest [id="
+        + id
+        + ", birthDate="
+        + birthDate
+        + ", name="
+        + name
+        + ", typeId="
+        + typeId
+        + "]";
+  }
 }

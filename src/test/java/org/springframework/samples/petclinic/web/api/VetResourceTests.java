@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +21,20 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(VetResource.class)
 public class VetResourceTests {
 
-	@Autowired
-	private MockMvc	mvc;
+  @Autowired private MockMvc mvc;
 
-	@MockBean
-	ClinicService		clinicService;
+  @MockBean ClinicService clinicService;
 
-	@Test
-	public void shouldGetAListOfVetsInJSonFormat() throws Exception {
+  @Test
+  public void shouldGetAListOfVetsInJSonFormat() throws Exception {
 
-		Vet vet = new Vet();
-		vet.setId(1);
+    Vet vet = new Vet();
+    vet.setId(1);
 
-		given(clinicService.findVets()).willReturn(Arrays.asList(vet));
+    given(clinicService.findVets()).willReturn(Arrays.asList(vet));
 
-		mvc.perform(get("/api/vets") //
-				.accept(MediaType.APPLICATION_JSON)) //
-				.andExpect(status().isOk()) //
-				.andExpect(jsonPath("$[0].id").value(1));
-	}
-
+    mvc.perform(get("/api/vets").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1));
+  }
 }

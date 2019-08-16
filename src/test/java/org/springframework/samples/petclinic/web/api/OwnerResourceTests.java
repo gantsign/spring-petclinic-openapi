@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
@@ -25,133 +25,135 @@ import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(OwnerResource.class)
 public class OwnerResourceTests {
 
-	@Autowired
-	private MockMvc	mvc;
+  @Autowired private MockMvc mvc;
 
-	@MockBean
-	ClinicService		clinicService;
+  @MockBean ClinicService clinicService;
 
-	@Test
-	public void shouldNotGetOwnerById() throws Exception {
+  @Test
+  public void shouldNotGetOwnerById() throws Exception {
 
-		mvc.perform(get("/api/owner/20") //
-				.accept(MediaType.APPLICATION_JSON)) //
-				.andExpect(status().is4xxClientError()) //
-				.andExpect(content().contentType("application/json")); //
-				
-	}
-	
-	@Test
-	public void shouldGetOwnerById() throws Exception {
-		given(clinicService.findOwnerById(1)).willReturn(setupOwners().get(1));
+    mvc.perform(
+            get("/api/owner/20") //
+                .accept(MediaType.APPLICATION_JSON)) //
+        .andExpect(status().is4xxClientError()) //
+        .andExpect(content().contentType("application/json")); //
+  }
 
-		mvc.perform(get("/api/owner/1") //
-				.accept(MediaType.APPLICATION_JSON)) //
-				.andExpect(status().isOk()) //
-				.andExpect(content().contentType("application/json;charset=UTF-8")) //
-				.andExpect(jsonPath("$.id").value(1)) //
-				.andExpect(jsonPath("$.city").value("Mainz")) //
-				.andExpect(jsonPath("$.lastName").value("Mueck")); //
-	}
-	
-	@Test
-	public void shouldFindOwners() throws Exception {
-		final List<Owner> owners = setupOwners();
-		owners.remove(1);
-		given(clinicService.findOwnerByLastName("mueller")).willReturn(owners);
-		mvc.perform(get("/api/owner/list/?lastName=mueller") //
-				.accept(MediaType.APPLICATION_JSON)) //
-		.andExpect(status().isOk())
-		.andExpect(content().contentType("application/json;charset=UTF-8")) //
-		.andExpect(jsonPath("$.[0].id").value(0))
-		.andExpect(jsonPath("$.[1].id").value(2)); //
-	}
-	
+  @Test
+  public void shouldGetOwnerById() throws Exception {
+    given(clinicService.findOwnerById(1)).willReturn(setupOwners().get(1));
 
-	@Test
-	public void shouldCreateOwner() throws Exception {
+    mvc.perform(
+            get("/api/owner/1") //
+                .accept(MediaType.APPLICATION_JSON)) //
+        .andExpect(status().isOk()) //
+        .andExpect(content().contentType("application/json;charset=UTF-8")) //
+        .andExpect(jsonPath("$.id").value(1)) //
+        .andExpect(jsonPath("$.city").value("Mainz")) //
+        .andExpect(jsonPath("$.lastName").value("Mueck")); //
+  }
 
-		doAnswer(new Answer<Void>() {
-			public Void answer(InvocationOnMock invocation) {
-				Owner receivedOwner = (Owner) invocation.getArguments()[0];
-				receivedOwner.setId(666);
-				return null;
-			}
-		}).when(clinicService).saveOwner((Owner) anyObject());
+  @Test
+  public void shouldFindOwners() throws Exception {
+    final List<Owner> owners = setupOwners();
+    owners.remove(1);
+    given(clinicService.findOwnerByLastName("mueller")).willReturn(owners);
+    mvc.perform(
+            get("/api/owner/list/?lastName=mueller") //
+                .accept(MediaType.APPLICATION_JSON)) //
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/json;charset=UTF-8")) //
+        .andExpect(jsonPath("$.[0].id").value(0))
+        .andExpect(jsonPath("$.[1].id").value(2)); //
+  }
 
-		final Owner newOwner = setupOwners().get(0);
-		newOwner.setId(null);
+  @Test
+  public void shouldCreateOwner() throws Exception {
 
-		ObjectMapper mapper = new ObjectMapper();
-		String ownerAsJsonString = mapper.writeValueAsString(newOwner);
-		newOwner.setId(666);
-		String newOwnerAsJsonString = 
-				mapper.writeValueAsString(newOwner);
-		
-		mvc.perform(post("/api/owner") //
-				.content(ownerAsJsonString).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)) //
-				.andExpect(status().isCreated())
-				.andExpect(content().json(newOwnerAsJsonString))
-		;
-	}
-	
-	@Test
-	public void shouldReturnBindingErrors() throws Exception {
+    doAnswer(
+            new Answer<Void>() {
+              public Void answer(InvocationOnMock invocation) {
+                Owner receivedOwner = (Owner) invocation.getArguments()[0];
+                receivedOwner.setId(666);
+                return null;
+              }
+            })
+        .when(clinicService)
+        .saveOwner((Owner) anyObject());
 
-		final Owner newOwner = setupOwners().get(0);
-		newOwner.setId(null);
-		newOwner.setLastName(null);
+    final Owner newOwner = setupOwners().get(0);
+    newOwner.setId(null);
 
-		ObjectMapper mapper = new ObjectMapper();
-		String ownerAsJsonString = mapper.writeValueAsString(newOwner);
-		
-		mvc.perform(post("/api/owner") //
-				.content(ownerAsJsonString).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)) //
-				.andExpect(status().isUnprocessableEntity())
-				.andExpect(content().contentType("application/json")) //
-				.andExpect(jsonPath("$.fieldErrors.lastName").isNotEmpty()) //
-				
-		;
-	}
+    ObjectMapper mapper = new ObjectMapper();
+    String ownerAsJsonString = mapper.writeValueAsString(newOwner);
+    newOwner.setId(666);
+    String newOwnerAsJsonString = mapper.writeValueAsString(newOwner);
 
-	private List<Owner> setupOwners() {
+    mvc.perform(
+            post("/api/owner") //
+                .content(ownerAsJsonString)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)) //
+        .andExpect(status().isCreated())
+        .andExpect(content().json(newOwnerAsJsonString));
+  }
 
-		final List<Owner> owners = new LinkedList<Owner>();
+  @Test
+  public void shouldReturnBindingErrors() throws Exception {
 
-		Owner owner = new Owner();
-		owner.setId(0);
-		owner.setAddress("My Street 123");
-		owner.setCity("Hamburg");
-		owner.setFirstName("Klaus-Dieter");
-		owner.setLastName("Mueller");
-		owner.setTelephone("1234567");
-		owners.add(owner);
+    final Owner newOwner = setupOwners().get(0);
+    newOwner.setId(null);
+    newOwner.setLastName(null);
 
-		owner = new Owner();
-		owner.setId(1);
-		owner.setAddress("Hier und Da 123");
-		owner.setCity("Mainz");
-		owner.setFirstName("Hein");
-		owner.setLastName("Mueck");
-		owner.setTelephone("765432");
-		owners.add(owner);
+    ObjectMapper mapper = new ObjectMapper();
+    String ownerAsJsonString = mapper.writeValueAsString(newOwner);
 
-		owner = new Owner();
-		owner.setId(2);
-		owner.setAddress("Lange Reihe");
-		owner.setCity("Hamburg");
-		owner.setFirstName("Peter");
-		owner.setLastName("Mueller");
-		owner.setTelephone("445566");
-		owners.add(owner);
+    mvc.perform(
+            post("/api/owner") //
+                .content(ownerAsJsonString)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)) //
+        .andExpect(status().isUnprocessableEntity())
+        .andExpect(content().contentType("application/json")) //
+        .andExpect(jsonPath("$.fieldErrors.lastName").isNotEmpty()) //
+    ;
+  }
 
-		return owners;
+  private List<Owner> setupOwners() {
 
-	}
+    final List<Owner> owners = new LinkedList<Owner>();
+
+    Owner owner = new Owner();
+    owner.setId(0);
+    owner.setAddress("My Street 123");
+    owner.setCity("Hamburg");
+    owner.setFirstName("Klaus-Dieter");
+    owner.setLastName("Mueller");
+    owner.setTelephone("1234567");
+    owners.add(owner);
+
+    owner = new Owner();
+    owner.setId(1);
+    owner.setAddress("Hier und Da 123");
+    owner.setCity("Mainz");
+    owner.setFirstName("Hein");
+    owner.setLastName("Mueck");
+    owner.setTelephone("765432");
+    owners.add(owner);
+
+    owner = new Owner();
+    owner.setId(2);
+    owner.setAddress("Lange Reihe");
+    owner.setCity("Hamburg");
+    owner.setFirstName("Peter");
+    owner.setLastName("Mueller");
+    owner.setTelephone("445566");
+    owners.add(owner);
+
+    return owners;
+  }
 }

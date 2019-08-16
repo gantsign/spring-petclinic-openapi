@@ -5,6 +5,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/api")
 @CrossOrigin
-public class AbstractResourceController {
-
-}
+public class AbstractResourceController {}

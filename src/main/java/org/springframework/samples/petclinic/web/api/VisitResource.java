@@ -16,7 +16,6 @@
 package org.springframework.samples.petclinic.web.api;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Pet;
@@ -38,27 +37,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class VisitResource extends AbstractResourceController {
 
-	private final ClinicService clinicService;
+  private final ClinicService clinicService;
 
-	@Autowired
-	public VisitResource(ClinicService clinicService) {
-		this.clinicService = clinicService;
-	}
+  @Autowired
+  public VisitResource(ClinicService clinicService) {
+    this.clinicService = clinicService;
+  }
 
-	@PostMapping("/owners/{ownerId}/pets/{petId}/visits")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void createÏ(@PathVariable("petId") int petId, @Valid @RequestBody Visit visit, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new InvalidRequestException("Visit is invalid", bindingResult);
-		}
+  @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void createÏ(
+      @PathVariable("petId") int petId,
+      @Valid @RequestBody Visit visit,
+      BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      throw new InvalidRequestException("Visit is invalid", bindingResult);
+    }
 
-		final Pet pet = clinicService.findPetById(petId);
-		if (pet == null) {
-			throw new BadRequestException("Pet with Id '" + petId + "' is unknown.");
-		}
+    final Pet pet = clinicService.findPetById(petId);
+    if (pet == null) {
+      throw new BadRequestException("Pet with Id '" + petId + "' is unknown.");
+    }
 
-		pet.addVisit(visit);
+    pet.addVisit(visit);
 
-		clinicService.saveVisit(visit);
-	}
+    clinicService.saveVisit(visit);
+  }
 }

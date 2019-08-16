@@ -19,11 +19,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
+ * Can be Cat, Dog, Hamster...
+ *
  * @author Juergen Hoeller
- *         Can be Cat, Dog, Hamster...
  */
 @Entity
 @Table(name = "types")
-public class PetType extends NamedEntity {
-
-}
+public class PetType extends NamedEntity {}

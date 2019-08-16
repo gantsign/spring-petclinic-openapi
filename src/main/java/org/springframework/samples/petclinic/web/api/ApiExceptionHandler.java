@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -20,53 +18,56 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler  {
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
   @ExceptionHandler({SuperFatalErrorException.class})
   public ResponseEntity<?> badRequest(HttpServletRequest req, Exception exception) {
-  	Map<String, Object> result = new Hashtable<>();
-  	result.put("status", HttpStatus.BAD_REQUEST);
-  	result.put("message", exception.getMessage());
-  	return ResponseEntity.badRequest().body(result);
+    Map<String, Object> result = new Hashtable<>();
+    result.put("status", HttpStatus.BAD_REQUEST);
+    result.put("message", exception.getMessage());
+    return ResponseEntity.badRequest().body(result);
   }
-  
+
   /**
-   * Credits to: Willie Wheeler (http://springinpractice.com/2013/10/09/generating-json-error-object-responses-with-spring-web-mvc)
+   * Credits to: Willie Wheeler
+   * (http://springinpractice.com/2013/10/09/generating-json-error-object-responses-with-spring-web-mvc)
    *
    * @author Willie Wheeler (@williewheeler)
    */
-  @ExceptionHandler({ InvalidRequestException.class })
-  protected ResponseEntity<Object> handleInvalidRequest(InvalidRequestException ire, WebRequest request) {
-  	logger.info("InvalidRequestException caught", ire);
-      List<FieldErrorResource> fieldErrorResources = new ArrayList<>();
+  @ExceptionHandler({InvalidRequestException.class})
+  protected ResponseEntity<Object> handleInvalidRequest(
+      InvalidRequestException ire, WebRequest request) {
+    logger.info("InvalidRequestException caught", ire);
+    List<FieldErrorResource> fieldErrorResources = new ArrayList<>();
 
-      List<FieldError> fieldErrors = ire.getErrors().getFieldErrors();
-      for (FieldError fieldError : fieldErrors) {
-          FieldErrorResource fieldErrorResource = new FieldErrorResource();
-          fieldErrorResource.setResource(fieldError.getObjectName());
-          fieldErrorResource.setField(fieldError.getField());
-          fieldErrorResource.setCode(fieldError.getCode());
-          fieldErrorResource.setMessage(fieldError.getDefaultMessage());
-          fieldErrorResources.add(fieldErrorResource);
-      }
+    List<FieldError> fieldErrors = ire.getErrors().getFieldErrors();
+    for (FieldError fieldError : fieldErrors) {
+      FieldErrorResource fieldErrorResource = new FieldErrorResource();
+      fieldErrorResource.setResource(fieldError.getObjectName());
+      fieldErrorResource.setField(fieldError.getField());
+      fieldErrorResource.setCode(fieldError.getCode());
+      fieldErrorResource.setMessage(fieldError.getDefaultMessage());
+      fieldErrorResources.add(fieldErrorResource);
+    }
 
-      ErrorResource error = new ErrorResource("InvalidRequest", ire.getMessage());
-      error.setFieldErrors(fieldErrorResources);
+    ErrorResource error = new ErrorResource("InvalidRequest", ire.getMessage());
+    error.setFieldErrors(fieldErrorResources);
 
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
 
-      return handleExceptionInternal(ire, error, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    return handleExceptionInternal(ire, error, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
   }
-  
-  @ExceptionHandler( { BadRequestException.class } )
+
+  @ExceptionHandler({BadRequestException.class})
   protected ResponseEntity<Object> handleBadRequest(BadRequestException bre, WebRequest request) {
-  	logger.info("BadRequestException caught", bre);
-  	
-  	ErrorResource error = new ErrorResource("BadRequest", bre.getMessage());
-  	error.addGlobalError(bre.getMessage());
-  	
-  	HttpHeaders headers = new HttpHeaders();
+    logger.info("BadRequestException caught", bre);
+
+    ErrorResource error = new ErrorResource("BadRequest", bre.getMessage());
+    error.addGlobalError(bre.getMessage());
+
+    HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
 
     return handleExceptionInternal(bre, error, headers, HttpStatus.BAD_REQUEST, request);

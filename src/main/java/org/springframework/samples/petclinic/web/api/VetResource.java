@@ -16,27 +16,24 @@
 package org.springframework.samples.petclinic.web.api;
 
 import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- */
 @RestController
 public class VetResource extends AbstractResourceController {
 
-    private final ClinicService clinicService;
+  private final ClinicService clinicService;
 
-    @Autowired
-    public VetResource(ClinicService clinicService) {
-        this.clinicService = clinicService;
-    }
-    
-    @GetMapping(value="/vets")
-    public Collection<Vet> showResourcesVetList() {
-        return this.clinicService.findVets();
-    }
+  @Autowired
+  public VetResource(ClinicService clinicService) {
+    this.clinicService = clinicService;
+  }
+
+  @GetMapping(value = "/vets")
+  public Collection<Vet> showResourcesVetList() {
+    return this.clinicService.findVets();
+  }
 }

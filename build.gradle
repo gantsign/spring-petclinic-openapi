@@ -1,9 +1,10 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.7.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.7.RELEASE'
-	id 'java'
-    id 'jacoco'
-    id 'com.google.cloud.tools.jib' version '1.4.0'
+  id 'com.diffplug.gradle.spotless' version '3.24.1'
+  id 'org.springframework.boot' version '2.1.7.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+  id 'java'
+  id 'jacoco'
+  id 'com.google.cloud.tools.jib' version '1.4.0'
 }
 
 group = 'org.springframework.samples'
@@ -11,40 +12,54 @@ version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
 }
 
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    // Spring and Spring Boot dependencies
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  // Spring and Spring Boot dependencies
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'org.springframework.boot:spring-boot-starter-cache'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // Databases - Uses HSQL by default
-    runtime 'org.hsqldb:hsqldb'
-    // runtime 'mysql:mysql-connector-java'
+  // Databases - Uses HSQL by default
+  runtime 'org.hsqldb:hsqldb'
+  // runtime 'mysql:mysql-connector-java'
 
-    // EhCache
-    implementation 'javax.cache:cache-api'
-    implementation 'org.ehcache:ehcache'
+  // EhCache
+  implementation 'javax.cache:cache-api'
+  implementation 'org.ehcache:ehcache'
+}
+
+spotless {
+  java { googleJavaFormat('1.7') }
+  groovyGradle {
+    paddedCell() // Avoid cyclic ambiguities
+    greclipse().configFile('config/eclipse-java-google-style.xml')
+  }
 }
 
 jacoco {
-    toolVersion = '0.8.4'
+  toolVersion = '0.8.4'
 }
 
 jib {
-    to {
-        tags = ['latest']
-    }
+  to {
+    tags = ['latest']
+  }
+}
+
+afterEvaluate {
+  if (!hasProperty('skipFormat')) {
+    tasks.spotlessCheck.dependsOn tasks.spotlessApply
+  }
 }
