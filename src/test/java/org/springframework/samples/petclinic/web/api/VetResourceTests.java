@@ -36,7 +36,7 @@ public class VetResourceTests {
 
 		given(clinicService.findVets()).willReturn(Arrays.asList(vet));
 
-		mvc.perform(get("/api/vets.json") //
+		mvc.perform(get("/api/vets") //
 				.accept(MediaType.APPLICATION_JSON)) //
 				.andExpect(status().isOk()) //
 				.andExpect(jsonPath("$[0].id").value(1));
