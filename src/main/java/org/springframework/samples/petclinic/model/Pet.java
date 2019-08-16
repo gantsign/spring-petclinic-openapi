@@ -32,7 +32,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Simple business object representing a pet.
@@ -46,7 +45,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Pet extends NamedEntity {
 
   @Column(name = "birth_date")
-  @DateTimeFormat(pattern = "yyyy/MM/dd")
   private LocalDate birthDate;
 
   @ManyToOne

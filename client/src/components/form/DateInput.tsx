@@ -12,11 +12,11 @@ import FieldFeedbackPanel from './FieldFeedbackPanel';
 export default ({object, error, name, label, onChange}: { object: any, error: IError, name: string, label: string, onChange: IInputChangeHandler }) => {
 
   const handleOnChange = value => {
-    const dateString = value ? value.format('YYYY/MM/DD') : null;
+    const dateString = value ? value.format('YYYY-MM-DD') : null;
     onChange(name, dateString, null);
   };
 
-  const selectedValue = object[name] ? moment(object[name], 'YYYY/MM/DD') : null;
+  const selectedValue = object[name] ? moment(object[name], 'YYYY-MM-DD') : null;
   const fieldError = error && error.fieldErrors[name];
   const valid = !fieldError && selectedValue != null;
 

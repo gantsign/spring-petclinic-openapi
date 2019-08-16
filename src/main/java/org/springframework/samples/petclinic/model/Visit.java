@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -24,7 +23,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -37,8 +35,6 @@ public class Visit extends BaseEntity {
 
   /** Holds value of property date. */
   @Column(name = "visit_date")
-  @DateTimeFormat(pattern = "yyyy/MM/dd")
-  @JsonFormat(pattern = "yyyy/MM/dd")
   private LocalDate date;
 
   /** Holds value of property description. */
