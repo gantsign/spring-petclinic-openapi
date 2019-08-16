@@ -183,25 +183,17 @@
             </plugin>
 
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.11</version>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.4.0</version>
                 <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
-                    <forceTags>true</forceTags>
-                    <imageTags>
-                        <imageTag>${project.version}</imageTag>
-                        <imageTag>latest</imageTag>
-                    </imageTags>
-                    <useConfigFile>true</useConfigFile>
+                    <to>
+                        <image>${docker.image.prefix}/${project.artifactId}</image>
+                        <tags>
+                            <tag>${project.version}</tag>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
                 </configuration>
             </plugin>
         </plugins>
