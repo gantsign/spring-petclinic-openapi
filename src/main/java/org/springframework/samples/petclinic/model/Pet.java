@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,8 +31,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,7 +49,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
 

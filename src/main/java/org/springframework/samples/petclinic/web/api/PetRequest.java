@@ -1,10 +1,9 @@
 package org.springframework.samples.petclinic.web.api;
 
+import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
-
-import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

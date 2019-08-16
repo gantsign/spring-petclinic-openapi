@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +123,7 @@ public class ClinicServiceSpringDataJpaTests {
         pet.setName("bowser");
         Collection<PetType> types = this.clinicService.findPetTypes();
         pet.setType(EntityUtils.getById(types, PetType.class, 2));
-        pet.setBirthDate(new LocalDate());
+        pet.setBirthDate(LocalDate.now());
         owner6.addPet(pet);
         assertThat(owner6.getPets().size()).isEqualTo(found + 1);
 

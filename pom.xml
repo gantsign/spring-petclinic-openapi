@@ -21,10 +21,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <docker.image.prefix>arey</docker.image.prefix>
 
-        <!-- Dates -->
-        <jodatime-hibernate.version>1.4</jodatime-hibernate.version>
-        <jadira-usertype-core.version>6.0.1.GA</jadira-usertype-core.version>
-
         <cobertura.version>2.7</cobertura.version>
 
     </properties>
@@ -66,26 +62,6 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-        </dependency>
-
-        <!-- Date and Time -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time-hibernate</artifactId>
-            <version>${jodatime-hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jadira.usertype</groupId>
-            <artifactId>usertype.core</artifactId>
-            <version>${jadira-usertype-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
 
         <!-- Databases - Uses HSQL by default -->
