@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @ExceptionHandler(SuperFatalErrorException.class)
   public ResponseEntity<?> badRequest(HttpServletRequest req, Exception exception) {
@@ -38,7 +37,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(InvalidRequestException.class)
   protected ResponseEntity<Object> handleInvalidRequest(
       InvalidRequestException ire, WebRequest request) {
-    logger.info("InvalidRequestException caught", ire);
+    log.info("InvalidRequestException caught", ire);
     List<FieldErrorResource> fieldErrorResources = new ArrayList<>();
 
     List<FieldError> fieldErrors = ire.getErrors().getFieldErrors();
@@ -62,7 +61,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(BadRequestException.class)
   protected ResponseEntity<Object> handleBadRequest(BadRequestException bre, WebRequest request) {
-    logger.info("BadRequestException caught", bre);
+    log.info("BadRequestException caught", bre);
 
     ErrorResource error = new ErrorResource("BadRequest", bre.getMessage());
     error.addGlobalError(bre.getMessage());

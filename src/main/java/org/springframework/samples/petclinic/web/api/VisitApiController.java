@@ -16,7 +16,7 @@
 package org.springframework.samples.petclinic.web.api;
 
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
@@ -34,15 +34,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Arjen Poutsma
  * @author Michael Isvy
  */
+@RequiredArgsConstructor
 @RestController
 public class VisitApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
-
-  @Autowired
-  public VisitApiController(ClinicService clinicService) {
-    this.clinicService = clinicService;
-  }
 
   @SuppressWarnings("IfCanBeAssertion")
   @PostMapping("/owners/{ownerId}/pets/{petId}/visits")

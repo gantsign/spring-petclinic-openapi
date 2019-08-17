@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Credits to: Willie Wheeler
@@ -15,8 +17,8 @@ import java.util.Map;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResource {
-  private String code;
-  private String message;
+  @Getter @Setter private String code;
+  @Getter @Setter private String message;
   private List<String> globalErrors;
   private Map<String, FieldErrorResource> fieldErrors;
 
@@ -24,22 +26,6 @@ public class ErrorResource {
 
   public ErrorResource(String code, String message) {
     this.code = code;
-    this.message = message;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public void setCode(String code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
     this.message = message;
   }
 

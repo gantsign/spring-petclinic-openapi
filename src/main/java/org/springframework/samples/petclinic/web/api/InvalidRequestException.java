@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.web.api;
 
+import lombok.Getter;
 import org.springframework.validation.Errors;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.validation.Errors;
  *
  * @author Willie Wheeler (@williewheeler)
  */
+@Getter
 public class InvalidRequestException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
@@ -16,9 +18,5 @@ public class InvalidRequestException extends RuntimeException {
   public InvalidRequestException(String message, Errors errors) {
     super(message);
     this.errors = errors;
-  }
-
-  public Errors getErrors() {
-    return errors;
   }
 }

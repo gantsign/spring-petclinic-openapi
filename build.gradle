@@ -16,6 +16,9 @@ configurations {
   runtimeClasspath {
     extendsFrom developmentOnly
   }
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
 }
 
 repositories {
@@ -28,7 +31,9 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-cache'
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   implementation 'org.springframework.boot:spring-boot-starter-web'
+  compileOnly 'org.projectlombok:lombok'
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  annotationProcessor 'org.projectlombok:lombok'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
   // Databases - Uses HSQL by default

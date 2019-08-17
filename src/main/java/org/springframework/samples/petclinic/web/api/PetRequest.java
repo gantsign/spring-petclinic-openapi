@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class PetRequest {
   private Integer id;
 
@@ -13,38 +17,6 @@ public class PetRequest {
   private @Size(min = 2, max = 14) String name;
 
   private Integer typeId;
-
-  public LocalDate getBirthDate() {
-    return birthDate;
-  }
-
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public int getTypeId() {
-    return typeId;
-  }
-
-  public void setTypeId(int typeId) {
-    this.typeId = typeId;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   @JsonProperty("isNew")
   public boolean isNew() {

@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Objects.requireNonNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -30,6 +28,9 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
@@ -43,6 +44,8 @@ import org.springframework.core.style.ToStringCreator;
  * @author Sam Brannen
  * @author Michael Isvy
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "owners")
 public class Owner extends Person {
@@ -55,41 +58,9 @@ public class Owner extends Person {
   @Column(name = "telephone")
   private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
 
-  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-  private Set<Pet> pets = new HashSet<>();
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public String getTelephone() {
-    return telephone;
-  }
-
-  public void setTelephone(String telephone) {
-    this.telephone = telephone;
-  }
-
-  public Set<Pet> getPets() {
-    return pets;
-  }
-
-  public void setPets(Set<Pet> pets) {
-    this.pets = requireNonNull(pets);
-  }
+  @JsonIgnore
+  private @NonNull Set<Pet> pets = new HashSet<>();
 
   @JsonProperty("pets")
   public List<Pet> getPetsSorted() {

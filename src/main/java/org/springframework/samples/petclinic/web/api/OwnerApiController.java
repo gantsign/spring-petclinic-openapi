@@ -17,7 +17,7 @@ package org.springframework.samples.petclinic.web.api;
 
 import java.util.Collection;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.ClinicService;
@@ -36,15 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Arjen Poutsma
  * @author Michael Isvy
  */
+@RequiredArgsConstructor
 @RestController
 public class OwnerApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
-
-  @Autowired
-  public OwnerApiController(ClinicService clinicService) {
-    this.clinicService = clinicService;
-  }
 
   @SuppressWarnings("IfCanBeAssertion")
   private Owner retrieveOwner(int ownerId) {

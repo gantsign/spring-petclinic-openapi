@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Objects.requireNonNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
@@ -33,6 +31,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
@@ -43,6 +44,8 @@ import org.springframework.beans.support.PropertyComparator;
  * @author Juergen Hoeller
  * @author Sam Brannen
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "pets")
 public class Pet extends NamedEntity {
@@ -59,41 +62,9 @@ public class Pet extends NamedEntity {
   @JsonIgnore
   private Owner owner;
 
-  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-  private Set<Visit> visits = new HashSet<>();
-
-  public LocalDate getBirthDate() {
-    return birthDate;
-  }
-
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
-  }
-
-  public PetType getType() {
-    return type;
-  }
-
-  public void setType(PetType type) {
-    this.type = type;
-  }
-
-  public Owner getOwner() {
-    return owner;
-  }
-
-  public void setOwner(Owner owner) {
-    this.owner = owner;
-  }
-
-  public Set<Visit> getVisits() {
-    return visits;
-  }
-
-  public void setVisits(Set<Visit> visits) {
-    this.visits = requireNonNull(visits);
-  }
+  @JsonIgnore
+  private @NonNull Set<Visit> visits = new HashSet<>();
 
   @JsonProperty("visits")
   public List<Visit> getVisitsSorted() {

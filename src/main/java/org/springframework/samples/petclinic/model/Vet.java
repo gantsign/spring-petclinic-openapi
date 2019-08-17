@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Objects.requireNonNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
@@ -30,6 +28,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
@@ -41,25 +42,19 @@ import org.springframework.beans.support.PropertyComparator;
  * @author Sam Brannen
  * @author Arjen Poutsma
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "vets")
 public class Vet extends Person {
 
-  @JsonIgnore
-  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "vet_specialties",
       joinColumns = @JoinColumn(name = "vet_id"),
       inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-  private Set<Specialty> specialties = new HashSet<>();
-
-  public Set<Specialty> getSpecialties() {
-    return specialties;
-  }
-
-  public void setSpecialties(Set<Specialty> specialties) {
-    this.specialties = requireNonNull(specialties);
-  }
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JsonIgnore
+  private @NonNull Set<Specialty> specialties = new HashSet<>();
 
   @JsonProperty("specialties")
   public List<Specialty> getSpecialtiesSorted() {

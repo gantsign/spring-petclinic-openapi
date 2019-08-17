@@ -18,6 +18,8 @@ package org.springframework.samples.petclinic.model;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -25,6 +27,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  *
  * @author Ken Krebs
  */
+@Getter
+@Setter
 @MappedSuperclass
 public class Person extends BaseEntity {
 
@@ -35,20 +39,4 @@ public class Person extends BaseEntity {
   @Column(name = "last_name")
   protected @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "Last name has invalid characters")
   String lastName;
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
 }

@@ -16,9 +16,8 @@
 package org.springframework.samples.petclinic.web.api;
 
 import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -33,17 +32,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /** @author Nils Hartmann */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 public class PetApiController extends AbstractResourceController {
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
-
   private final ClinicService clinicService;
-
-  @Autowired
-  public PetApiController(ClinicService clinicService) {
-    this.clinicService = clinicService;
-  }
 
   @GetMapping("/pettypes")
   Object getPetTypes() {
@@ -58,7 +52,7 @@ public class PetApiController extends AbstractResourceController {
       @RequestBody final @Valid PetRequest petRequest,
       final BindingResult bindingResult) {
 
-    logger.info("PetRequest: {}", petRequest);
+    log.info("PetRequest: {}", petRequest);
 
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Submitted Pet invalid", bindingResult);
