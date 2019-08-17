@@ -20,8 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PetResource.class)
-public class PetResourceTests {
+@WebMvcTest(PetApiController.class)
+public class PetApiControllerTests {
 
   @Autowired private MockMvc mvc;
 

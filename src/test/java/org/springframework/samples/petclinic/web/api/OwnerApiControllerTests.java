@@ -25,8 +25,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(OwnerResource.class)
-public class OwnerResourceTests {
+@WebMvcTest(OwnerApiController.class)
+public class OwnerApiControllerTests {
 
   @Autowired private MockMvc mvc;
 

@@ -34,14 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** @author Nils Hartmann */
 @RestController
-public class PetResource extends AbstractResourceController {
+public class PetApiController extends AbstractResourceController {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private final ClinicService clinicService;
 
   @Autowired
-  public PetResource(ClinicService clinicService) {
+  public PetApiController(ClinicService clinicService) {
     this.clinicService = clinicService;
   }
 

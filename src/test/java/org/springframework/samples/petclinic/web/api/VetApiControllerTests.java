@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(VetResource.class)
-public class VetResourceTests {
+@WebMvcTest(VetApiController.class)
+public class VetApiControllerTests {
 
   @Autowired private MockMvc mvc;
 

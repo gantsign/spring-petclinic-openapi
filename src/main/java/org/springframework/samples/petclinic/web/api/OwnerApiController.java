@@ -37,12 +37,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Michael Isvy
  */
 @RestController
-public class OwnerResource extends AbstractResourceController {
+public class OwnerApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
 
   @Autowired
-  public OwnerResource(ClinicService clinicService) {
+  public OwnerApiController(ClinicService clinicService) {
     this.clinicService = clinicService;
   }
 

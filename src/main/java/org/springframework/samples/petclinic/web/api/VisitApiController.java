@@ -35,12 +35,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Michael Isvy
  */
 @RestController
-public class VisitResource extends AbstractResourceController {
+public class VisitApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
 
   @Autowired
-  public VisitResource(ClinicService clinicService) {
+  public VisitApiController(ClinicService clinicService) {
     this.clinicService = clinicService;
   }
 

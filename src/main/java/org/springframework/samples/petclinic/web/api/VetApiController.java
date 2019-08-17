@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class VetResource extends AbstractResourceController {
+public class VetApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
 
   @Autowired
-  public VetResource(ClinicService clinicService) {
+  public VetApiController(ClinicService clinicService) {
     this.clinicService = clinicService;
   }
 
