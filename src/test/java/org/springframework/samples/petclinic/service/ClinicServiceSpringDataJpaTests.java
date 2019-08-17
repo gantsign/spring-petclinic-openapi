@@ -65,9 +65,9 @@ public class ClinicServiceSpringDataJpaTests {
   public void shouldFindSingleOwnerWithPet() {
     Owner owner = clinicService.findOwnerById(1);
     assertThat(owner.getLastName()).startsWith("Franklin");
-    assertThat(owner.getPets().size()).isEqualTo(1);
-    assertThat(owner.getPets().get(0).getType()).isNotNull();
-    assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
+    assertThat(owner.getPetsSorted().size()).isEqualTo(1);
+    assertThat(owner.getPetsSorted().get(0).getType()).isNotNull();
+    assertThat(owner.getPetsSorted().get(0).getType().getName()).isEqualTo("cat");
   }
 
   @Test
@@ -125,7 +125,7 @@ public class ClinicServiceSpringDataJpaTests {
   @Transactional
   public void shouldInsertPetIntoDatabaseAndGenerateId() {
     Owner owner6 = clinicService.findOwnerById(6);
-    int found = owner6.getPets().size();
+    int found = owner6.getPetsSorted().size();
 
     Pet pet = new Pet();
     pet.setName("bowser");
@@ -133,13 +133,13 @@ public class ClinicServiceSpringDataJpaTests {
     pet.setType(EntityUtils.getById(types, PetType.class, 2));
     pet.setBirthDate(LocalDate.now());
     owner6.addPet(pet);
-    assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+    assertThat(owner6.getPetsSorted().size()).isEqualTo(found + 1);
 
     clinicService.savePet(pet);
     clinicService.saveOwner(owner6);
 
     owner6 = clinicService.findOwnerById(6);
-    assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+    assertThat(owner6.getPetsSorted().size()).isEqualTo(found + 1);
     // checks that id has been generated
     assertThat(pet.getId()).isNotNull();
   }
@@ -165,15 +165,15 @@ public class ClinicServiceSpringDataJpaTests {
     Vet vet = EntityUtils.getById(vets, Vet.class, 3);
     assertThat(vet.getLastName()).isEqualTo("Douglas");
     assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-    assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-    assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
+    assertThat(vet.getSpecialtiesSorted().get(0).getName()).isEqualTo("dentistry");
+    assertThat(vet.getSpecialtiesSorted().get(1).getName()).isEqualTo("surgery");
   }
 
   @Test
   @Transactional
   public void shouldAddNewVisitForPet() {
     Pet pet7 = clinicService.findPetById(7);
-    int found = pet7.getVisits().size();
+    int found = pet7.getVisitsSorted().size();
     Visit visit = new Visit();
     pet7.addVisit(visit);
     visit.setDescription("test");
@@ -181,7 +181,7 @@ public class ClinicServiceSpringDataJpaTests {
     clinicService.savePet(pet7);
 
     pet7 = clinicService.findPetById(7);
-    assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
+    assertThat(pet7.getVisitsSorted().size()).isEqualTo(found + 1);
     assertThat(visit.getId()).isNotNull();
   }
 

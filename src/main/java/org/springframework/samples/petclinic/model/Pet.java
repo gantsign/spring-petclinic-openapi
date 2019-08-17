@@ -15,7 +15,10 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +59,9 @@ public class Pet extends NamedEntity {
   @JsonIgnore
   private Owner owner;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-  private Set<Visit> visits;
+  private Set<Visit> visits = new HashSet<>();
 
   public LocalDate getBirthDate() {
     return birthDate;
@@ -79,29 +83,27 @@ public class Pet extends NamedEntity {
     return owner;
   }
 
-  protected void setOwner(Owner owner) {
+  public void setOwner(Owner owner) {
     this.owner = owner;
   }
 
-  protected Set<Visit> getVisitsInternal() {
-    if (visits == null) {
-      visits = new HashSet<>();
-    }
+  public Set<Visit> getVisits() {
     return visits;
   }
 
-  protected void setVisitsInternal(Set<Visit> visits) {
-    this.visits = visits;
+  public void setVisits(Set<Visit> visits) {
+    this.visits = requireNonNull(visits);
   }
 
-  public List<Visit> getVisits() {
-    List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+  @JsonProperty("visits")
+  public List<Visit> getVisitsSorted() {
+    List<Visit> sortedVisits = new ArrayList<>(visits);
     PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
     return Collections.unmodifiableList(sortedVisits);
   }
 
   public void addVisit(Visit visit) {
-    getVisitsInternal().add(visit);
+    visits.add(visit);
     visit.setPet(this);
   }
 }
