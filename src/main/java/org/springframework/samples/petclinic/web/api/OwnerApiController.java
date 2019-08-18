@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.OwnerDto;
+import org.springframework.samples.petclinic.model.OwnerFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,12 +61,13 @@ public class OwnerApiController extends AbstractResourceController {
   @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public OwnerDto createOwner(@RequestBody @Valid OwnerDto ownerDto, BindingResult bindingResult) {
+  public OwnerDto createOwner(
+      @RequestBody @Valid OwnerFieldsDto ownerFieldsDto, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Invalid Owner", bindingResult);
     }
 
-    Owner owner = ownerMapper.ownerDtoToOwner(ownerDto);
+    Owner owner = ownerMapper.ownerFieldsDtoToOwner(ownerFieldsDto);
 
     clinicService.saveOwner(owner);
 
@@ -97,14 +99,14 @@ public class OwnerApiController extends AbstractResourceController {
   @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.PUT)
   public OwnerDto updateOwner(
       @PathVariable("ownerId") int ownerId,
-      @Valid @RequestBody OwnerDto ownerRequest,
+      @Valid @RequestBody OwnerFieldsDto ownerFieldsDto,
       final BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Invalid Owner", bindingResult);
     }
 
     Owner ownerModel = retrieveOwner(ownerId);
-    ownerMapper.updateOwnerFromOwnerDto(ownerModel, ownerRequest);
+    ownerMapper.updateOwnerFromOwnerFieldsDto(ownerModel, ownerFieldsDto);
 
     clinicService.saveOwner(ownerModel);
     return ownerMapper.ownerToOwnerDto(ownerModel);

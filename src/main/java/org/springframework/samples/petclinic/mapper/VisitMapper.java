@@ -11,14 +11,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.model.VisitDto;
+import org.springframework.samples.petclinic.model.VisitFieldsDto;
 
 @Mapper
 public interface VisitMapper {
 
   VisitDto visitToVisitDto(Visit visit);
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "pet", ignore = true)
-  Visit visitDtoToVisit(VisitDto visitDto);
+  Visit visitFieldsDtoToVisit(VisitFieldsDto visitFieldsDto);
 
   default List<VisitDto> visitsToVisitDtos(Set<Visit> visits) {
     return visits.stream()

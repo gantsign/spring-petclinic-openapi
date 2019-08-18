@@ -15,12 +15,18 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import javax.validation.constraints.Digits;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
-/** Base class for DTOs. */
+/** DTO representing the editable fields for an owner. */
 @Data
-public abstract class BaseDto {
-
-  protected Integer id;
-
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class OwnerFieldsDto extends PersonFieldsDto {
+  private @NotEmpty String address;
+  private @NotEmpty String city;
+  private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
 }

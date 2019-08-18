@@ -5,16 +5,18 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.OwnerDto;
+import org.springframework.samples.petclinic.model.OwnerFieldsDto;
 
 @Mapper(uses = PetMapper.class)
 public interface OwnerMapper {
 
   OwnerDto ownerToOwnerDto(Owner owner);
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "pets", ignore = true)
-  Owner ownerDtoToOwner(OwnerDto ownerDto);
+  Owner ownerFieldsDtoToOwner(OwnerFieldsDto ownerFieldsDto);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "pets", ignore = true)
-  void updateOwnerFromOwnerDto(@MappingTarget Owner owner, OwnerDto ownerDto);
+  void updateOwnerFromOwnerFieldsDto(@MappingTarget Owner owner, OwnerFieldsDto ownerFieldsDto);
 }

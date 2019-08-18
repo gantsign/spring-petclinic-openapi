@@ -17,20 +17,16 @@ package org.springframework.samples.petclinic.model;
 
 import java.util.Collections;
 import java.util.List;
-import javax.validation.constraints.Digits;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /** DTO representing an owner. */
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class OwnerDto extends PersonDto {
-  private @NotEmpty String address;
-  private @NotEmpty String city;
-  private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
+public class OwnerDto extends OwnerFieldsDto {
+  private Integer id;
   private @NonNull List<PetDto> pets = Collections.emptyList();
 }

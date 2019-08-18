@@ -16,11 +16,10 @@
 package org.springframework.samples.petclinic.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /** Models a {@link Vet Vet's} specialty (for example, dentistry). */
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class SpecialtyDto extends NamedDto {}
+public class SpecialtyDto {
+  private Integer id;
+  private String name;
+}

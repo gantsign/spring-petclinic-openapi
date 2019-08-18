@@ -15,14 +15,17 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import javax.validation.constraints.Pattern;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
-/** DTO representing a visit. */
+/** DTO representing the editable fields for a person. */
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class VisitDto extends VisitFieldsDto {
-  private Integer id;
+public class PersonFieldsDto {
+
+  private @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "First name has invalid characters")
+  String firstName;
+
+  private @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "Last name has invalid characters")
+  String lastName;
 }

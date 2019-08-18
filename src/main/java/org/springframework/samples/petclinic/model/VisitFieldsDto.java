@@ -15,15 +15,13 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.time.LocalDate;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
-/** Base class for named DTOs */
+/** DTO representing the editable fields for a visit. */
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public abstract class NamedDto extends BaseDto {
-
-  private String name;
+public class VisitFieldsDto {
+  private LocalDate date;
+  private @NotEmpty String description;
 }

@@ -26,7 +26,8 @@ import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetRequestDto;
+import org.springframework.samples.petclinic.model.PetDto;
+import org.springframework.samples.petclinic.model.PetFieldsDto;
 import org.springframework.samples.petclinic.model.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
@@ -60,10 +61,10 @@ public class PetApiController extends AbstractResourceController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void addNewPet(
       @PathVariable("ownerId") final int ownerId,
-      @RequestBody final @Valid PetRequestDto petRequest,
+      @RequestBody final @Valid PetFieldsDto petFieldsDto,
       final BindingResult bindingResult) {
 
-    log.info("PetRequest: {}", petRequest);
+    log.info("PetFieldsDto: {}", petFieldsDto);
 
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Submitted Pet invalid", bindingResult);
@@ -76,7 +77,7 @@ public class PetApiController extends AbstractResourceController {
     }
     owner.addPet(pet);
 
-    save(pet, petRequest);
+    save(pet, petFieldsDto);
   }
 
   @SuppressWarnings("IfCanBeAssertion")
@@ -84,28 +85,28 @@ public class PetApiController extends AbstractResourceController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
       @PathVariable("petId") final int petId,
-      @RequestBody final @Valid PetRequestDto petRequest,
+      @RequestBody final @Valid PetFieldsDto petFieldsDto,
       final BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Submitted Pet invalid", bindingResult);
     }
 
-    save(clinicService.findPetById(petId), petRequest);
+    save(clinicService.findPetById(petId), petFieldsDto);
   }
 
-  private void save(Pet pet, PetRequestDto petRequest) {
+  private void save(Pet pet, PetFieldsDto petCoreFieldsDto) {
 
-    petMapper.updatePetFromPetRequestDto(pet, petRequest);
+    petMapper.updatePetFromPetFieldsDto(pet, petCoreFieldsDto);
 
     clinicService.savePet(pet);
   }
 
   @GetMapping("/owners/*/pets/{petId}")
-  public PetRequestDto findPet(@PathVariable("petId") int petId) {
+  public PetDto findPet(@PathVariable("petId") int petId) {
     final Pet pet = clinicService.findPetById(petId);
 
-    return petMapper.petToPetRequestDto(pet);
+    return petMapper.petToPetDto(pet);
   }
 
   // @Getter

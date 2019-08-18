@@ -16,11 +16,10 @@
 package org.springframework.samples.petclinic.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /** Can be Cat, Dog, Hamster... */
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class PetTypeDto extends NamedDto {}
+public class PetTypeDto {
+  private Integer id;
+  private String name;
+}

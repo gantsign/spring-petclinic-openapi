@@ -12,21 +12,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetDto;
-import org.springframework.samples.petclinic.model.PetRequestDto;
+import org.springframework.samples.petclinic.model.PetFieldsDto;
 
 @Mapper(uses = {PetTypeLookup.class, VisitMapper.class})
 public interface PetMapper {
 
   @Mapping(target = "typeId", source = "type")
-  PetRequestDto petToPetRequestDto(Pet pet);
-
   PetDto petToPetDto(Pet pet);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "type", source = "typeId")
   @Mapping(target = "owner", ignore = true)
   @Mapping(target = "visits", ignore = true)
-  void updatePetFromPetRequestDto(@MappingTarget Pet pet, PetRequestDto petRequestDto);
+  void updatePetFromPetFieldsDto(@MappingTarget Pet pet, PetFieldsDto petFieldsDto);
 
   default List<PetDto> petsToPetDtos(Set<Pet> pets) {
     return pets.stream()

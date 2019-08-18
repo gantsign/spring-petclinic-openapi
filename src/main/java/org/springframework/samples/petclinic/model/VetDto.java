@@ -26,6 +26,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class VetDto extends PersonDto {
+public class VetDto extends PersonFieldsDto {
+  private Integer id;
   private @NonNull List<SpecialtyDto> specialties = Collections.emptyList();
 }

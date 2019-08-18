@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
@@ -27,8 +26,8 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class PetDto extends NamedDto {
-  private LocalDate birthDate;
+public class PetDto extends PetFieldsDto {
+  private Integer id;
   private PetTypeDto type;
   private @NonNull List<VisitDto> visits = Collections.emptyList();
 }
