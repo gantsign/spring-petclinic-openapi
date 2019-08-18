@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web.api;
+package org.springframework.samples.petclinic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FieldErrorResource {
+public class FieldErrorDto {
   private String resource;
   private String field;
   private String code;

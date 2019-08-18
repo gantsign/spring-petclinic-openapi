@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web.api;
+package org.springframework.samples.petclinic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.LinkedHashMap;
@@ -16,27 +16,27 @@ import lombok.Setter;
  * @author Nils Hartmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErrorResource {
+public class ErrorDto {
   @Getter @Setter private String code;
   @Getter @Setter private String message;
   private List<String> globalErrors;
-  private Map<String, FieldErrorResource> fieldErrors;
+  private Map<String, FieldErrorDto> fieldErrors;
 
-  public ErrorResource() {}
+  public ErrorDto() {}
 
-  public ErrorResource(String code, String message) {
+  public ErrorDto(String code, String message) {
     this.code = code;
     this.message = message;
   }
 
-  public Map<String, FieldErrorResource> getFieldErrors() {
+  public Map<String, FieldErrorDto> getFieldErrors() {
     return fieldErrors;
   }
 
-  public void setFieldErrors(List<FieldErrorResource> fieldErrors) {
+  public void setFieldErrors(List<FieldErrorDto> fieldErrors) {
     this.fieldErrors = new LinkedHashMap<>();
-    for (FieldErrorResource fieldErrorResource : fieldErrors) {
-      this.fieldErrors.put(fieldErrorResource.getField(), fieldErrorResource);
+    for (FieldErrorDto fieldError : fieldErrors) {
+      this.fieldErrors.put(fieldError.getField(), fieldError);
     }
   }
 

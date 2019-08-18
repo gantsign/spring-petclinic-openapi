@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web.api;
+package org.springframework.samples.petclinic.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PetRequest {
+public class PetRequestDto {
   private Integer id;
 
   private @NotNull LocalDate birthDate;

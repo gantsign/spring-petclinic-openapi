@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.model.ErrorDto;
+import org.springframework.samples.petclinic.model.FieldErrorDto;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,20 +40,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleInvalidRequest(
       InvalidRequestException ire, WebRequest request) {
     log.info("InvalidRequestException caught", ire);
-    List<FieldErrorResource> fieldErrorResources = new ArrayList<>();
+    List<FieldErrorDto> fieldErrorDtos = new ArrayList<>();
 
     List<FieldError> fieldErrors = ire.getErrors().getFieldErrors();
     for (FieldError fieldError : fieldErrors) {
-      FieldErrorResource fieldErrorResource = new FieldErrorResource();
-      fieldErrorResource.setResource(fieldError.getObjectName());
-      fieldErrorResource.setField(fieldError.getField());
-      fieldErrorResource.setCode(fieldError.getCode());
-      fieldErrorResource.setMessage(fieldError.getDefaultMessage());
-      fieldErrorResources.add(fieldErrorResource);
+      FieldErrorDto fieldErrorDto = new FieldErrorDto();
+      fieldErrorDto.setResource(fieldError.getObjectName());
+      fieldErrorDto.setField(fieldError.getField());
+      fieldErrorDto.setCode(fieldError.getCode());
+      fieldErrorDto.setMessage(fieldError.getDefaultMessage());
+      fieldErrorDtos.add(fieldErrorDto);
     }
 
-    ErrorResource error = new ErrorResource("InvalidRequest", ire.getMessage());
-    error.setFieldErrors(fieldErrorResources);
+    ErrorDto error = new ErrorDto("InvalidRequest", ire.getMessage());
+    error.setFieldErrors(fieldErrorDtos);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -63,7 +65,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleBadRequest(BadRequestException bre, WebRequest request) {
     log.info("BadRequestException caught", bre);
 
-    ErrorResource error = new ErrorResource("BadRequest", bre.getMessage());
+    ErrorDto error = new ErrorDto("BadRequest", bre.getMessage());
     error.addGlobalError(bre.getMessage());
 
     HttpHeaders headers = new HttpHeaders();

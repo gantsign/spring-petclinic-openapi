@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.PetRequestDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class PetApiController extends AbstractResourceController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void addNewPet(
       @PathVariable("ownerId") final int ownerId,
-      @RequestBody final @Valid PetRequest petRequest,
+      @RequestBody final @Valid PetRequestDto petRequest,
       final BindingResult bindingResult) {
 
     log.info("PetRequest: {}", petRequest);
@@ -73,7 +74,7 @@ public class PetApiController extends AbstractResourceController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
       @PathVariable("petId") final int petId,
-      @RequestBody final @Valid PetRequest petRequest,
+      @RequestBody final @Valid PetRequestDto petRequest,
       final BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
@@ -83,7 +84,7 @@ public class PetApiController extends AbstractResourceController {
     save(clinicService.findPetById(petId), petRequest);
   }
 
-  private void save(Pet pet, PetRequest petRequest) {
+  private void save(Pet pet, PetRequestDto petRequest) {
 
     pet.setName(petRequest.getName());
     pet.setBirthDate(petRequest.getBirthDate());
@@ -97,10 +98,10 @@ public class PetApiController extends AbstractResourceController {
   }
 
   @GetMapping("/owners/*/pets/{petId}")
-  public PetRequest findPet(@PathVariable("petId") int petId) {
+  public PetRequestDto findPet(@PathVariable("petId") int petId) {
     final Pet pet = clinicService.findPetById(petId);
 
-    final PetRequest petRequest = new PetRequest();
+    final PetRequestDto petRequest = new PetRequestDto();
     petRequest.setId(pet.getId());
     petRequest.setBirthDate(pet.getBirthDate());
     petRequest.setName(pet.getName());
