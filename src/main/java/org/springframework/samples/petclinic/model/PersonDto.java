@@ -15,24 +15,21 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
+import javax.validation.constraints.Pattern;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * Simple JavaBean domain object representing an person.
- *
- * @author Ken Krebs
- */
-@Getter
-@Setter
-@MappedSuperclass
-public class Person extends BaseEntity {
+/** DTO representing an person. */
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class PersonDto extends BaseDto {
 
-  @Column(name = "first_name")
-  private String firstName;
+  private @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "First name has invalid characters")
+  String firstName;
 
-  @Column(name = "last_name")
-  private String lastName;
+  private @NotEmpty @Pattern(regexp = "[a-z-A-Z]*", message = "Last name has invalid characters")
+  String lastName;
 }

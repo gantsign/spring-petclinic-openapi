@@ -15,24 +15,15 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-/**
- * Simple JavaBean domain object representing an person.
- *
- * @author Ken Krebs
- */
-@Getter
-@Setter
-@MappedSuperclass
-public class Person extends BaseEntity {
+/** Base class for named DTOs */
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public abstract class NamedDto extends BaseDto {
 
-  @Column(name = "first_name")
-  private String firstName;
-
-  @Column(name = "last_name")
-  private String lastName;
+  private String name;
 }

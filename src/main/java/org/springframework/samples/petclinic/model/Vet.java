@@ -15,15 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,17 +46,8 @@ public class Vet extends Person {
       joinColumns = @JoinColumn(name = "vet_id"),
       inverseJoinColumns = @JoinColumn(name = "specialty_id"))
   @ManyToMany(fetch = FetchType.EAGER)
-  @JsonIgnore
   private @NonNull Set<Specialty> specialties = new HashSet<>();
 
-  @JsonProperty("specialties")
-  public List<Specialty> getSpecialtiesSorted() {
-    return specialties.stream()
-        .sorted(comparing(Specialty::getName, String.CASE_INSENSITIVE_ORDER))
-        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-  }
-
-  @JsonIgnore
   public int getNrOfSpecialties() {
     return specialties.size();
   }

@@ -15,9 +15,12 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
-import java.util.Collection;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.mapper.VetMapper;
+import org.springframework.samples.petclinic.model.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class VetApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
+  private final VetMapper vetMapper;
 
   @GetMapping("/vets")
-  public Collection<Vet> showResourcesVetList() {
-    return clinicService.findVets();
+  public List<VetDto> showResourcesVetList() {
+    return clinicService.findVets().stream().map(vetMapper::vetToVetDto).collect(toList());
   }
 }

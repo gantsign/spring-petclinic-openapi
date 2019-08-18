@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +37,6 @@ public class BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Integer id;
 
-  @JsonProperty("isNew")
   public boolean isNew() {
     return id == null;
   }

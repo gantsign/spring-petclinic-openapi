@@ -18,17 +18,28 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.OwnerDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(OwnerApiController.class)
+@WebMvcTest(
+    controllers = OwnerApiController.class,
+    includeFilters =
+        @ComponentScan.Filter(
+            type = FilterType.REGEX,
+            pattern = "org\\.springframework\\.samples\\.petclinic\\.mapper\\..*"))
 public class OwnerApiControllerTests {
 
   @Autowired private MockMvc mvc;
+
+  @Autowired OwnerMapper ownerMapper;
 
   @MockBean ClinicService clinicService;
 
@@ -87,10 +98,12 @@ public class OwnerApiControllerTests {
     final Owner newOwner = setupOwners().get(0);
     newOwner.setId(null);
 
+    OwnerDto newOwnerDto = ownerMapper.ownerToOwnerDto(newOwner);
+
     ObjectMapper mapper = new ObjectMapper();
-    String ownerAsJsonString = mapper.writeValueAsString(newOwner);
-    newOwner.setId(666);
-    String newOwnerAsJsonString = mapper.writeValueAsString(newOwner);
+    String ownerAsJsonString = mapper.writeValueAsString(newOwnerDto);
+    newOwnerDto.setId(666);
+    String newOwnerAsJsonString = mapper.writeValueAsString(newOwnerDto);
 
     mvc.perform(
             post("/api/owner") //
@@ -109,7 +122,8 @@ public class OwnerApiControllerTests {
     newOwner.setLastName(null);
 
     ObjectMapper mapper = new ObjectMapper();
-    String ownerAsJsonString = mapper.writeValueAsString(newOwner);
+    OwnerDto newOwnerDto = ownerMapper.ownerToOwnerDto(newOwner);
+    String ownerAsJsonString = mapper.writeValueAsString(newOwnerDto);
 
     mvc.perform(
             post("/api/owner") //

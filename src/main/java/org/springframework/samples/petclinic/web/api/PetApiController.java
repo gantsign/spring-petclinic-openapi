@@ -15,13 +15,19 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.PetMapper;
+import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetRequestDto;
+import org.springframework.samples.petclinic.model.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +45,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class PetApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
+  private final PetTypeMapper petTypeMapper;
+  private final PetMapper petMapper;
 
   @GetMapping("/pettypes")
-  Object getPetTypes() {
-    return clinicService.findPetTypes();
+  public List<PetTypeDto> getPetTypes() {
+    return clinicService.findPetTypes().stream()
+        .map(petTypeMapper::petTypeToPetTypeDto)
+        .collect(toList());
   }
 
   @SuppressWarnings("IfCanBeAssertion")
@@ -86,13 +96,7 @@ public class PetApiController extends AbstractResourceController {
 
   private void save(Pet pet, PetRequestDto petRequest) {
 
-    pet.setName(petRequest.getName());
-    pet.setBirthDate(petRequest.getBirthDate());
-
-    clinicService.findPetTypes().stream()
-        .filter(petType -> petType.getId() == petRequest.getTypeId())
-        .findFirst()
-        .ifPresent(pet::setType);
+    petMapper.updatePetFromPetRequestDto(pet, petRequest);
 
     clinicService.savePet(pet);
   }
@@ -101,13 +105,7 @@ public class PetApiController extends AbstractResourceController {
   public PetRequestDto findPet(@PathVariable("petId") int petId) {
     final Pet pet = clinicService.findPetById(petId);
 
-    final PetRequestDto petRequest = new PetRequestDto();
-    petRequest.setId(pet.getId());
-    petRequest.setBirthDate(pet.getBirthDate());
-    petRequest.setName(pet.getName());
-    petRequest.setTypeId(pet.getType().getId());
-
-    return petRequest;
+    return petMapper.petToPetRequestDto(pet);
   }
 
   // @Getter

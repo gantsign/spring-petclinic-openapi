@@ -18,8 +18,10 @@ package org.springframework.samples.petclinic.web.api;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.VisitDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,13 +41,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class VisitApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
+  private final VisitMapper visitMapper;
 
   @SuppressWarnings("IfCanBeAssertion")
   @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void createÏ(
       @PathVariable("petId") int petId,
-      @Valid @RequestBody Visit visit,
+      @Valid @RequestBody VisitDto visitDto,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Visit is invalid", bindingResult);
@@ -56,6 +59,7 @@ public class VisitApiController extends AbstractResourceController {
       throw new BadRequestException("Pet with Id '" + petId + "' is unknown.");
     }
 
+    Visit visit = visitMapper.visitDtoToVisit(visitDto);
     pet.addVisit(visit);
 
     clinicService.saveVisit(visit);

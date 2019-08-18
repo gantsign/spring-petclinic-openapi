@@ -15,24 +15,22 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Collections;
+import java.util.List;
+import javax.validation.constraints.Digits;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * Simple JavaBean domain object representing an person.
- *
- * @author Ken Krebs
- */
-@Getter
-@Setter
-@MappedSuperclass
-public class Person extends BaseEntity {
-
-  @Column(name = "first_name")
-  private String firstName;
-
-  @Column(name = "last_name")
-  private String lastName;
+/** DTO representing an owner. */
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class OwnerDto extends PersonDto {
+  private @NotEmpty String address;
+  private @NotEmpty String city;
+  private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
+  private @NonNull List<PetDto> pets = Collections.emptyList();
 }

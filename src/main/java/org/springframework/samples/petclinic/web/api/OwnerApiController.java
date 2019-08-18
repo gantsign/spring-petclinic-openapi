@@ -15,11 +15,15 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.Collection;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.OwnerDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OwnerApiController extends AbstractResourceController {
 
   private final ClinicService clinicService;
+  private final OwnerMapper ownerMapper;
 
   @SuppressWarnings("IfCanBeAssertion")
   private Owner retrieveOwner(int ownerId) {
@@ -55,53 +60,53 @@ public class OwnerApiController extends AbstractResourceController {
   @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public Owner createOwner(@RequestBody @Valid Owner owner, BindingResult bindingResult) {
+  public OwnerDto createOwner(@RequestBody @Valid OwnerDto ownerDto, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Invalid Owner", bindingResult);
     }
 
+    Owner owner = ownerMapper.ownerDtoToOwner(ownerDto);
+
     clinicService.saveOwner(owner);
 
-    return owner;
+    return ownerMapper.ownerToOwnerDto(owner);
   }
 
   /** Read single Owner */
   @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.GET)
-  public Owner findOwner(@PathVariable("ownerId") int ownerId) {
-    return retrieveOwner(ownerId);
+  public OwnerDto findOwner(@PathVariable("ownerId") int ownerId) {
+    Owner owner = retrieveOwner(ownerId);
+    return ownerMapper.ownerToOwnerDto(owner);
   }
 
   /** Read List of Owners */
   @RequestMapping(value = "/owner/list", method = RequestMethod.GET)
-  public Collection<Owner> findOwnerCollection(@RequestParam("lastName") String ownerLastName) {
+  public Collection<OwnerDto> findOwnerCollection(@RequestParam("lastName") String ownerLastName) {
 
     if (ownerLastName == null) {
       ownerLastName = "";
     }
 
-    return clinicService.findOwnerByLastName(ownerLastName);
+    return clinicService.findOwnerByLastName(ownerLastName).stream()
+        .map(ownerMapper::ownerToOwnerDto)
+        .collect(toList());
   }
 
   /** Update Owner */
   @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.PUT)
-  public Owner updateOwner(
+  public OwnerDto updateOwner(
       @PathVariable("ownerId") int ownerId,
-      @Valid @RequestBody Owner ownerRequest,
+      @Valid @RequestBody OwnerDto ownerRequest,
       final BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       throw new InvalidRequestException("Invalid Owner", bindingResult);
     }
 
     Owner ownerModel = retrieveOwner(ownerId);
-    // This is done by hand for simplicity purpose. In a real life use-case we
-    // should consider using MapStruct.
-    ownerModel.setFirstName(ownerRequest.getFirstName());
-    ownerModel.setLastName(ownerRequest.getLastName());
-    ownerModel.setCity(ownerRequest.getCity());
-    ownerModel.setAddress(ownerRequest.getAddress());
-    ownerModel.setTelephone(ownerRequest.getTelephone());
+    ownerMapper.updateOwnerFromOwnerDto(ownerModel, ownerRequest);
+
     clinicService.saveOwner(ownerModel);
-    return ownerModel;
+    return ownerMapper.ownerToOwnerDto(ownerModel);
   }
 }

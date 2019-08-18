@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -43,12 +41,11 @@ public class Visit extends BaseEntity {
 
   /** Holds value of property description. */
   @Column(name = "description")
-  private @NotEmpty String description;
+  private String description;
 
   /** Holds value of property pet. */
   @ManyToOne
   @JoinColumn(name = "pet_id")
-  @JsonIgnore
   private Pet pet;
 
   /** Creates a new instance of Visit for the current date */

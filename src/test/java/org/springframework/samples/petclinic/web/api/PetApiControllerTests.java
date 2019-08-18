@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -20,7 +22,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PetApiController.class)
+@WebMvcTest(
+    controllers = PetApiController.class,
+    includeFilters =
+        @ComponentScan.Filter(
+            type = FilterType.REGEX,
+            pattern = "org\\.springframework\\.samples\\.petclinic\\.mapper\\..*"))
 public class PetApiControllerTests {
 
   @Autowired private MockMvc mvc;

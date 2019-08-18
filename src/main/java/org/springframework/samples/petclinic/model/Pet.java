@@ -15,16 +15,8 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,19 +52,10 @@ public class Pet extends NamedEntity {
 
   @ManyToOne
   @JoinColumn(name = "owner_id")
-  @JsonIgnore
   private Owner owner;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-  @JsonIgnore
   private @NonNull Set<Visit> visits = new HashSet<>();
-
-  @JsonProperty("visits")
-  public List<Visit> getVisitsSorted() {
-    return visits.stream()
-        .sorted(comparing(Visit::getDate).reversed())
-        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-  }
 
   public void addVisit(Visit visit) {
     visits.add(visit);

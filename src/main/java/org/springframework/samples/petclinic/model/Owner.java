@@ -15,26 +15,16 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -51,24 +41,16 @@ import org.springframework.core.style.ToStringCreator;
 @Table(name = "owners")
 public class Owner extends Person {
   @Column(name = "address")
-  private @NotEmpty String address;
+  private String address;
 
   @Column(name = "city")
-  private @NotEmpty String city;
+  private String city;
 
   @Column(name = "telephone")
-  private @NotEmpty @Digits(fraction = 0, integer = 10) String telephone;
+  private String telephone;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-  @JsonIgnore
   private @NonNull Set<Pet> pets = new HashSet<>();
-
-  @JsonProperty("pets")
-  public List<Pet> getPetsSorted() {
-    return pets.stream()
-        .sorted(comparing(Pet::getName, String.CASE_INSENSITIVE_ORDER))
-        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-  }
 
   public void addPet(Pet pet) {
     if (pet.isNew()) {
