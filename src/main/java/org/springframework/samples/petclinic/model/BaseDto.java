@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /** Base class for DTOs. */
@@ -24,8 +23,4 @@ public abstract class BaseDto {
 
   protected Integer id;
 
-  @JsonProperty("isNew")
-  public boolean isNew() {
-    return id == null;
-  }
 }

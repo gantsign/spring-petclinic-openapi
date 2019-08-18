@@ -41,7 +41,7 @@ export interface ISelectOption {
 
 interface IBaseEntity {
   id: number;
-  isNew: boolean;
+  isNew?: boolean;
 };
 
 interface INamedEntity extends IBaseEntity {
