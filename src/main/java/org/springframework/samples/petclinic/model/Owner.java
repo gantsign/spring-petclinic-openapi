@@ -15,9 +15,12 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -32,8 +35,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -64,9 +65,9 @@ public class Owner extends Person {
 
   @JsonProperty("pets")
   public List<Pet> getPetsSorted() {
-    List<Pet> sortedPets = new ArrayList<>(pets);
-    PropertyComparator.sort(sortedPets, new MutableSortDefinition("name", true, true));
-    return Collections.unmodifiableList(sortedPets);
+    return pets.stream()
+        .sorted(comparing(Pet::getName, String.CASE_INSENSITIVE_ORDER))
+        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 
   public void addPet(Pet pet) {
