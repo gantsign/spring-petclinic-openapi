@@ -17,7 +17,7 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
   }
 
   componentDidMount() {
-    const requestUrl = url('api/vets');
+    const requestUrl = url('api/vet');
 
     fetch(requestUrl)
       .then(response => response.json())

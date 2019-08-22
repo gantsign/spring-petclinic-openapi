@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class FailingApiController extends AbstractResourceController {
 
-  @GetMapping("/oups")
+  @GetMapping("/oops")
   @ResponseBody
   String failingRequest() {
     throw new ResponseStatusException(

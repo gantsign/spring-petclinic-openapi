@@ -32,7 +32,7 @@ public class VetApiController extends AbstractResourceController {
   private final ClinicService clinicService;
   private final VetMapper vetMapper;
 
-  @GetMapping("/vets")
+  @GetMapping("/vet")
   public List<VetDto> showResourcesVetList() {
     return clinicService.findVets().stream().map(vetMapper::vetToVetDto).collect(toList());
   }

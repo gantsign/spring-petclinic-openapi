@@ -25,5 +25,13 @@ export const submitForm = (method: IHttpMethod, path: string, data: any, onSucce
 
   console.log('Submitting to ' + method + ' ' + requestUrl);
   return fetch(requestUrl, fetchParams)
-    .then(response => response.status === 204 ? onSuccess(response.status, {}) : response.json().then(result => onSuccess(response.status, result)));
+    .then(response => {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(result => {
+                onSuccess(response.status, result);
+            });
+        }
+        onSuccess(response.status, {});
+    });
 };

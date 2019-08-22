@@ -84,7 +84,7 @@ public class OwnerApiController extends AbstractResourceController {
   }
 
   /** Read List of Owners */
-  @RequestMapping(value = "/owner/list", method = RequestMethod.GET)
+  @RequestMapping(value = "/owner", method = RequestMethod.GET)
   public Collection<OwnerDto> findOwnerCollection(@RequestParam("lastName") String ownerLastName) {
 
     if (ownerLastName == null) {

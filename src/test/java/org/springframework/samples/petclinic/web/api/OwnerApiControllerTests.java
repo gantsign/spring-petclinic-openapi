@@ -77,7 +77,7 @@ public class OwnerApiControllerTests {
 
     webTestClient
         .get()
-        .uri("/api/owner/list/?lastName=mueller")
+        .uri("/api/owner?lastName=mueller")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()

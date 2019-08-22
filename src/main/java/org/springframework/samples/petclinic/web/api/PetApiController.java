@@ -52,7 +52,7 @@ public class PetApiController extends AbstractResourceController {
   private final PetTypeMapper petTypeMapper;
   private final PetMapper petMapper;
 
-  @GetMapping("/pettypes")
+  @GetMapping("/pet-type")
   public List<PetTypeDto> getPetTypes() {
     return clinicService.findPetTypes().stream()
         .map(petTypeMapper::petTypeToPetTypeDto)
@@ -60,8 +60,8 @@ public class PetApiController extends AbstractResourceController {
   }
 
   @SuppressWarnings("IfCanBeAssertion")
-  @PostMapping("/owners/{ownerId}/pets")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @PostMapping("/owner/{ownerId}/pet")
+  @ResponseStatus(HttpStatus.CREATED)
   public void addNewPet(
       @PathVariable("ownerId") final int ownerId,
       @RequestBody final @Valid PetFieldsDto petFieldsDto) {
@@ -78,7 +78,8 @@ public class PetApiController extends AbstractResourceController {
     save(pet, petFieldsDto);
   }
 
-  @PutMapping("/owners/{ownerId}/pets/{petId}")
+  @SuppressWarnings("IfCanBeAssertion")
+  @PutMapping("/owner/{ownerId}/pet/{petId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
       @PathVariable("ownerId") int ownerId,
@@ -105,7 +106,7 @@ public class PetApiController extends AbstractResourceController {
   }
 
   @SuppressWarnings("IfCanBeAssertion")
-  @GetMapping("/owners/{ownerId}/pets/{petId}")
+  @GetMapping("/owner/{ownerId}/pet/{petId}")
   public PetDto findPet(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
     final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {

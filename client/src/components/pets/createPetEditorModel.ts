@@ -5,7 +5,7 @@ const toSelectOptions = (pettypes: IPetType[]): ISelectOption[] => pettypes.map(
 
 export default (ownerId: string, petLoaderPromise: Promise<any>): Promise<any> => {
   return Promise.all(
-    [fetch(url('/api/pettypes'))
+    [fetch(url('/api/pet-type'))
       .then(response => response.json())
       .then(toSelectOptions),
     fetch(url('/api/owner/' + ownerId))

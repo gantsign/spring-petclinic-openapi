@@ -48,9 +48,9 @@ public class VisitApiController extends AbstractResourceController {
   private final VisitMapper visitMapper;
 
   @SuppressWarnings("IfCanBeAssertion")
-  @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void createÏ(
+  @PostMapping("/owner/{ownerId}/pet/{petId}/visit")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void createVisit(
       @PathVariable("ownerId") final int ownerId,
       @PathVariable("petId") int petId,
       @Valid @RequestBody VisitFieldsDto visitFieldsDto) {
