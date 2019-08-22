@@ -1,0 +1,6 @@
+**/application.properties
+**/OpenAPI2SpringBoot.java
+**/RFC3339DateFormat.java
+**/*ApiController*
+**/HomeController.java
+**/OpenAPIDocumentationConfig.java

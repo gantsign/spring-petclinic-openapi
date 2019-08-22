@@ -15,23 +15,20 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.model.VisitFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -41,19 +38,17 @@ import org.springframework.web.server.ResponseStatusException;
  * @author Michael Isvy
  */
 @RequiredArgsConstructor
-@RestController
-public class VisitApiController extends AbstractResourceController {
+@Controller
+@RequestMapping("${openapi.springPetClinic.base-path:/api}")
+public class VisitApiController implements VisitApi {
 
   private final ClinicService clinicService;
   private final VisitMapper visitMapper;
 
   @SuppressWarnings("IfCanBeAssertion")
-  @PostMapping("/owner/{ownerId}/pet/{petId}/visit")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void createVisit(
-      @PathVariable("ownerId") final int ownerId,
-      @PathVariable("petId") int petId,
-      @Valid @RequestBody VisitFieldsDto visitFieldsDto) {
+  @Override
+  public ResponseEntity<Void> addVisit(
+      Integer ownerId, Integer petId, VisitFieldsDto visitFieldsDto) {
     final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {
       throw new ResponseStatusException(
@@ -69,5 +64,7 @@ public class VisitApiController extends AbstractResourceController {
     pet.addVisit(visit);
 
     clinicService.saveVisit(visit);
+
+    return ResponseEntity.status(CREATED).build();
   }
 }

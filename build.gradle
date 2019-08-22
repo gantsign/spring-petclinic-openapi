@@ -1,10 +1,17 @@
 plugins {
   id 'com.diffplug.gradle.spotless' version '3.24.1'
+  id 'org.openapi.generator' version '4.1.0'
   id 'org.springframework.boot' version '2.1.7.RELEASE'
   id 'io.spring.dependency-management' version '1.0.7.RELEASE'
   id 'java'
   id 'jacoco'
   id 'com.google.cloud.tools.jib' version '1.4.0'
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+  }
 }
 
 group = 'org.springframework.samples'
@@ -19,10 +26,6 @@ configurations {
   compileOnly {
     extendsFrom annotationProcessor
   }
-}
-
-repositories {
-  mavenCentral()
 }
 
 ext {
@@ -40,6 +43,8 @@ dependencies {
   annotationProcessor 'org.projectlombok:lombok'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+  implementation project(':server-generated')
 
   // Databases - Uses HSQL by default
   runtime 'org.hsqldb:hsqldb'

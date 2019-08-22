@@ -15,25 +15,30 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.VetMapper;
 import org.springframework.samples.petclinic.model.VetDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
-@RestController
-public class VetApiController extends AbstractResourceController {
+@Controller
+@RequestMapping("${openapi.springPetClinic.base-path:/api}")
+public class VetApiController implements VetApi {
 
   private final ClinicService clinicService;
   private final VetMapper vetMapper;
 
-  @GetMapping("/vet")
-  public List<VetDto> showResourcesVetList() {
-    return clinicService.findVets().stream().map(vetMapper::vetToVetDto).collect(toList());
+  @Override
+  public ResponseEntity<List<VetDto>> listVets() {
+    return clinicService.findVets().stream()
+        .map(vetMapper::vetToVetDto)
+        .collect(collectingAndThen(toList(), ResponseEntity::ok));
   }
 }

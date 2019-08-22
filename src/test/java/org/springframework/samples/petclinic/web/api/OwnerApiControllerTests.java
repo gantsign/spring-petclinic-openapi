@@ -131,7 +131,7 @@ public class OwnerApiControllerTests extends TestBase {
         .jsonPath("$.id")
         .isEqualTo(666)
         .jsonPath("$.firstName")
-        .isEqualTo("Klaus-Dieter")
+        .isEqualTo("Klaus")
         .jsonPath("$.lastName")
         .isEqualTo("Mueller")
         .jsonPath("$.address")
@@ -172,7 +172,7 @@ public class OwnerApiControllerTests extends TestBase {
         .jsonPath("$.errors[0].field")
         .isEqualTo("lastName")
         .jsonPath("$.errors[0].defaultMessage")
-        .isEqualTo("may not be empty");
+        .isEqualTo("must not be null");
   }
 
   @Test
@@ -204,7 +204,7 @@ public class OwnerApiControllerTests extends TestBase {
         .jsonPath("$.id")
         .isEqualTo(0)
         .jsonPath("$.firstName")
-        .isEqualTo("Klaus-Dieter")
+        .isEqualTo("Klaus")
         .jsonPath("$.lastName")
         .isEqualTo("NewLastName")
         .jsonPath("$.address")
@@ -228,7 +228,7 @@ public class OwnerApiControllerTests extends TestBase {
     owner.setId(0);
     owner.setAddress("My Street 123");
     owner.setCity("Hamburg");
-    owner.setFirstName("Klaus-Dieter");
+    owner.setFirstName("Klaus");
     owner.setLastName("Mueller");
     owner.setTelephone("1234567");
     owners.add(owner);

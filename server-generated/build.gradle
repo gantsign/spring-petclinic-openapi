@@ -1,0 +1,56 @@
+plugins {
+  id 'com.diffplug.gradle.spotless'
+  id 'org.openapi.generator'
+  id 'java'
+}
+
+dependencies {
+  implementation platform('org.springframework.boot:spring-boot-dependencies:2.1.7.RELEASE')
+
+  implementation 'org.apache.tomcat.embed:tomcat-embed-core'
+  implementation 'org.springframework:spring-webmvc'
+
+  compileOnly 'io.springfox:springfox-swagger2:2.9.2'
+
+  implementation 'org.openapitools:jackson-databind-nullable:0.1.0'
+  implementation 'javax.validation:validation-api'
+}
+
+openApiGenerate {
+  generatorName = 'spring'
+  library = 'spring-boot'
+  inputSpec = "$rootDir/src/main/resources/schema/petclinic.openapi.yaml".toString()
+  outputDir = "$buildDir/generated".toString()
+  apiPackage = 'org.springframework.samples.petclinic.web.api'
+  invokerPackage = 'org.springframework.samples.petclinic.invoker'
+  modelPackage = 'org.springframework.samples.petclinic.model'
+  modelNameSuffix = 'Dto'
+  ignoreFileOverride = "$projectDir/src/main/openapi-generator/.openapi-generator-ignore".toString()
+  configOptions = [
+    configPackage: 'org.springframework.samples.petclinic.swagger',
+    dateLibrary: 'java8',
+    java8: true,
+    hideGenerationTimestamp: true,
+    useTags: true,
+    useBeanValidation: true
+  ]
+}
+
+sourceSets {
+  main {
+    java.srcDirs += "$buildDir/generated/src/main/java"
+  }
+}
+
+spotless {
+  java { googleJavaFormat('1.7') }
+  groovyGradle {
+    paddedCell() // Avoid cyclic ambiguities
+    greclipse().configFile("$rootDir/config/eclipse-java-google-style.xml")
+  }
+}
+
+afterEvaluate {
+  spotlessApply.dependsOn(tasks.openApiGenerate)
+  compileJava.dependsOn(spotlessApply)
+}

@@ -28,16 +28,20 @@ public class ValidatorTests {
   public void shouldNotValidateWhenFirstNameEmpty() {
 
     LocaleContextHolder.setLocale(Locale.ENGLISH);
-    PersonFieldsDto person = new PersonFieldsDto();
-    person.setFirstName("");
-    person.setLastName("smith");
+    OwnerFieldsDto owner =
+        new OwnerFieldsDto()
+            .firstName("")
+            .lastName("smith")
+            .address("1 Station Rd.")
+            .city("London")
+            .telephone("012345");
 
     Validator validator = createValidator();
-    Set<ConstraintViolation<PersonFieldsDto>> constraintViolations = validator.validate(person);
+    Set<ConstraintViolation<OwnerFieldsDto>> constraintViolations = validator.validate(owner);
 
     assertThat(constraintViolations.size()).isEqualTo(1);
-    ConstraintViolation<PersonFieldsDto> violation = constraintViolations.iterator().next();
+    ConstraintViolation<OwnerFieldsDto> violation = constraintViolations.iterator().next();
     assertThat(violation.getPropertyPath().toString()).isEqualTo("firstName");
-    assertThat(violation.getMessage()).isEqualTo("may not be empty");
+    assertThat(violation.getMessage()).isEqualTo("size must be between 1 and 30");
   }
 }

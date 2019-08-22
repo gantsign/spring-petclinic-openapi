@@ -15,15 +15,16 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
@@ -33,38 +34,31 @@ import org.springframework.samples.petclinic.model.PetDto;
 import org.springframework.samples.petclinic.model.PetFieldsDto;
 import org.springframework.samples.petclinic.model.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 /** @author Nils Hartmann */
 @Slf4j
 @RequiredArgsConstructor
-@RestController
-public class PetApiController extends AbstractResourceController {
+@Controller
+@RequestMapping("${openapi.springPetClinic.base-path:/api}")
+public class PetApiController implements PetApi {
 
   private final ClinicService clinicService;
   private final PetTypeMapper petTypeMapper;
   private final PetMapper petMapper;
 
-  @GetMapping("/pet-type")
-  public List<PetTypeDto> getPetTypes() {
+  @Override
+  public ResponseEntity<List<PetTypeDto>> listPetTypes() {
     return clinicService.findPetTypes().stream()
         .map(petTypeMapper::petTypeToPetTypeDto)
-        .collect(toList());
+        .collect(collectingAndThen(toList(), ResponseEntity::ok));
   }
 
   @SuppressWarnings("IfCanBeAssertion")
-  @PostMapping("/owner/{ownerId}/pet")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void addNewPet(
-      @PathVariable("ownerId") final int ownerId,
-      @RequestBody final @Valid PetFieldsDto petFieldsDto) {
+  @Override
+  public ResponseEntity<Void> addPet(Integer ownerId, PetFieldsDto petFieldsDto) {
 
     log.info("PetFieldsDto: {}", petFieldsDto);
 
@@ -76,15 +70,13 @@ public class PetApiController extends AbstractResourceController {
     owner.addPet(pet);
 
     save(pet, petFieldsDto);
+
+    return ResponseEntity.status(CREATED).build();
   }
 
   @SuppressWarnings("IfCanBeAssertion")
-  @PutMapping("/owner/{ownerId}/pet/{petId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void processUpdateForm(
-      @PathVariable("ownerId") int ownerId,
-      @PathVariable("petId") final int petId,
-      @RequestBody final @Valid PetFieldsDto petFieldsDto) {
+  @Override
+  public ResponseEntity<Void> updatePet(Integer ownerId, Integer petId, PetFieldsDto petFieldsDto) {
     final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {
       throw new ResponseStatusException(
@@ -92,6 +84,8 @@ public class PetApiController extends AbstractResourceController {
     }
 
     save(pet, petFieldsDto);
+
+    return ResponseEntity.noContent().build();
   }
 
   private void save(Pet pet, PetFieldsDto petCoreFieldsDto) {
@@ -106,14 +100,14 @@ public class PetApiController extends AbstractResourceController {
   }
 
   @SuppressWarnings("IfCanBeAssertion")
-  @GetMapping("/owner/{ownerId}/pet/{petId}")
-  public PetDto findPet(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
+  @Override
+  public ResponseEntity<PetDto> getPet(Integer ownerId, Integer petId) {
     final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {
       throw new ResponseStatusException(
           NOT_FOUND, "Pet with ID '" + petId + "' and Owner ID '" + ownerId + "' is unknown.");
     }
 
-    return petMapper.petToPetDto(pet);
+    return ResponseEntity.ok(petMapper.petToPetDto(pet));
   }
 }

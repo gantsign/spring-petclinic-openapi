@@ -15,27 +15,23 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
-import java.util.Collection;
-import javax.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.OwnerDto;
 import org.springframework.samples.petclinic.model.OwnerFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -45,8 +41,9 @@ import org.springframework.web.server.ResponseStatusException;
  * @author Michael Isvy
  */
 @RequiredArgsConstructor
-@RestController
-public class OwnerApiController extends AbstractResourceController {
+@Controller
+@RequestMapping("${openapi.springPetClinic.base-path:/api}")
+public class OwnerApiController implements OwnerApi {
 
   private final ClinicService clinicService;
   private final OwnerMapper ownerMapper;
@@ -61,9 +58,8 @@ public class OwnerApiController extends AbstractResourceController {
   }
 
   /** Create Owner */
-  @RequestMapping(value = "/owner", method = RequestMethod.POST)
-  @ResponseStatus(HttpStatus.CREATED)
-  public OwnerDto createOwner(@RequestBody @Valid OwnerFieldsDto ownerFieldsDto) {
+  @Override
+  public ResponseEntity<OwnerDto> addOwner(OwnerFieldsDto ownerFieldsDto) {
     Owner owner;
     try {
       owner = ownerMapper.ownerFieldsDtoToOwner(ownerFieldsDto);
@@ -73,33 +69,32 @@ public class OwnerApiController extends AbstractResourceController {
 
     clinicService.saveOwner(owner);
 
-    return ownerMapper.ownerToOwnerDto(owner);
+    return ResponseEntity.status(CREATED).body(ownerMapper.ownerToOwnerDto(owner));
   }
 
   /** Read single Owner */
-  @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.GET)
-  public OwnerDto findOwner(@PathVariable("ownerId") int ownerId) {
+  @Override
+  public ResponseEntity<OwnerDto> getOwner(Integer ownerId) {
     Owner owner = retrieveOwner(ownerId);
-    return ownerMapper.ownerToOwnerDto(owner);
+    return ResponseEntity.ok(ownerMapper.ownerToOwnerDto(owner));
   }
 
   /** Read List of Owners */
-  @RequestMapping(value = "/owner", method = RequestMethod.GET)
-  public Collection<OwnerDto> findOwnerCollection(@RequestParam("lastName") String ownerLastName) {
+  @Override
+  public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
 
-    if (ownerLastName == null) {
-      ownerLastName = "";
+    if (lastName == null) {
+      lastName = "";
     }
 
-    return clinicService.findOwnerByLastName(ownerLastName).stream()
+    return clinicService.findOwnerByLastName(lastName).stream()
         .map(ownerMapper::ownerToOwnerDto)
-        .collect(toList());
+        .collect(collectingAndThen(toList(), ResponseEntity::ok));
   }
 
   /** Update Owner */
-  @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.PUT)
-  public OwnerDto updateOwner(
-      @PathVariable("ownerId") int ownerId, @Valid @RequestBody OwnerFieldsDto ownerFieldsDto) {
+  @Override
+  public ResponseEntity<OwnerDto> updateOwner(Integer ownerId, OwnerFieldsDto ownerFieldsDto) {
     Owner ownerModel = retrieveOwner(ownerId);
     try {
       ownerMapper.updateOwnerFromOwnerFieldsDto(ownerModel, ownerFieldsDto);
@@ -108,6 +103,6 @@ public class OwnerApiController extends AbstractResourceController {
     }
 
     clinicService.saveOwner(ownerModel);
-    return ownerMapper.ownerToOwnerDto(ownerModel);
+    return ResponseEntity.ok(ownerMapper.ownerToOwnerDto(ownerModel));
   }
 }
