@@ -15,20 +15,24 @@
  */
 package org.springframework.samples.petclinic.web.api;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.VisitMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.model.VisitFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Juergen Hoeller
@@ -47,19 +51,18 @@ public class VisitApiController extends AbstractResourceController {
   @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void createÏ(
-      @PathVariable("petId") int petId,
-      @Valid @RequestBody VisitFieldsDto visitFieldsDto,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      throw new InvalidRequestException("Visit is invalid", bindingResult);
-    }
-
+      @PathVariable("petId") int petId, @Valid @RequestBody VisitFieldsDto visitFieldsDto) {
     final Pet pet = clinicService.findPetById(petId);
     if (pet == null) {
-      throw new BadRequestException("Pet with ID '" + petId + "' is unknown.");
+      throw new ResponseStatusException(NOT_FOUND, "Pet with ID '" + petId + "' is unknown.");
     }
 
-    Visit visit = visitMapper.visitFieldsDtoToVisit(visitFieldsDto);
+    Visit visit;
+    try {
+      visit = visitMapper.visitFieldsDtoToVisit(visitFieldsDto);
+    } catch (MappingValidationException e) {
+      throw new ResponseStatusException(UNPROCESSABLE_ENTITY, e.getMessage(), e);
+    }
     pet.addVisit(visit);
 
     clinicService.saveVisit(visit);

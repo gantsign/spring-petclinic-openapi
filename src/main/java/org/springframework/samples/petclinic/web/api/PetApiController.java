@@ -16,12 +16,15 @@
 package org.springframework.samples.petclinic.web.api;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.mapper.PetTypeMapper;
 import org.springframework.samples.petclinic.model.Owner;
@@ -30,7 +33,6 @@ import org.springframework.samples.petclinic.model.PetDto;
 import org.springframework.samples.petclinic.model.PetFieldsDto;
 import org.springframework.samples.petclinic.model.PetTypeDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /** @author Nils Hartmann */
 @Slf4j
@@ -61,43 +64,35 @@ public class PetApiController extends AbstractResourceController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void addNewPet(
       @PathVariable("ownerId") final int ownerId,
-      @RequestBody final @Valid PetFieldsDto petFieldsDto,
-      final BindingResult bindingResult) {
+      @RequestBody final @Valid PetFieldsDto petFieldsDto) {
 
     log.info("PetFieldsDto: {}", petFieldsDto);
-
-    if (bindingResult.hasErrors()) {
-      throw new InvalidRequestException("Submitted Pet invalid", bindingResult);
-    }
 
     Pet pet = new Pet();
     Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
-      throw new BadRequestException("Owner with ID '" + ownerId + "' is unknown.");
+      throw new ResponseStatusException(NOT_FOUND, "Owner with ID '" + ownerId + "' is unknown.");
     }
     owner.addPet(pet);
 
     save(pet, petFieldsDto);
   }
 
-  @SuppressWarnings("IfCanBeAssertion")
   @PutMapping("/owners/{ownerId}/pets/{petId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
-      @PathVariable("petId") final int petId,
-      @RequestBody final @Valid PetFieldsDto petFieldsDto,
-      final BindingResult bindingResult) {
-
-    if (bindingResult.hasErrors()) {
-      throw new InvalidRequestException("Submitted Pet invalid", bindingResult);
-    }
+      @PathVariable("petId") final int petId, @RequestBody final @Valid PetFieldsDto petFieldsDto) {
 
     save(clinicService.findPetById(petId), petFieldsDto);
   }
 
   private void save(Pet pet, PetFieldsDto petCoreFieldsDto) {
 
-    petMapper.updatePetFromPetFieldsDto(pet, petCoreFieldsDto);
+    try {
+      petMapper.updatePetFromPetFieldsDto(pet, petCoreFieldsDto);
+    } catch (MappingValidationException e) {
+      throw new ResponseStatusException(UNPROCESSABLE_ENTITY, e.getMessage(), e);
+    }
 
     clinicService.savePet(pet);
   }

@@ -16,17 +16,19 @@
 package org.springframework.samples.petclinic.web.api;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.Collection;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.OwnerDto;
 import org.springframework.samples.petclinic.model.OwnerFieldsDto;
 import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Juergen Hoeller
@@ -52,22 +55,21 @@ public class OwnerApiController extends AbstractResourceController {
   private Owner retrieveOwner(int ownerId) {
     Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
-      throw new BadRequestException("Owner with ID '" + ownerId + "' is unknown.");
+      throw new ResponseStatusException(NOT_FOUND, "Owner with ID '" + ownerId + "' is unknown.");
     }
     return owner;
   }
 
   /** Create Owner */
-  @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public OwnerDto createOwner(
-      @RequestBody @Valid OwnerFieldsDto ownerFieldsDto, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      throw new InvalidRequestException("Invalid Owner", bindingResult);
+  public OwnerDto createOwner(@RequestBody @Valid OwnerFieldsDto ownerFieldsDto) {
+    Owner owner;
+    try {
+      owner = ownerMapper.ownerFieldsDtoToOwner(ownerFieldsDto);
+    } catch (MappingValidationException e) {
+      throw new ResponseStatusException(UNPROCESSABLE_ENTITY, e.getMessage(), e);
     }
-
-    Owner owner = ownerMapper.ownerFieldsDtoToOwner(ownerFieldsDto);
 
     clinicService.saveOwner(owner);
 
@@ -95,18 +97,15 @@ public class OwnerApiController extends AbstractResourceController {
   }
 
   /** Update Owner */
-  @SuppressWarnings("IfCanBeAssertion")
   @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.PUT)
   public OwnerDto updateOwner(
-      @PathVariable("ownerId") int ownerId,
-      @Valid @RequestBody OwnerFieldsDto ownerFieldsDto,
-      final BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      throw new InvalidRequestException("Invalid Owner", bindingResult);
-    }
-
+      @PathVariable("ownerId") int ownerId, @Valid @RequestBody OwnerFieldsDto ownerFieldsDto) {
     Owner ownerModel = retrieveOwner(ownerId);
-    ownerMapper.updateOwnerFromOwnerFieldsDto(ownerModel, ownerFieldsDto);
+    try {
+      ownerMapper.updateOwnerFromOwnerFieldsDto(ownerModel, ownerFieldsDto);
+    } catch (MappingValidationException e) {
+      throw new ResponseStatusException(UNPROCESSABLE_ENTITY, e.getMessage(), e);
+    }
 
     clinicService.saveOwner(ownerModel);
     return ownerMapper.ownerToOwnerDto(ownerModel);

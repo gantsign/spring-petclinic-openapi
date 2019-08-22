@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface IErrorPageState {
   error?: {
-    status: string;
+    error: string;
     message: string;
   };
 }
@@ -28,7 +28,7 @@ export default class ErrorPage extends React.Component<void, IErrorPageState> {
       <h2>Something happened...</h2>
       { error ?
         <span>
-          <p><b>Status:</b> {error.status}</p>
+          <p><b>Status:</b> {error.error}</p>
           <p><b>Message:</b> {error.message}</p>
         </span>
         :

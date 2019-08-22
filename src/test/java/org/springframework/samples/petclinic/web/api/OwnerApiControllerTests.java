@@ -3,11 +3,6 @@ package org.springframework.samples.petclinic.web.api;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedList;
@@ -16,28 +11,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.OwnerDto;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(
-    controllers = OwnerApiController.class,
-    includeFilters =
-        @ComponentScan.Filter(
-            type = FilterType.REGEX,
-            pattern = "org\\.springframework\\.samples\\.petclinic\\.mapper\\..*"))
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class OwnerApiControllerTests {
 
-  @Autowired private MockMvc mvc;
+  @Autowired WebTestClient webTestClient;
 
   @Autowired OwnerMapper ownerMapper;
 
@@ -45,26 +33,40 @@ public class OwnerApiControllerTests {
 
   @Test
   public void shouldNotGetOwnerById() throws Exception {
-
-    mvc.perform(
-            get("/api/owner/20") //
-                .accept(MediaType.APPLICATION_JSON)) //
-        .andExpect(status().is4xxClientError()) //
-        .andExpect(content().contentType("application/json")); //
+    webTestClient
+        .get()
+        .uri("/api/owner/20")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .isNotFound()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.message")
+        .isEqualTo("Owner with ID '20' is unknown.");
   }
 
   @Test
   public void shouldGetOwnerById() throws Exception {
     when(clinicService.findOwnerById(1)).thenReturn(setupOwners().get(1));
 
-    mvc.perform(
-            get("/api/owner/1") //
-                .accept(MediaType.APPLICATION_JSON)) //
-        .andExpect(status().isOk()) //
-        .andExpect(content().contentType("application/json;charset=UTF-8")) //
-        .andExpect(jsonPath("$.id").value(1)) //
-        .andExpect(jsonPath("$.city").value("Mainz")) //
-        .andExpect(jsonPath("$.lastName").value("Mueck")); //
+    webTestClient
+        .get()
+        .uri("/api/owner/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.id")
+        .isEqualTo(1)
+        .jsonPath("$.city")
+        .isEqualTo("Mainz")
+        .jsonPath("$.lastName")
+        .isEqualTo("Mueck");
   }
 
   @Test
@@ -72,13 +74,21 @@ public class OwnerApiControllerTests {
     final List<Owner> owners = setupOwners();
     owners.remove(1);
     when(clinicService.findOwnerByLastName("mueller")).thenReturn(owners);
-    mvc.perform(
-            get("/api/owner/list/?lastName=mueller") //
-                .accept(MediaType.APPLICATION_JSON)) //
-        .andExpect(status().isOk())
-        .andExpect(content().contentType("application/json;charset=UTF-8")) //
-        .andExpect(jsonPath("$.[0].id").value(0))
-        .andExpect(jsonPath("$.[1].id").value(2)); //
+
+    webTestClient
+        .get()
+        .uri("/api/owner/list/?lastName=mueller")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.[0].id")
+        .isEqualTo(0)
+        .jsonPath("$.[1].id")
+        .isEqualTo(2);
   }
 
   @SuppressWarnings("SameReturnValue")
@@ -105,13 +115,32 @@ public class OwnerApiControllerTests {
     newOwnerDto.setId(666);
     String newOwnerAsJsonString = mapper.writeValueAsString(newOwnerDto);
 
-    mvc.perform(
-            post("/api/owner") //
-                .content(ownerAsJsonString)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)) //
-        .andExpect(status().isCreated())
-        .andExpect(content().json(newOwnerAsJsonString));
+    webTestClient
+        .post()
+        .uri("/api/owner")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .syncBody(ownerAsJsonString)
+        .exchange()
+        .expectStatus()
+        .isCreated()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.id")
+        .isEqualTo(666)
+        .jsonPath("$.firstName")
+        .isEqualTo("Klaus-Dieter")
+        .jsonPath("$.lastName")
+        .isEqualTo("Mueller")
+        .jsonPath("$.address")
+        .isEqualTo("My Street 123")
+        .jsonPath("$.city")
+        .isEqualTo("Hamburg")
+        .jsonPath("$.telephone")
+        .isEqualTo("1234567")
+        .jsonPath("$.pets")
+        .isArray();
   }
 
   @Test
@@ -125,15 +154,22 @@ public class OwnerApiControllerTests {
     OwnerDto newOwnerDto = ownerMapper.ownerToOwnerDto(newOwner);
     String ownerAsJsonString = mapper.writeValueAsString(newOwnerDto);
 
-    mvc.perform(
-            post("/api/owner") //
-                .content(ownerAsJsonString)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)) //
-        .andExpect(status().isUnprocessableEntity())
-        .andExpect(content().contentType("application/json")) //
-        .andExpect(jsonPath("$.fieldErrors.lastName").isNotEmpty()) //
-    ;
+    webTestClient
+        .post()
+        .uri("/api/owner")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .syncBody(ownerAsJsonString)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.errors[0].field")
+        .isEqualTo("lastName")
+        .jsonPath("$.errors[0].defaultMessage")
+        .isEqualTo("may not be empty");
   }
 
   private static List<Owner> setupOwners() {
