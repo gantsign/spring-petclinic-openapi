@@ -51,10 +51,13 @@ public class VisitApiController extends AbstractResourceController {
   @PostMapping("/owners/{ownerId}/pets/{petId}/visits")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void createÏ(
-      @PathVariable("petId") int petId, @Valid @RequestBody VisitFieldsDto visitFieldsDto) {
-    final Pet pet = clinicService.findPetById(petId);
+      @PathVariable("ownerId") final int ownerId,
+      @PathVariable("petId") int petId,
+      @Valid @RequestBody VisitFieldsDto visitFieldsDto) {
+    final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {
-      throw new ResponseStatusException(NOT_FOUND, "Pet with ID '" + petId + "' is unknown.");
+      throw new ResponseStatusException(
+          NOT_FOUND, "Pet with ID '" + petId + "' and Owner ID '" + ownerId + "' is unknown.");
     }
 
     Visit visit;

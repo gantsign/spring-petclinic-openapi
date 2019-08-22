@@ -78,8 +78,8 @@ public class ClinicServiceImpl implements ClinicService {
 
   @Override
   @Transactional(readOnly = true)
-  public Pet findPetById(int id) throws DataAccessException {
-    return petRepository.findById(id);
+  public Pet findPetByIdAndOwnerId(int id, int ownerId) throws DataAccessException {
+    return petRepository.findByIdAndOwnerId(id, ownerId);
   }
 
   @Override

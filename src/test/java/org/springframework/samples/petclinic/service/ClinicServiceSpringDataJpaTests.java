@@ -106,8 +106,8 @@ public class ClinicServiceSpringDataJpaTests {
   }
 
   @Test
-  public void shouldFindPetWithCorrectId() {
-    Pet pet7 = clinicService.findPetById(7);
+  public void shouldFindPetWithCorrectIdAndOwnerId() {
+    Pet pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
     assertThat(pet7.getName()).startsWith("Samantha");
     assertThat(pet7.getOwner().getFirstName()).isEqualTo("Jean");
   }
@@ -148,14 +148,14 @@ public class ClinicServiceSpringDataJpaTests {
   @Test
   @Transactional
   public void shouldUpdatePetName() throws Exception {
-    Pet pet7 = clinicService.findPetById(7);
+    Pet pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
     String oldName = pet7.getName();
 
     String newName = oldName + 'X';
     pet7.setName(newName);
     clinicService.savePet(pet7);
 
-    pet7 = clinicService.findPetById(7);
+    pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
     assertThat(pet7.getName()).isEqualTo(newName);
   }
 
@@ -173,7 +173,7 @@ public class ClinicServiceSpringDataJpaTests {
   @Test
   @Transactional
   public void shouldAddNewVisitForPet() {
-    Pet pet7 = clinicService.findPetById(7);
+    Pet pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
     int found = pet7.getVisits().size();
     Visit visit = new Visit();
     pet7.addVisit(visit);
@@ -181,7 +181,7 @@ public class ClinicServiceSpringDataJpaTests {
     clinicService.saveVisit(visit);
     clinicService.savePet(pet7);
 
-    pet7 = clinicService.findPetById(7);
+    pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
     assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
     assertThat(visit.getId()).isNotNull();
   }

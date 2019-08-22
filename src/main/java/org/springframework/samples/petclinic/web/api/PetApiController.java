@@ -81,9 +81,16 @@ public class PetApiController extends AbstractResourceController {
   @PutMapping("/owners/{ownerId}/pets/{petId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void processUpdateForm(
-      @PathVariable("petId") final int petId, @RequestBody final @Valid PetFieldsDto petFieldsDto) {
+      @PathVariable("ownerId") int ownerId,
+      @PathVariable("petId") final int petId,
+      @RequestBody final @Valid PetFieldsDto petFieldsDto) {
+    final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
+    if (pet == null) {
+      throw new ResponseStatusException(
+          NOT_FOUND, "Pet with ID '" + petId + "' and Owner ID '" + ownerId + "' is unknown.");
+    }
 
-    save(clinicService.findPetById(petId), petFieldsDto);
+    save(pet, petFieldsDto);
   }
 
   private void save(Pet pet, PetFieldsDto petCoreFieldsDto) {
@@ -97,9 +104,14 @@ public class PetApiController extends AbstractResourceController {
     clinicService.savePet(pet);
   }
 
-  @GetMapping("/owners/*/pets/{petId}")
-  public PetDto findPet(@PathVariable("petId") int petId) {
-    final Pet pet = clinicService.findPetById(petId);
+  @SuppressWarnings("IfCanBeAssertion")
+  @GetMapping("/owners/{ownerId}/pets/{petId}")
+  public PetDto findPet(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
+    final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
+    if (pet == null) {
+      throw new ResponseStatusException(
+          NOT_FOUND, "Pet with ID '" + petId + "' and Owner ID '" + ownerId + "' is unknown.");
+    }
 
     return petMapper.petToPetDto(pet);
   }

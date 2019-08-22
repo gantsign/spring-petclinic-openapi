@@ -39,7 +39,7 @@ public class PetApiControllerTests {
 
     Pet pet = setupPet();
 
-    when(clinicService.findPetById(2)).thenReturn(pet);
+    when(clinicService.findPetByIdAndOwnerId(2, 2)).thenReturn(pet);
 
     mvc.perform(get("/api/owners/2/pets/2").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
