@@ -56,6 +56,8 @@ dependencies {
 
   implementation "org.mapstruct:mapstruct:${mapstructVersion}"
   annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+  implementation 'com.atlassian.oai:swagger-request-validator-springmvc:2.5.0'
 }
 
 compileJava {

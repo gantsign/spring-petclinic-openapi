@@ -71,6 +71,39 @@ public class OwnerApiControllerTests extends TestBase {
   }
 
   @Test
+  public void shouldReturnServerErrorOnBadResponse() throws Exception {
+    Owner owner = setupOwners().get(1);
+    owner.setId(null);
+
+    when(clinicService.findOwnerById(1)).thenReturn(owner);
+
+    webTestClient
+        .get()
+        .uri("/api/owner/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .is5xxServerError()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.status")
+        .isEqualTo(500)
+        .jsonPath("$.error")
+        .isEqualTo("Internal Server Error")
+        .jsonPath("$.path")
+        .isEqualTo("/api/owner/1")
+        .jsonPath("$.timestamp")
+        .value(this::parseDateTime, String.class)
+        .jsonPath("$.schemaValidationErrors.length()")
+        .isEqualTo(1)
+        .jsonPath("$.schemaValidationErrors[0].message")
+        .isEqualTo("Instance failed to match all required schemas (matched only 1 out of 2)")
+        .jsonPath("$.message")
+        .isEqualTo("Response failed schema validation");
+  }
+
+  @Test
   public void shouldFindOwners() throws Exception {
     final List<Owner> owners = setupOwners();
     owners.remove(1);
@@ -147,7 +180,7 @@ public class OwnerApiControllerTests extends TestBase {
   }
 
   @Test
-  public void shouldReturnBindingErrors() throws Exception {
+  public void shouldReturnValidationErrors() throws Exception {
 
     final Owner newOwner = setupOwners().get(0);
     newOwner.setId(null);
@@ -169,10 +202,9 @@ public class OwnerApiControllerTests extends TestBase {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON_UTF8)
         .expectBody()
-        .jsonPath("$.errors[0].field")
-        .isEqualTo("lastName")
-        .jsonPath("$.errors[0].defaultMessage")
-        .isEqualTo("must not be null");
+        .jsonPath("$.schemaValidationErrors[0].message")
+        .isEqualTo(
+            "[Path '/lastName'] Instance type (null) does not match any allowed primitive type (allowed: [\"string\"])");
   }
 
   @Test

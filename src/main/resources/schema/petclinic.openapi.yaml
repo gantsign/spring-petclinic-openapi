@@ -479,12 +479,12 @@ components:
           type: string
           example: 'Request failed schema validation'
           readOnly: true
-        errors:
+        schemaValidationErrors:
           title: Schema validation errors
           description: Validation errors against the OpenAPI schema.
           type: array
           items:
-            $ref: '#/components/schemas/FieldError'
+            $ref: '#/components/schemas/ValidationMessage'
         trace:
           title: Trace
           description: The stacktrace for this error.
@@ -498,26 +498,19 @@ components:
         - timestamp
         - message
         - schemaValidationErrors
-    FieldError:
-      title: Field error
-      description: Message describing a validation error.
+    ValidationMessage:
+      title: Validation message
+      description: Messages describing a validation error.
       type: object
       properties:
-        field:
-          title: Field
-          description: The field that failed validation.
-          type: string
-          example: lastName
-          readOnly: true
-        defaultMessage:
-          title: Default message
+        message:
+          title: Message
           description: The valiation message.
           type: string
-          example: "may not be empty"
+          example: "[Path '/lastName'] Instance type (null) does not match any allowed primitive type (allowed: [\"string\"])"
           readOnly: true
       required:
-        - field
-        - defaultMessage
+        - message
       additionalProperties: true
     Specialty:
       title: Specialty

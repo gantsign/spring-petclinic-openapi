@@ -34,6 +34,8 @@ public class FailingApiControllerTests extends TestBase {
         .isEqualTo("/api/oops")
         .jsonPath("$.timestamp")
         .value(this::parseDateTime, String.class)
+        .jsonPath("$.schemaValidationErrors.length()")
+        .isEqualTo(0)
         .jsonPath("$.message")
         .isEqualTo(
             "Expected: controller used to showcase what happens when an exception is thrown");
