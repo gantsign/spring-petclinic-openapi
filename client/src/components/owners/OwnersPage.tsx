@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Link } from 'react-router';
 import { IOwner } from '../../types';
 import { url } from '../../util';
 
@@ -15,8 +14,10 @@ interface IOwnerPageState {
   owner?: IOwner;
 }
 
-export default class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
-
+export default class OwnersPage extends React.Component<
+  IOwnersPageProps,
+  IOwnerPageState
+> {
   constructor() {
     super();
 

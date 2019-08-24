@@ -18,6 +18,7 @@
     <option name="configurationPath" value="" />
     <option name="exclusions">
       <set>
+        <option value=".*\.[jt]sx?" />
         <option value=".*\.iml" />
         <option value="\.idea/.*" />
       </set>

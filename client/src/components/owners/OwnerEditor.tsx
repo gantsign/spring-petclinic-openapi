@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import { IRouter, Link } from 'react-router';
-import { url, submitForm } from '../../util';
+import { submitForm, url } from '../../util';
 
 import Input from '../form/Input';
 
 import { Digits, NotEmpty } from '../form/Constraints';
 
-import { IInputChangeHandler, IFieldError, IError, IOwner, IRouterContext } from '../../types';
+import { IError, IFieldError, IOwner, IRouterContext } from '../../types';
 
 interface IOwnerEditorProps {
   initialOwner?: IOwner;
@@ -16,14 +15,16 @@ interface IOwnerEditorProps {
 interface IOwnerEditorState {
   owner?: IOwner;
   error?: IError;
-};
+}
 
-export default class OwnerEditor extends React.Component<IOwnerEditorProps, IOwnerEditorState> {
-
+export default class OwnerEditor extends React.Component<
+  IOwnerEditorProps,
+  IOwnerEditorState
+> {
   context: IRouterContext;
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -32,7 +33,7 @@ export default class OwnerEditor extends React.Component<IOwnerEditorProps, IOwn
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      owner: Object.assign({}, props.initialOwner)
+      owner: Object.assign({}, props.initialOwner),
     };
   }
 
@@ -46,7 +47,7 @@ export default class OwnerEditor extends React.Component<IOwnerEditorProps, IOwn
       if (status === 200 || status === 201) {
         const newOwner = response as IOwner;
         this.context.router.push({
-          pathname: '/owners/' + newOwner.id
+          pathname: '/owners/' + newOwner.id,
         });
       } else {
         console.log('ERROR?!...', response);
@@ -58,10 +59,12 @@ export default class OwnerEditor extends React.Component<IOwnerEditorProps, IOwn
   onInputChange(name: string, value: string, fieldError: IFieldError) {
     const { owner, error } = this.state;
     const modifiedOwner = Object.assign({}, owner, { [name]: value });
-    const newFieldErrors = error ? Object.assign({}, error.fieldErrors, {[name]: fieldError }) : {[name]: fieldError };
+    const newFieldErrors = error
+      ? Object.assign({}, error.fieldErrors, { [name]: fieldError })
+      : { [name]: fieldError };
     this.setState({
       owner: modifiedOwner,
-      error: { fieldErrors: newFieldErrors }
+      error: { fieldErrors: newFieldErrors },
     });
   }
 
@@ -70,17 +73,62 @@ export default class OwnerEditor extends React.Component<IOwnerEditorProps, IOwn
     return (
       <span>
         <h2>New Owner</h2>
-        <form className='form-horizontal' method='POST' action={url('/api/owner')}>
-          <div className='form-group has-feedback'>
-            <Input object={owner} error={error} constraint={NotEmpty} label='First Name' name='firstName' onChange={this.onInputChange} />
-            <Input object={owner} error={error} constraint={NotEmpty} label='Last Name' name='lastName' onChange={this.onInputChange} />
-            <Input object={owner} error={error} constraint={NotEmpty} label='Address' name='address' onChange={this.onInputChange} />
-            <Input object={owner} error={error} constraint={NotEmpty} label='City' name='city' onChange={this.onInputChange} />
-            <Input object={owner} error={error} constraint={Digits(10)} label='Telephone' name='telephone' onChange={this.onInputChange} />
+        <form
+          className="form-horizontal"
+          method="POST"
+          action={url('/api/owner')}
+        >
+          <div className="form-group has-feedback">
+            <Input
+              object={owner}
+              error={error}
+              constraint={NotEmpty}
+              label="First Name"
+              name="firstName"
+              onChange={this.onInputChange}
+            />
+            <Input
+              object={owner}
+              error={error}
+              constraint={NotEmpty}
+              label="Last Name"
+              name="lastName"
+              onChange={this.onInputChange}
+            />
+            <Input
+              object={owner}
+              error={error}
+              constraint={NotEmpty}
+              label="Address"
+              name="address"
+              onChange={this.onInputChange}
+            />
+            <Input
+              object={owner}
+              error={error}
+              constraint={NotEmpty}
+              label="City"
+              name="city"
+              onChange={this.onInputChange}
+            />
+            <Input
+              object={owner}
+              error={error}
+              constraint={Digits(10)}
+              label="Telephone"
+              name="telephone"
+              onChange={this.onInputChange}
+            />
           </div>
-          <div className='form-group'>
-            <div className='col-sm-offset-2 col-sm-10'>
-              <button className='btn btn-default' type='submit' onClick={this.onSubmit}>{owner.isNew ? 'Add Owner' : 'Update Owner'}</button>
+          <div className="form-group">
+            <div className="col-sm-offset-2 col-sm-10">
+              <button
+                className="btn btn-default"
+                type="submit"
+                onClick={this.onSubmit}
+              >
+                {owner.isNew ? 'Add Owner' : 'Update Owner'}
+              </button>
             </div>
           </div>
         </form>

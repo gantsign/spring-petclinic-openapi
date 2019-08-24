@@ -6,18 +6,33 @@ import FieldFeedbackPanel from './FieldFeedbackPanel';
 
 const NoConstraint: IConstraint = {
   message: '',
-  validate: v => true
+  validate: v => true,
 };
 
-
-export default ({object, error, name, constraint = NoConstraint, label, onChange}: { object: any, error: IError, name: string, constraint?: IConstraint, label: string, onChange: IInputChangeHandler }) => {
-
+export default ({
+  object,
+  error,
+  name,
+  constraint = NoConstraint,
+  label,
+  onChange,
+}: {
+  object: any;
+  error: IError;
+  name: string;
+  constraint?: IConstraint;
+  label: string;
+  onChange: IInputChangeHandler;
+}) => {
   const handleOnChange = event => {
     const { value } = event.target;
 
     // run validation (if any)
-    let error = null;
-    const fieldError = constraint.validate(value) === false ? { field: name, message: constraint.message } : null;
+    const error = null;
+    const fieldError =
+      constraint.validate(value) === false
+        ? { field: name, message: constraint.message }
+        : null;
 
     // invoke callback
     onChange(name, value, fieldError);
@@ -31,12 +46,18 @@ export default ({object, error, name, constraint = NoConstraint, label, onChange
 
   return (
     <div className={cssGroup}>
-      <label className='col-sm-2 control-label'>{label}</label>
+      <label className="col-sm-2 control-label">{label}</label>
 
-      <div className='col-sm-10'>
-        <input type='text' name={name} className='form-control' value={value} onChange={handleOnChange} />
+      <div className="col-sm-10">
+        <input
+          type="text"
+          name={name}
+          className="form-control"
+          value={value}
+          onChange={handleOnChange}
+        />
 
-         <FieldFeedbackPanel valid={valid} fieldError={fieldError} />
+        <FieldFeedbackPanel valid={valid} fieldError={fieldError} />
       </div>
     </div>
   );

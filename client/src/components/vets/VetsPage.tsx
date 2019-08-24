@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { IRouter, Link } from 'react-router';
 import { url } from '../../util';
 
 import { IVet } from '../../types';
@@ -21,7 +20,10 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
 
     fetch(requestUrl)
       .then(response => response.json())
-      .then(vets => { console.log('vets', vets); this.setState({ vets }); });
+      .then(vets => {
+        console.log('vets', vets);
+        this.setState({ vets });
+      });
   }
 
   render() {
@@ -34,7 +36,7 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
     return (
       <span>
         <h2>Veterinarians</h2>
-        <table className='table table-striped'>
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Name</th>
@@ -42,11 +44,18 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
             </tr>
           </thead>
           <tbody>
-
             {vets.map(vet => (
               <tr key={vet.id}>
-                <td>{vet.firstName} {vet.lastName}</td>
-                <td>{vet.specialties.length > 0 ? vet.specialties.map(specialty => specialty.name).join(', ') : 'none'}</td>
+                <td>
+                  {vet.firstName} {vet.lastName}
+                </td>
+                <td>
+                  {vet.specialties.length > 0
+                    ? vet.specialties
+                        .map(specialty => specialty.name)
+                        .join(', ')
+                    : 'none'}
+                </td>
               </tr>
             ))}
           </tbody>

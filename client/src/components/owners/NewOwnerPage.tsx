@@ -11,7 +11,7 @@ const newOwner = (): IOwner => ({
   address: '',
   city: '',
   telephone: '',
-  pets: []
+  pets: [],
 });
 
 export default () => <OwnerEditor initialOwner={newOwner()} />;

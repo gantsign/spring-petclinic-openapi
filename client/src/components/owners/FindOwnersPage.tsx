@@ -1,11 +1,10 @@
 import * as React from 'react';
 
-import { IRouter, Link } from 'react-router';
+import { Link } from 'react-router';
 import { IOwner, IRouterContext } from '../../types';
 import { url } from '../../util';
 
 import OwnersTable from './OwnersTable';
-
 
 interface IFindOwnersPageProps {
   location: HistoryModule.Location;
@@ -16,15 +15,18 @@ interface IFindOwnersPageState {
   filter?: string;
 }
 
-const getFilterFromLocation = (location) => {
+const getFilterFromLocation = location => {
   return location.query ? (location.query as any).lastName : null;
 };
 
-export default class FindOwnersPage extends React.Component<IFindOwnersPageProps, IFindOwnersPageState> {
+export default class FindOwnersPage extends React.Component<
+  IFindOwnersPageProps,
+  IFindOwnersPageState
+> {
   context: IRouterContext;
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -33,7 +35,7 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
     this.submitSearchForm = this.submitSearchForm.bind(this);
 
     this.state = {
-      filter: getFilterFromLocation(props.location)
+      filter: getFilterFromLocation(props.location),
     };
   }
 
@@ -61,13 +63,13 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
 
   onFilterChange(event) {
     this.setState({
-      filter: event.target.value as string
+      filter: event.target.value as string,
     });
   }
 
   /**
    * Invoked when the submit button was pressed.
-   * 
+   *
    * This method updates the URL with the entered lastName. The change of the URL
    * leads to new properties and thus results in rendering.
    */
@@ -76,11 +78,11 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
 
     this.context.router.push({
       pathname: '/owners/list',
-      query: { 'lastName': filter || '' }
+      query: { lastName: filter || '' },
     });
   }
 
-  /** 
+  /**
    * Actually loads data from the server
    */
   fetchData(filter: string) {
@@ -89,7 +91,9 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
 
     fetch(requestUrl)
       .then(response => response.json())
-      .then(owners => { this.setState({ owners }); });
+      .then(owners => {
+        this.setState({ owners });
+      });
   }
 
   render() {
@@ -100,26 +104,42 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
         <section>
           <h2>Find Owners</h2>
 
-          <form className='form-horizontal' action='javascript:void(0)'>
-            <div className='form-group'>
-              <div className='control-group' id='lastName'>
-                <label className='col-sm-2 control-label'>Last name </label>
-                <div className='col-sm-10'>
-                  <input className='form-control' name='filter' value={filter || ''} onChange={this.onFilterChange} size={30} maxLength={80} />
-                  { /* <span className='help-inline'><form:errors path='*'/></span> TODO */}
+          <form className="form-horizontal" action="javascript:void(0)">
+            <div className="form-group">
+              <div className="control-group" id="lastName">
+                <label className="col-sm-2 control-label">Last name </label>
+                <div className="col-sm-10">
+                  <input
+                    className="form-control"
+                    name="filter"
+                    value={filter || ''}
+                    onChange={this.onFilterChange}
+                    size={30}
+                    maxLength={80}
+                  />
+                  {/* <span className='help-inline'><form:errors path='*'/></span> TODO */}
                 </div>
               </div>
             </div>
-            <div className='form-group'>
-              <div className='col-sm-offset-2 col-sm-10'>
-                <button type='button' onClick={this.submitSearchForm} className='btn btn-default'>Find Owner</button>
+            <div className="form-group">
+              <div className="col-sm-offset-2 col-sm-10">
+                <button
+                  type="button"
+                  onClick={this.submitSearchForm}
+                  className="btn btn-default"
+                >
+                  Find Owner
+                </button>
               </div>
             </div>
           </form>
         </section>
         <OwnersTable owners={owners} />
-        <Link className='btn btn-default' to='/owners/new'> Add Owner</Link>
+        <Link className="btn btn-default" to="/owners/new">
+          {' '}
+          Add Owner
+        </Link>
       </span>
     );
   }
-};
+}

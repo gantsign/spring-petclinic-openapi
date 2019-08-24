@@ -1,13 +1,19 @@
 import * as React from 'react';
 
-import { IRouter, Link } from 'react-router';
-import { url, submitForm } from '../../util';
+import { submitForm, url } from '../../util';
 
 import Input from '../form/Input';
 import DateInput from '../form/DateInput';
 import SelectInput from '../form/SelectInput';
 
-import { IError, IOwner, IPetRequest, IEditablePet, IPet, IPetType, IRouterContext, ISelectOption } from '../../types';
+import {
+  IEditablePet,
+  IError,
+  IOwner,
+  IPetRequest,
+  IRouterContext,
+  ISelectOption,
+} from '../../types';
 
 interface IPetEditorProps {
   pet: IEditablePet;
@@ -18,14 +24,16 @@ interface IPetEditorProps {
 interface IPetEditorState {
   editablePet?: IEditablePet;
   error?: IError;
-};
+}
 
-export default class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
-
+export default class PetEditor extends React.Component<
+  IPetEditorProps,
+  IPetEditorState
+> {
   context: IRouterContext;
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -33,7 +41,7 @@ export default class PetEditor extends React.Component<IPetEditorProps, IPetEdit
     this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this.state = { editablePet: Object.assign({}, props.pet ) };
+    this.state = { editablePet: Object.assign({}, props.pet) };
   }
 
   onSubmit(event) {
@@ -45,20 +53,27 @@ export default class PetEditor extends React.Component<IPetEditorProps, IPetEdit
     const request: IPetRequest = {
       birthDate: editablePet.birthDate,
       name: editablePet.name,
-      typeId: editablePet.typeId
+      typeId: editablePet.typeId,
     };
 
-    const url = editablePet.isNew ? '/api/owner/' + owner.id + '/pet' :  '/api/owner/' + owner.id + '/pet/' + editablePet.id;
-    submitForm(editablePet.isNew ? 'POST' : 'PUT', url, request, (status, response) => {
-      if (status === 201 || status === 204) {
-        this.context.router.push({
-          pathname: '/owners/' + owner.id
-        });
-      } else {
-        console.log('ERROR?!...', response);
-        this.setState({ error: response });
+    const url = editablePet.isNew
+      ? '/api/owner/' + owner.id + '/pet'
+      : '/api/owner/' + owner.id + '/pet/' + editablePet.id;
+    submitForm(
+      editablePet.isNew ? 'POST' : 'PUT',
+      url,
+      request,
+      (status, response) => {
+        if (status === 201 || status === 204) {
+          this.context.router.push({
+            pathname: '/owners/' + owner.id,
+          });
+        } else {
+          console.log('ERROR?!...', response);
+          this.setState({ error: response });
+        }
       }
-    });
+    );
   }
 
   onInputChange(name: string, value: string) {
@@ -77,20 +92,51 @@ export default class PetEditor extends React.Component<IPetEditorProps, IPetEdit
     return (
       <span>
         <h2>{formLabel}</h2>
-        <form className='form-horizontal' method='POST' action={url('/api/owner')}>
-          <div className='form-group has-feedback'>
-            <div className='form-group'>
-              <label className='col-sm-2 control-label'>Owner</label>
-              <div className='col-sm-10'>{owner.firstName} {owner.lastName}</div>
+        <form
+          className="form-horizontal"
+          method="POST"
+          action={url('/api/owner')}
+        >
+          <div className="form-group has-feedback">
+            <div className="form-group">
+              <label className="col-sm-2 control-label">Owner</label>
+              <div className="col-sm-10">
+                {owner.firstName} {owner.lastName}
+              </div>
             </div>
 
-            <Input object={editablePet} error={error} label='Name' name='name' onChange={this.onInputChange} />
-            <DateInput object={editablePet} error={error} label='Birth date' name='birthDate' onChange={this.onInputChange} />
-            <SelectInput object={editablePet} error={error} label='Type' name='typeId' options={petTypes} onChange={this.onInputChange} />
+            <Input
+              object={editablePet}
+              error={error}
+              label="Name"
+              name="name"
+              onChange={this.onInputChange}
+            />
+            <DateInput
+              object={editablePet}
+              error={error}
+              label="Birth date"
+              name="birthDate"
+              onChange={this.onInputChange}
+            />
+            <SelectInput
+              object={editablePet}
+              error={error}
+              label="Type"
+              name="typeId"
+              options={petTypes}
+              onChange={this.onInputChange}
+            />
           </div>
-          <div className='form-group'>
-            <div className='col-sm-offset-2 col-sm-10'>
-              <button className='btn btn-default' type='submit' onClick={this.onSubmit}>{formLabel}</button>
+          <div className="form-group">
+            <div className="col-sm-offset-2 col-sm-10">
+              <button
+                className="btn btn-default"
+                type="submit"
+                onClick={this.onSubmit}
+              >
+                {formLabel}
+              </button>
             </div>
           </div>
         </form>

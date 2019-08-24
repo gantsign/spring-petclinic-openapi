@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { IOwner, IPet } from '../../types';
 
-export default ({owner, pet}: { owner: IOwner, pet: IPet }) => (
-  <table className='table table-striped'>
+export default ({ owner, pet }: { owner: IOwner; pet: IPet }) => (
+  <table className="table table-striped">
     <thead>
       <tr>
         <th>Name</th>
@@ -17,7 +17,9 @@ export default ({owner, pet}: { owner: IOwner, pet: IPet }) => (
         <td>{pet.name}</td>
         <td>{pet.birthDate}</td>
         <td>{pet.type.name}</td>
-        <td>{owner.firstName} {owner.lastName}</td>
+        <td>
+          {owner.firstName} {owner.lastName}
+        </td>
       </tr>
     </tbody>
   </table>

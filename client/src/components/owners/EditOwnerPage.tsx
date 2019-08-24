@@ -12,7 +12,10 @@ interface IEditOwnerPageState {
   owner: IOwner;
 }
 
-export default class EditOwnerPage extends React.Component<IEditOwnerPageProps, IEditOwnerPageState> {
+export default class EditOwnerPage extends React.Component<
+  IEditOwnerPageProps,
+  IEditOwnerPageState
+> {
   componentDidMount() {
     const { params } = this.props;
 
