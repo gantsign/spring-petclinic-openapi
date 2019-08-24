@@ -1,12 +1,15 @@
-require('jest');
 import * as React from 'react';
-import { shallow } from 'enzyme';
+import * as Enzyme from 'enzyme';
+import * as Adapter from 'enzyme-adapter-react-15';
 
 import { NotEmpty } from '../../../../src/components/form/Constraints';
 import FieldFeedbackPanel from '../../../../src/components/form/FieldFeedbackPanel';
 import { IInputChangeHandler, IError, IConstraint } from '../../../../src/types';
 
 import Input from '../../../../src/components/form/Input';
+
+const shallow = Enzyme.shallow;
+Enzyme.configure({adapter: new Adapter()});
 
 describe('Input', () => {
 
