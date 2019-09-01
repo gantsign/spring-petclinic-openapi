@@ -18,7 +18,7 @@ export default ({
   onChange,
 }: {
   object: any;
-  error: IError;
+  error?: IError;
   name: string;
   constraint?: IConstraint;
   label: string;
@@ -32,7 +32,7 @@ export default ({
     const fieldError =
       constraint.validate(value) === false
         ? { field: name, message: constraint.message }
-        : null;
+        : undefined;
 
     // invoke callback
     onChange(name, value, fieldError);

@@ -13,12 +13,12 @@ Enzyme.configure({adapter: new Adapter()});
 
 describe('Input', () => {
 
-  const onChange = (name, value, error) => {
+  const onChange: IInputChangeHandler = (name, value, error) => {
     onChangeResult = { name, value, error };
   };
 
-  let object = null;
-  let onChangeResult = null;
+  let object: any | null = null;
+  let onChangeResult: any | null = null;
 
   beforeEach(() => {
     object = {

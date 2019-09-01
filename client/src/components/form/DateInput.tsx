@@ -1,4 +1,5 @@
 /// <reference path="../../react-datepicker.d.ts" />
+/// <reference path="../../../node_modules/@types/webpack-env/index.d.ts" />
 
 import * as React from 'react';
 
@@ -18,14 +19,14 @@ export default ({
   onChange,
 }: {
   object: any;
-  error: IError;
+  error?: IError;
   name: string;
   label: string;
   onChange: IInputChangeHandler;
 }) => {
   const handleOnChange = value => {
     const dateString = value ? value.format('YYYY-MM-DD') : null;
-    onChange(name, dateString, null);
+    onChange(name, dateString);
   };
 
   const selectedValue = object[name]

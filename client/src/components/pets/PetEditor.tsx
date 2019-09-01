@@ -50,10 +50,20 @@ export default class PetEditor extends React.Component<
     const { owner } = this.props;
     const { editablePet } = this.state;
 
+    if (!editablePet) {
+      throw new Error('Invalid state: no editablePet');
+    }
+
+    const { typeId = null } = editablePet;
+
+    if (typeId == null) {
+      throw new Error('Invalid state: no typeId');
+    }
+
     const request: IPetRequest = {
       birthDate: editablePet.birthDate,
       name: editablePet.name,
-      typeId: editablePet.typeId,
+      typeId,
     };
 
     const url = editablePet.isNew
@@ -86,6 +96,10 @@ export default class PetEditor extends React.Component<
   render() {
     const { owner, petTypes } = this.props;
     const { editablePet, error } = this.state;
+
+    if (!editablePet) {
+      return <></>;
+    }
 
     const formLabel = editablePet.isNew ? 'Add Pet' : 'Update Pet';
 

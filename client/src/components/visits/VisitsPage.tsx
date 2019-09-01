@@ -48,7 +48,7 @@ export default class VisitsPage extends React.Component<
         .then(owner =>
           this.setState({
             owner,
-            visit: { id: null, isNew: true, date: null, description: '' },
+            visit: { isNew: true, description: '' },
           })
         );
     }
@@ -59,6 +59,13 @@ export default class VisitsPage extends React.Component<
 
     const petId = this.props.params.petId;
     const { owner, visit } = this.state;
+
+    if (!owner) {
+      throw new Error('Invalid state: no owner');
+    }
+    if (!visit) {
+      throw new Error('Invalid state: no visit');
+    }
 
     const request = {
       date: visit.date,
@@ -90,9 +97,16 @@ export default class VisitsPage extends React.Component<
     }
 
     const { owner, error, visit } = this.state;
-    const petId = this.props.params.petId;
+    if (!owner) {
+      return <h2>Loading...</h2>;
+    }
 
-    const pet = owner.pets.find(candidate => candidate.id.toString() === petId);
+    const petId = Number(this.props.params.petId);
+
+    const pet = owner.pets.find(candidate => candidate.id === petId);
+    if (!pet) {
+      return <h2>Loading...</h2>;
+    }
 
     return (
       <div>

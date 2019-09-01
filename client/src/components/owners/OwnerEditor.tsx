@@ -6,7 +6,13 @@ import Input from '../form/Input';
 
 import { Digits, NotEmpty } from '../form/Constraints';
 
-import { IError, IFieldError, IOwner, IRouterContext } from '../../types';
+import {
+  IError,
+  IFieldError,
+  IFieldErrors,
+  IOwner,
+  IRouterContext,
+} from '../../types';
 
 interface IOwnerEditorProps {
   initialOwner?: IOwner;
@@ -42,6 +48,10 @@ export default class OwnerEditor extends React.Component<
 
     const { owner } = this.state;
 
+    if (!owner) {
+      return;
+    }
+
     const url = owner.isNew ? '/api/owner' : '/api/owner/' + owner.id;
     submitForm(owner.isNew ? 'POST' : 'PUT', url, owner, (status, response) => {
       if (status === 200 || status === 201) {
@@ -56,20 +66,40 @@ export default class OwnerEditor extends React.Component<
     });
   }
 
-  onInputChange(name: string, value: string, fieldError: IFieldError) {
+  onInputChange(
+    name: string,
+    value: string,
+    fieldError: IFieldError | undefined
+  ) {
     const { owner, error } = this.state;
-    const modifiedOwner = Object.assign({}, owner, { [name]: value });
-    const newFieldErrors = error
-      ? Object.assign({}, error.fieldErrors, { [name]: fieldError })
-      : { [name]: fieldError };
-    this.setState({
-      owner: modifiedOwner,
-      error: { fieldErrors: newFieldErrors },
-    });
+    const modifiedOwner: IOwner = Object.assign({}, owner, { [name]: value });
+
+    const newState: IOwnerEditorState = { owner: modifiedOwner };
+
+    const newFieldErrors: IFieldErrors | undefined =
+      fieldError === undefined
+        ? undefined
+        : error
+        ? Object.assign({}, error.fieldErrors, { [name]: fieldError })
+        : { [name]: fieldError };
+    const newError: IError | undefined =
+      newFieldErrors === undefined
+        ? undefined
+        : { fieldErrors: newFieldErrors };
+    if (newError) {
+      newState.error = newError;
+    }
+
+    this.setState(newState);
   }
 
   render() {
     const { owner, error } = this.state;
+
+    if (!owner) {
+      return;
+    }
+
     return (
       <div>
         <h2>New Owner</h2>

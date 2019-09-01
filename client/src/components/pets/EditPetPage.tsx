@@ -43,6 +43,18 @@ export default class EditPetPage extends React.Component<
       return <LoadingPanel />;
     }
 
-    return <PetEditor {...this.state} />;
+    const { pet, owner, petTypes } = this.state;
+
+    if (!pet) {
+      return <LoadingPanel />;
+    }
+    if (!owner) {
+      return <LoadingPanel />;
+    }
+    if (!petTypes) {
+      return <LoadingPanel />;
+    }
+
+    return <PetEditor pet={pet} owner={owner} petTypes={petTypes} />;
   }
 }

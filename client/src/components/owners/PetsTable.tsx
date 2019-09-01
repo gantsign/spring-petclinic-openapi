@@ -32,29 +32,36 @@ const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: IPet }) => (
   </table>
 );
 
-export default ({ owner }: { owner: IOwner }) => (
-  <section>
-    <h2>Pets and Visits</h2>
-    <table className="table table-striped">
-      <tbody>
-        {owner.pets.map(pet => (
-          <tr key={pet.id}>
-            <td style={{ verticalAlign: 'top' }}>
-              <dl className="dl-horizontal">
-                <dt>Name</dt>
-                <dd>{pet.name}</dd>
-                <dt>Birth Date</dt>
-                <dd>{pet.birthDate}</dd>
-                <dt>Type</dt>
-                <dd>{pet.type.name}</dd>
-              </dl>
-            </td>
-            <td style={{ verticalAlign: 'top' }}>
-              <VisitsTable ownerId={owner.id} pet={pet} />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </section>
-);
+export default ({ owner }: { owner: IOwner }) => {
+  const ownerId = owner.id;
+  if (ownerId === undefined) {
+    return <></>;
+  }
+
+  return (
+    <section>
+      <h2>Pets and Visits</h2>
+      <table className="table table-striped">
+        <tbody>
+          {owner.pets.map(pet => (
+            <tr key={pet.id}>
+              <td style={{ verticalAlign: 'top' }}>
+                <dl className="dl-horizontal">
+                  <dt>Name</dt>
+                  <dd>{pet.name}</dd>
+                  <dt>Birth Date</dt>
+                  <dd>{pet.birthDate}</dd>
+                  <dt>Type</dt>
+                  <dd>{pet.type.name}</dd>
+                </dl>
+              </td>
+              <td style={{ verticalAlign: 'top' }}>
+                <VisitsTable ownerId={ownerId} pet={pet} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+};

@@ -7,7 +7,7 @@ export default ({
   fieldError,
 }: {
   valid: boolean;
-  fieldError: IFieldError;
+  fieldError?: IFieldError;
 }) => {
   if (valid) {
     return (

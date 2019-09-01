@@ -7,9 +7,14 @@
     "preserveConstEnums": true,
     "removeComments": true,
     "target": "ES6",
-    "allowJs": true,
+    "allowJs": false,
     "outDir": "public/dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ]
   },
   "include": [
     "src/**/*.ts",

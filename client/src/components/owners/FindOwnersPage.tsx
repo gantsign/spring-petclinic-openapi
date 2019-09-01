@@ -97,7 +97,7 @@ export default class FindOwnersPage extends React.Component<
   }
 
   render() {
-    const { filter, owners } = this.state;
+    const { filter, owners = [] } = this.state;
 
     return (
       <div>

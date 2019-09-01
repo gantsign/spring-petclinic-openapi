@@ -9,8 +9,8 @@ interface IVetsPageState {
 }
 
 export default class VetsPage extends React.Component<void, IVetsPageState> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { vets: [] };
   }

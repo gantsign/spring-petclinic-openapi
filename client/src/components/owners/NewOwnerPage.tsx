@@ -4,7 +4,6 @@ import OwnerEditor from './OwnerEditor';
 import { IOwner } from '../../types';
 
 const newOwner = (): IOwner => ({
-  id: null,
   isNew: true,
   firstName: '',
   lastName: '',

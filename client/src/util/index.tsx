@@ -32,10 +32,10 @@ export const submitForm = (
   };
 
   console.log('Submitting to ' + method + ' ' + requestUrl);
-  return fetch(requestUrl, fetchParams).then(response => {
+  fetch(requestUrl, fetchParams).then(response => {
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
-      return response.json().then(result => {
+      response.json().then(result => {
         onSuccess(response.status, result);
       });
     }

@@ -2,7 +2,7 @@ import { IPetType, ISelectOption } from '../../types';
 import { url } from '../../util';
 
 const toSelectOptions = (petTypes: IPetType[]): ISelectOption[] =>
-  petTypes.map(petType => ({ value: petType.id, name: petType.name }));
+  petTypes.map(petType => ({ value: petType.id || -1, name: petType.name }));
 
 export default (
   ownerId: string,

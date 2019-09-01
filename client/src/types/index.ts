@@ -14,7 +14,7 @@ export interface IFieldError {
   message: string;
 }
 
-interface IFieldErrors {
+export interface IFieldErrors {
   [index: string]: IFieldError;
 }
 
@@ -31,7 +31,7 @@ export interface IConstraint {
 export type IInputChangeHandler = (
   name: string,
   value: string,
-  error: IFieldError
+  error?: IFieldError
 ) => void;
 
 export interface ISelectOption {
@@ -42,7 +42,7 @@ export interface ISelectOption {
 // ------------------------------------ MODEL .------------------------------------
 
 interface IBaseEntity {
-  id: number;
+  id?: number;
   isNew?: boolean;
 }
 
@@ -56,7 +56,7 @@ interface IPerson extends IBaseEntity {
 }
 
 export interface IVisit extends IBaseEntity {
-  date: Date;
+  date?: Date;
   description: string;
 }
 

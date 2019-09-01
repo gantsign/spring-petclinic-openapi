@@ -13,7 +13,7 @@ export default ({
   onChange,
 }: {
   object: any;
-  error: IError;
+  error?: IError;
   name: string;
   label: string;
   options: ISelectOption[];
@@ -21,7 +21,7 @@ export default ({
 }) => {
   const handleOnChange = event => {
     console.log('select on change', event.target.value);
-    onChange(name, event.target.value, null);
+    onChange(name, event.target.value);
   };
 
   const selectedValue = object[name] || '';

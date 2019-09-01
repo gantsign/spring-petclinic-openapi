@@ -18,8 +18,8 @@ export default class OwnersPage extends React.Component<
   IOwnersPageProps,
   IOwnerPageState
 > {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {};
   }
