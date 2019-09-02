@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import { IEditablePet, IOwner, ISelectOption } from '../../types';
 
 import { url } from '../../util';
@@ -9,12 +11,7 @@ import PetEditor from './PetEditor';
 
 import createPetEditorModel from './createPetEditorModel';
 
-interface IEditPetPageProps {
-  params: {
-    ownerId: string;
-    petId: string;
-  };
-}
+interface IEditPetPageProps extends RouteComponentProps {}
 
 interface IEditPetPageState {
   pet?: IEditablePet;
@@ -22,19 +19,20 @@ interface IEditPetPageState {
   petTypes?: ISelectOption[];
 }
 
-export default class EditPetPage extends React.Component<
+class EditPetPage extends React.Component<
   IEditPetPageProps,
   IEditPetPageState
 > {
   componentDidMount() {
-    const { params } = this.props;
+    const ownerId = Number(this.props.match.params['ownerId']);
+    const petId = Number(this.props.match.params['petId']);
 
-    const fetchUrl = url(`/api/owner/${params.ownerId}/pet/${params.petId}`);
+    const fetchUrl = url(`/api/owner/${ownerId}/pet/${petId}`);
 
     const loadPetPromise = fetch(fetchUrl).then(response => response.json());
 
-    createPetEditorModel(this.props.params.ownerId, loadPetPromise).then(
-      model => this.setState(model)
+    createPetEditorModel(ownerId, loadPetPromise).then(model =>
+      this.setState(model)
     );
   }
 
@@ -58,3 +56,5 @@ export default class EditPetPage extends React.Component<
     return <PetEditor pet={pet} owner={owner} petTypes={petTypes} />;
   }
 }
+
+export default withRouter(EditPetPage);

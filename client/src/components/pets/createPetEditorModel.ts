@@ -5,7 +5,7 @@ const toSelectOptions = (petTypes: IPetType[]): ISelectOption[] =>
   petTypes.map(petType => ({ value: petType.id || -1, name: petType.name }));
 
 export default (
-  ownerId: string,
+  ownerId: number,
   petLoaderPromise: Promise<any>
 ): Promise<any> => {
   return Promise.all([

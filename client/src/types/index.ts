@@ -1,10 +1,3 @@
-import { IRouter } from 'react-router';
-
-// ------------------------------------ ROUTER ------------------------------------
-export interface IRouterContext {
-  router: IRouter;
-}
-
 // ------------------------------------ UTIL --------------------------------------
 export type IHttpMethod = 'POST' | 'PUT' | 'GET';
 

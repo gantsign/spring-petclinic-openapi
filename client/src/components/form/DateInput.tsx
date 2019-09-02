@@ -32,7 +32,7 @@ export default ({
   const selectedValue = object[name]
     ? moment(object[name], 'YYYY-MM-DD')
     : null;
-  const fieldError = error && error.fieldErrors[name];
+  const fieldError = error && error.fieldErrors && error.fieldErrors[name];
   const valid = !fieldError && selectedValue != null;
 
   const cssGroup = `form-group ${fieldError ? 'has-error' : ''}`;

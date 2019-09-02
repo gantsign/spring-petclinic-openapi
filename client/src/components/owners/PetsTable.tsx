@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { IOwner, IPet } from '../../types';
 
 const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: IPet }) => (

@@ -1,30 +1,29 @@
 import * as React from 'react';
+
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import OwnerEditor from './OwnerEditor';
 
 import { IOwner } from '../../types';
 import { url } from '../../util';
 
-interface IEditOwnerPageProps {
-  params?: { ownerId?: string };
-}
+interface IEditOwnerPageProps extends RouteComponentProps {}
 
 interface IEditOwnerPageState {
   owner: IOwner;
 }
 
-export default class EditOwnerPage extends React.Component<
+class EditOwnerPage extends React.Component<
   IEditOwnerPageProps,
   IEditOwnerPageState
 > {
   componentDidMount() {
-    const { params } = this.props;
+    const ownerId = Number(this.props.match.params['ownerId']);
 
-    if (params && params.ownerId) {
-      const fetchUrl = url(`/api/owner/${params.ownerId}`);
-      fetch(fetchUrl)
-        .then(response => response.json())
-        .then(owner => this.setState({ owner }));
-    }
+    const fetchUrl = url(`/api/owner/${ownerId}`);
+    fetch(fetchUrl)
+      .then(response => response.json())
+      .then(owner => this.setState({ owner }));
   }
   render() {
     const owner = this.state && this.state.owner;
@@ -34,3 +33,5 @@ export default class EditOwnerPage extends React.Component<
     return null;
   }
 }
+
+export default withRouter(EditOwnerPage);

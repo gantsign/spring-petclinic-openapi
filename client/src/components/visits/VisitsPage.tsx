@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { IError, IOwner, IRouterContext, IVisit } from '../../types';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { IError, IOwner, IVisit } from '../../types';
 
 import { submitForm, url } from '../../util';
 import { NotEmpty } from '../form/Constraints';
@@ -9,12 +10,7 @@ import DateInput from '../form/DateInput';
 import Input from '../form/Input';
 import PetDetails from './PetDetails';
 
-interface IVisitsPageProps {
-  params: {
-    ownerId: string;
-    petId: string;
-  };
-}
+interface IVisitsPageProps extends RouteComponentProps {}
 
 interface IVisitsPageState {
   visit?: IVisit;
@@ -22,16 +18,7 @@ interface IVisitsPageState {
   error?: IError;
 }
 
-export default class VisitsPage extends React.Component<
-  IVisitsPageProps,
-  IVisitsPageState
-> {
-  context: IRouterContext;
-
-  static contextTypes = {
-    router: React.PropTypes.object.isRequired,
-  };
-
+class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   constructor(props) {
     super(props);
 
@@ -40,24 +27,22 @@ export default class VisitsPage extends React.Component<
   }
 
   componentDidMount() {
-    const { params } = this.props;
+    const ownerId = Number(this.props.match.params['ownerId']);
 
-    if (params && params.ownerId) {
-      fetch(url(`/api/owner/${params.ownerId}`))
-        .then(response => response.json())
-        .then(owner =>
-          this.setState({
-            owner,
-            visit: { isNew: true, description: '' },
-          })
-        );
-    }
+    fetch(url(`/api/owner/${ownerId}`))
+      .then(response => response.json())
+      .then(owner =>
+        this.setState({
+          owner,
+          visit: { isNew: true, description: '' },
+        })
+      );
   }
 
   onSubmit(event) {
     event.preventDefault();
 
-    const petId = this.props.params.petId;
+    const petId = Number(this.props.match.params['petId']);
     const { owner, visit } = this.state;
 
     if (!owner) {
@@ -75,7 +60,7 @@ export default class VisitsPage extends React.Component<
     const url = '/api/owner/' + owner.id + '/pet/' + petId + '/visit';
     submitForm('POST', url, request, (status, response) => {
       if (status === 201) {
-        this.context.router.push({
+        this.props.history.push({
           pathname: '/owners/' + owner.id,
         });
       } else {
@@ -101,7 +86,7 @@ export default class VisitsPage extends React.Component<
       return <h2>Loading...</h2>;
     }
 
-    const petId = Number(this.props.params.petId);
+    const petId = Number(this.props.match.params['petId']);
 
     const pet = owner.pets.find(candidate => candidate.id === petId);
     if (!pet) {
@@ -152,3 +137,5 @@ export default class VisitsPage extends React.Component<
     );
   }
 }
+
+export default withRouter(VisitsPage);

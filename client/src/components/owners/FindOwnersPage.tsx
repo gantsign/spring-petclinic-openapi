@@ -1,34 +1,38 @@
 import * as React from 'react';
 
-import { Link } from 'react-router';
-import { IOwner, IRouterContext } from '../../types';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { IOwner } from '../../types';
 import { url } from '../../util';
 
 import OwnersTable from './OwnersTable';
 
-interface IFindOwnersPageProps {
-  location: HistoryModule.Location;
-}
+import * as H from 'history';
+
+import QueryString from 'query-string';
+
+interface IFindOwnersPageProps extends RouteComponentProps {}
 
 interface IFindOwnersPageState {
   owners?: IOwner[];
   filter?: string;
 }
 
-const getFilterFromLocation = location => {
-  return location.query ? (location.query as any).lastName : null;
+const getFilterFromLocation = (location: H.Location): string | undefined => {
+  const query = QueryString.parse(location.search);
+  const lastName = query['lastName'];
+  if (Array.isArray(lastName)) {
+    return lastName[0];
+  }
+  if (lastName === null) {
+    return undefined;
+  }
+  return lastName;
 };
 
-export default class FindOwnersPage extends React.Component<
+class FindOwnersPage extends React.Component<
   IFindOwnersPageProps,
   IFindOwnersPageState
 > {
-  context: IRouterContext;
-
-  static contextTypes = {
-    router: React.PropTypes.object.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.onFilterChange = this.onFilterChange.bind(this);
@@ -58,7 +62,7 @@ export default class FindOwnersPage extends React.Component<
     this.setState({ filter });
 
     // load data according to filter
-    this.fetchData(filter);
+    this.fetchData(filter || '');
   }
 
   onFilterChange(event) {
@@ -76,9 +80,9 @@ export default class FindOwnersPage extends React.Component<
   submitSearchForm() {
     const { filter } = this.state;
 
-    this.context.router.push({
+    this.props.history.push({
       pathname: '/owners/list',
-      query: { lastName: filter || '' },
+      search: `?lastName=${encodeURIComponent(filter || '')}`,
     });
   }
 
@@ -97,7 +101,10 @@ export default class FindOwnersPage extends React.Component<
   }
 
   render() {
-    const { filter, owners = [] } = this.state;
+    const filter = this.state.filter || '';
+    const owners = this.state.owners || [];
+
+    const showResults: boolean = filter.length > 0 || owners.length > 0;
 
     return (
       <div>
@@ -112,7 +119,7 @@ export default class FindOwnersPage extends React.Component<
                   <input
                     className="form-control"
                     name="filter"
-                    value={filter || ''}
+                    value={filter}
                     onChange={this.onFilterChange}
                     size={30}
                     maxLength={80}
@@ -134,7 +141,7 @@ export default class FindOwnersPage extends React.Component<
             </div>
           </form>
         </section>
-        <OwnersTable owners={owners} />
+        {showResults && <OwnersTable owners={owners} />}
         <Link className="btn btn-default" to="/owners/new">
           {' '}
           Add Owner
@@ -143,3 +150,5 @@ export default class FindOwnersPage extends React.Component<
     );
   }
 }
+
+export default withRouter(FindOwnersPage);

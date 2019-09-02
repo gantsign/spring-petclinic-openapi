@@ -1,23 +1,20 @@
 import * as React from 'react';
 
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import { IOwner } from '../../types';
 import { url } from '../../util';
 
 import OwnerInformation from './OwnerInformation';
 import PetsTable from './PetsTable';
 
-interface IOwnersPageProps {
-  params?: { ownerId?: string };
-}
+interface IOwnersPageProps extends RouteComponentProps {}
 
 interface IOwnerPageState {
   owner?: IOwner;
 }
 
-export default class OwnersPage extends React.Component<
-  IOwnersPageProps,
-  IOwnerPageState
-> {
+class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
   constructor(props) {
     super(props);
 
@@ -25,14 +22,12 @@ export default class OwnersPage extends React.Component<
   }
 
   componentDidMount() {
-    const { params } = this.props;
+    const ownerId = Number(this.props.match.params['ownerId']);
 
-    if (params && params.ownerId) {
-      const fetchUrl = url(`/api/owner/${params.ownerId}`);
-      fetch(fetchUrl)
-        .then(response => response.json())
-        .then(owner => this.setState({ owner }));
-    }
+    const fetchUrl = url(`/api/owner/${ownerId}`);
+    fetch(fetchUrl)
+      .then(response => response.json())
+      .then(owner => this.setState({ owner }));
   }
 
   render() {
@@ -50,3 +45,5 @@ export default class OwnersPage extends React.Component<
     );
   }
 }
+
+export default withRouter(OwnersPage);

@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import { url } from '../../util';
 
 import { IVet } from '../../types';
@@ -8,7 +10,7 @@ interface IVetsPageState {
   vets: IVet[];
 }
 
-export default class VetsPage extends React.Component<void, IVetsPageState> {
+class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
   constructor(props) {
     super(props);
 
@@ -64,3 +66,5 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
     );
   }
 }
+
+export default withRouter(VetsPage);

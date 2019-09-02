@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 
 import App from './components/App';
 
@@ -18,20 +17,29 @@ import ErrorPage from './components/ErrorPage';
 import NotFoundPage from './components/NotFoundPage';
 
 export default () => (
-  <Route component={App}>
-    <Route path="/" component={WelcomePage} />
-    <Route path="/owners/list" component={FindOwnersPage} />
-    <Route path="/owners/new" component={NewOwnerPage} />
-    <Route path="/owners/:ownerId/edit" component={EditOwnerPage} />
-    <Route path="/owners/:ownerId/pets/:petId/edit" component={EditPetPage} />
-    <Route path="/owners/:ownerId/pets/new" component={NewPetPage} />
-    <Route
-      path="/owners/:ownerId/pets/:petId/visits/new"
-      component={VisitsPage}
-    />
-    <Route path="/owners/:ownerId" component={OwnersPage} />
-    <Route path="/vets" component={VetsPage} />
-    <Route path="/error" component={ErrorPage} />
-    <Route path="*" component={NotFoundPage} />
-  </Route>
+  <Route
+    render={() => (
+      <App>
+        <Switch>
+          <Route path="/" exact component={WelcomePage} />
+          <Route path="/owners/list" component={FindOwnersPage} />
+          <Route path="/owners/new" component={NewOwnerPage} />
+          <Route path="/owners/:ownerId(\d+)/edit" component={EditOwnerPage} />
+          <Route
+            path="/owners/:ownerId(\d+)/pets/:petId(\d+)/edit"
+            component={EditPetPage}
+          />
+          <Route path="/owners/:ownerId(\d+)/pets/new" component={NewPetPage} />
+          <Route
+            path="/owners/:ownerId(\d+)/pets/:petId(\d+)/visits/new"
+            component={VisitsPage}
+          />
+          <Route path="/owners/:ownerId(\d+)" component={OwnersPage} />
+          <Route path="/vets" component={VetsPage} />
+          <Route path="/error" component={ErrorPage} />
+          <Route path="*" component={NotFoundPage} />
+        </Switch>
+      </App>
+    )}
+  />
 );

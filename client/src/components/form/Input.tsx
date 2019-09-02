@@ -39,7 +39,7 @@ export default ({
   };
 
   const value = object[name];
-  const fieldError = error && error.fieldErrors[name];
+  const fieldError = error && error.fieldErrors && error.fieldErrors[name];
   const valid = !fieldError && value !== null && value !== undefined;
 
   const cssGroup = `form-group ${fieldError ? 'has-error' : ''}`;

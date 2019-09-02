@@ -2,8 +2,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-
-import { browserHistory as history } from 'react-router';
 // The Application
 import Root from './Root';
 
@@ -13,7 +11,7 @@ require('./styles/less/petclinic.less');
 const mountPoint = document.getElementById('mount');
 ReactDOM.render(
   <AppContainer>
-    <Root history={history} />
+    <Root />
   </AppContainer>,
   mountPoint
 );
@@ -24,7 +22,7 @@ if (module.hot) {
     const NextApp = require('./Root').default;
     ReactDOM.render(
       <AppContainer>
-        <NextApp history={history} />
+        <NextApp />
       </AppContainer>,
       mountPoint
     );
