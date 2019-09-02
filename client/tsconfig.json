@@ -22,8 +22,6 @@
   ],
   "exclude": [
     "node_modules",
-    "typings/browser.d.ts",
-    "typings/browser",
     "tests"
   ]
 }

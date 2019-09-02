@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Enzyme from 'enzyme';
-import * as Adapter from 'enzyme-adapter-react-15';
+import * as Adapter from 'enzyme-adapter-react-16';
 
 import { NotEmpty } from '../../../../src/components/form/Constraints';
 import FieldFeedbackPanel from '../../../../src/components/form/FieldFeedbackPanel';
