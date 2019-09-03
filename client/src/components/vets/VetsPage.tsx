@@ -2,12 +2,10 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { url } from '../../util';
-
-import { IVet } from '../../types';
+import { Vet, VetApi } from 'petclinic-api';
 
 interface IVetsPageState {
-  vets: IVet[];
+  vets: Vet[];
 }
 
 class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
@@ -18,14 +16,10 @@ class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
   }
 
   componentDidMount() {
-    const requestUrl = url('api/vet');
-
-    fetch(requestUrl)
-      .then(response => response.json())
-      .then(vets => {
-        console.log('vets', vets);
-        this.setState({ vets });
-      });
+    new VetApi().listVets().then(vets => {
+      console.log('vets', vets);
+      this.setState({ vets });
+    });
   }
 
   render() {

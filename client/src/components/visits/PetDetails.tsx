@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { IOwner, IPet } from '../../types';
+import { Owner, Pet } from 'petclinic-api';
 
-export default ({ owner, pet }: { owner: IOwner; pet: IPet }) => (
+import moment from 'moment';
+
+export default ({ owner, pet }: { owner: Owner; pet: Pet }) => (
   <table className="table table-striped">
     <thead>
       <tr>
@@ -15,7 +17,7 @@ export default ({ owner, pet }: { owner: IOwner; pet: IPet }) => (
     <tbody>
       <tr>
         <td>{pet.name}</td>
-        <td>{pet.birthDate}</td>
+        <td>{moment(pet.birthDate).format('YYYY-MM-DD')}</td>
         <td>{pet.type.name}</td>
         <td>
           {owner.firstName} {owner.lastName}

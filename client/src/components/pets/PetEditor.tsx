@@ -1,17 +1,20 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { submitForm, url } from '../../util';
+import { url } from '../../util';
+import { Owner, Pet, PetApi, PetFields } from 'petclinic-api';
 
 import Input from '../form/Input';
 import DateInput from '../form/DateInput';
 import SelectInput from '../form/SelectInput';
 
-import { IEditablePet, IError, IOwner, IPetRequest, ISelectOption } from '../../types';
+import { IEditablePet, IError, IPetTypeId, ISelectOption } from '../../types';
+
+import moment from 'moment';
 
 interface IPetEditorProps extends RouteComponentProps {
-  pet: IEditablePet;
-  owner: IOwner;
+  pet: Pet | PetFields;
+  owner: Owner;
   petTypes: ISelectOption[];
 }
 
@@ -26,7 +29,19 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this.state = { editablePet: Object.assign({}, props.pet) };
+    const initialPet: Pet | PetFields = props.pet;
+    const birthDate = initialPet.birthDate;
+
+    this.state = {
+      editablePet: {
+        name: initialPet.name || '',
+        birthDate:
+          birthDate !== undefined
+            ? moment(birthDate).format('YYYY-MM-DD')
+            : undefined,
+        typeId: initialPet.typeId as IPetTypeId,
+      },
+    };
   }
 
   onSubmit(event) {
@@ -45,30 +60,28 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
       throw new Error('Invalid state: no typeId');
     }
 
-    const request: IPetRequest = {
-      birthDate: editablePet.birthDate,
+    const request: PetFields = {
+      birthDate: new Date(editablePet.birthDate || ''),
       name: editablePet.name,
       typeId: Number(typeId),
     };
 
-    const url = editablePet.isNew
-      ? '/api/owner/' + owner.id + '/pet'
-      : '/api/owner/' + owner.id + '/pet/' + editablePet.id;
-    submitForm(
-      editablePet.isNew ? 'POST' : 'PUT',
-      url,
-      request,
-      (status, response) => {
-        if (status === 201 || status === 204) {
-          this.props.history.push({
-            pathname: '/owners/' + owner.id,
-          });
-        } else {
-          console.log('ERROR?!...', response);
-          this.setState({ error: response });
-        }
-      }
-    );
+    const initialPet = this.props.pet;
+    const petId = (initialPet as Pet).id;
+
+    (petId === undefined
+      ? new PetApi().addPet({ ownerId: owner.id, petFields: request })
+      : new PetApi().updatePet({ ownerId: owner.id, petId, petFields: request })
+    )
+      .then(() => {
+        this.props.history.push({
+          pathname: '/owners/' + owner.id,
+        });
+      })
+      .catch(response => {
+        console.log('ERROR?!...', response);
+        this.setState({ error: response });
+      });
   }
 
   onInputChange(name: string, value: string) {
@@ -86,7 +99,10 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
       return <></>;
     }
 
-    const formLabel = editablePet.isNew ? 'Add Pet' : 'Update Pet';
+    const initialPet = this.props.pet;
+    const petId = (initialPet as Pet).id;
+
+    const formLabel = petId === undefined ? 'Add Pet' : 'Update Pet';
 
     return (
       <div>

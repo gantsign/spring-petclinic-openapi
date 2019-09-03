@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { IEditablePet, IOwner, ISelectOption } from '../../types';
+import { ISelectOption } from '../../types';
+import { Owner, PetFields } from 'petclinic-api';
+
 import LoadingPanel from './LoadingPanel';
 import PetEditor from './PetEditor';
 
@@ -11,13 +13,12 @@ import createPetEditorModel from './createPetEditorModel';
 interface INewPetPageProps extends RouteComponentProps {}
 
 interface INewPetPageState {
-  pet?: IEditablePet;
-  owner?: IOwner;
+  pet?: PetFields;
+  owner?: Owner;
   petTypes?: ISelectOption[];
 }
 
-const NEW_PET: IEditablePet = {
-  isNew: true,
+const NEW_PET: PetFields = {
   name: '',
 };
 

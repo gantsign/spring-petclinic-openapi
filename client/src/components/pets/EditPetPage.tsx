@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { IEditablePet, IOwner, ISelectOption } from '../../types';
+import { ISelectOption } from '../../types';
 
-import { url } from '../../util';
+import { Owner, Pet, PetApi } from 'petclinic-api';
 
 import LoadingPanel from './LoadingPanel';
 import PetEditor from './PetEditor';
@@ -14,8 +14,8 @@ import createPetEditorModel from './createPetEditorModel';
 interface IEditPetPageProps extends RouteComponentProps {}
 
 interface IEditPetPageState {
-  pet?: IEditablePet;
-  owner?: IOwner;
+  pet?: Pet;
+  owner?: Owner;
   petTypes?: ISelectOption[];
 }
 
@@ -27,9 +27,7 @@ class EditPetPage extends React.Component<
     const ownerId = Number(this.props.match.params['ownerId']);
     const petId = Number(this.props.match.params['petId']);
 
-    const fetchUrl = url(`/api/owner/${ownerId}/pet/${petId}`);
-
-    const loadPetPromise = fetch(fetchUrl).then(response => response.json());
+    const loadPetPromise = new PetApi().getPet({ ownerId, petId });
 
     createPetEditorModel(ownerId, loadPetPromise).then(model =>
       this.setState(model)

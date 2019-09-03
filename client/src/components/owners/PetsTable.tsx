@@ -1,9 +1,11 @@
 import * as React from 'react';
 
 import { Link } from 'react-router-dom';
-import { IOwner, IPet } from '../../types';
+import { Owner, Pet } from 'petclinic-api';
 
-const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: IPet }) => (
+import moment from 'moment';
+
+const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: Pet }) => (
   <table className="table-condensed">
     <thead>
       <tr>
@@ -14,7 +16,7 @@ const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: IPet }) => (
     <tbody>
       {pet.visits.map(visit => (
         <tr key={visit.id}>
-          <td>{visit.date}</td>
+          <td>{moment(visit.date).format('YYYY-MM-DD')}</td>
           <td>{visit.description}</td>
         </tr>
       ))}
@@ -32,7 +34,7 @@ const VisitsTable = ({ ownerId, pet }: { ownerId: number; pet: IPet }) => (
   </table>
 );
 
-export default ({ owner }: { owner: IOwner }) => {
+export default ({ owner }: { owner: Owner }) => {
   const ownerId = owner.id;
   if (ownerId === undefined) {
     return <></>;
@@ -50,7 +52,7 @@ export default ({ owner }: { owner: IOwner }) => {
                   <dt>Name</dt>
                   <dd>{pet.name}</dd>
                   <dt>Birth Date</dt>
-                  <dd>{pet.birthDate}</dd>
+                  <dd>{moment(pet.birthDate).format('YYYY-MM-DD')}</dd>
                   <dt>Type</dt>
                   <dd>{pet.type.name}</dd>
                 </dl>

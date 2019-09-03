@@ -4,13 +4,12 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import OwnerEditor from './OwnerEditor';
 
-import { IOwner } from '../../types';
-import { url } from '../../util';
+import { Owner, OwnerApi } from 'petclinic-api';
 
 interface IEditOwnerPageProps extends RouteComponentProps {}
 
 interface IEditOwnerPageState {
-  owner: IOwner;
+  owner: Owner;
 }
 
 class EditOwnerPage extends React.Component<
@@ -20,9 +19,8 @@ class EditOwnerPage extends React.Component<
   componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    const fetchUrl = url(`/api/owner/${ownerId}`);
-    fetch(fetchUrl)
-      .then(response => response.json())
+    new OwnerApi()
+      .getOwner({ ownerId })
       .then(owner => this.setState({ owner }));
   }
   render() {

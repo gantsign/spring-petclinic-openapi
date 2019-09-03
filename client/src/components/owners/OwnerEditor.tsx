@@ -2,20 +2,21 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { submitForm, url } from '../../util';
+import { url } from '../../util';
 
 import Input from '../form/Input';
 
 import { Digits, NotEmpty } from '../form/Constraints';
 
-import { IError, IFieldError, IFieldErrors, IOwner } from '../../types';
+import { IError, IFieldError, IFieldErrors } from '../../types';
+import { Owner, OwnerApi, OwnerFields } from 'petclinic-api';
 
 interface IOwnerEditorProps extends RouteComponentProps {
-  initialOwner?: IOwner;
+  initialOwner?: Owner | OwnerFields;
 }
 
 interface IOwnerEditorState {
-  owner?: IOwner;
+  owner?: OwnerFields;
   error?: IError;
 }
 
@@ -42,22 +43,22 @@ class OwnerEditor extends React.Component<
       return;
     }
 
-    const url = owner.isNew ? '/api/owner' : '/api/owner/' + owner.id;
-    submitForm(owner.isNew ? 'POST' : 'PUT', url, owner, (status, response) => {
-      if (status === 200 || status === 201) {
-        const newOwner = response as IOwner;
-        const ownerId = newOwner.id;
-        if (ownerId === undefined) {
-          return;
-        }
+    const { initialOwner } = this.props;
+    const ownerId = (initialOwner as Owner).id;
+
+    (ownerId === undefined
+      ? new OwnerApi().addOwner({ ownerFields: owner })
+      : new OwnerApi().updateOwner({ ownerId, ownerFields: owner })
+    )
+      .then(newOwner =>
         this.props.history.push({
-          pathname: '/owners/' + ownerId,
-        });
-      } else {
+          pathname: '/owners/' + newOwner.id,
+        })
+      )
+      .catch(response => {
         console.log('ERROR?!...', response);
         this.setState({ error: response });
-      }
-    });
+      });
   }
 
   onInputChange(
@@ -66,7 +67,9 @@ class OwnerEditor extends React.Component<
     fieldError: IFieldError | undefined
   ) {
     const { owner, error } = this.state;
-    const modifiedOwner: IOwner = Object.assign({}, owner, { [name]: value });
+    const modifiedOwner: OwnerFields = Object.assign({}, owner, {
+      [name]: value,
+    });
 
     const newState: IOwnerEditorState = { owner: modifiedOwner };
 
@@ -93,6 +96,9 @@ class OwnerEditor extends React.Component<
     if (!owner) {
       return;
     }
+
+    const { initialOwner } = this.props;
+    const ownerId = (initialOwner as Owner).id;
 
     return (
       <div>
@@ -151,7 +157,7 @@ class OwnerEditor extends React.Component<
                 type="submit"
                 onClick={this.onSubmit}
               >
-                {owner.isNew ? 'Add Owner' : 'Update Owner'}
+                {ownerId === undefined ? 'Add Owner' : 'Update Owner'}
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FailingApi } from 'petclinic-api';
 
 interface IErrorPageState {
   error?: {
@@ -19,8 +20,9 @@ export default class ErrorPage extends React.Component<
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/api/oops')
-      .then(response => response.json())
+    new FailingApi()
+      .failingRequest()
+      .catch(response => response.json())
       .then(error => this.setState({ error }));
   }
 

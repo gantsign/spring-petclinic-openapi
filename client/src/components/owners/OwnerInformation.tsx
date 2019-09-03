@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Link } from 'react-router-dom';
-import { IOwner } from '../../types';
+import { Owner } from 'petclinic-api';
 
-export default ({ owner }: { owner: IOwner }) => (
+export default ({ owner }: { owner: Owner }) => (
   <section>
     <h2>Owner Information</h2>
     <table className="table table-striped">

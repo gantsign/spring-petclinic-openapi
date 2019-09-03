@@ -1,0 +1,37 @@
+plugins {
+  id 'com.diffplug.gradle.spotless'
+  id 'org.openapi.generator'
+}
+
+task ensureTypeScriptDirectory {
+  doLast {
+    mkdir "$projectDir/generated"
+  }
+}
+
+clean.doLast {
+  file("$projectDir/generated").deleteDir()
+}
+
+openApiGenerate {
+  generatorName = 'typescript-fetch'
+  inputSpec = "$rootDir/src/main/resources/schema/petclinic.openapi.yaml".toString()
+  outputDir = "$projectDir/generated".toString()
+  configOptions = [
+    npmName: 'petclinic-api',
+    npmVersion: '1.0.0'
+  ]
+}
+
+spotless {
+  groovyGradle {
+    paddedCell() // Avoid cyclic ambiguities
+    greclipse().configFile("$rootDir/config/eclipse-java-google-style.xml")
+  }
+}
+
+afterEvaluate {
+  spotlessCheck.dependsOn spotlessApply
+  tasks.openApiGenerate.dependsOn tasks.ensureTypeScriptDirectory
+  build.dependsOn tasks.openApiGenerate
+}

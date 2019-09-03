@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { IOwner } from '../../types';
+import { Owner } from 'petclinic-api';
 
-const renderRow = (owner: IOwner) => (
+const renderRow = (owner: Owner) => (
   <tr key={owner.id}>
     <td>
       <a href={`/owners/${owner.id}`}>
@@ -16,7 +16,7 @@ const renderRow = (owner: IOwner) => (
   </tr>
 );
 
-const renderOwners = (owners: IOwner[]) => (
+const renderOwners = (owners: Owner[]) => (
   <section>
     <h2>{owners.length} Owners found</h2>
     <table className="table table-striped">
@@ -34,5 +34,5 @@ const renderOwners = (owners: IOwner[]) => (
   </section>
 );
 
-export default ({ owners }: { owners: IOwner[] }) =>
+export default ({ owners }: { owners: Owner[] }) =>
   owners ? renderOwners(owners) : null;

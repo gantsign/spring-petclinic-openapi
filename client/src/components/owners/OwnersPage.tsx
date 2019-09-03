@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { IOwner } from '../../types';
-import { url } from '../../util';
+import { Owner, OwnerApi } from 'petclinic-api';
 
 import OwnerInformation from './OwnerInformation';
 import PetsTable from './PetsTable';
@@ -11,7 +10,7 @@ import PetsTable from './PetsTable';
 interface IOwnersPageProps extends RouteComponentProps {}
 
 interface IOwnerPageState {
-  owner?: IOwner;
+  owner?: Owner;
 }
 
 class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
@@ -24,9 +23,8 @@ class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
   componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    const fetchUrl = url(`/api/owner/${ownerId}`);
-    fetch(fetchUrl)
-      .then(response => response.json())
+    new OwnerApi()
+      .getOwner({ ownerId })
       .then(owner => this.setState({ owner }));
   }
 

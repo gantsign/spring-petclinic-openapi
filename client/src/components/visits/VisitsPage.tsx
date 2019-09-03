@@ -1,20 +1,23 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { IError, IOwner, IVisit } from '../../types';
+import { IEditableVisit, IError } from '../../types';
+import { Owner, OwnerApi, VisitApi, VisitFields } from 'petclinic-api';
 
-import { submitForm, url } from '../../util';
+import { url } from '../../util';
 import { NotEmpty } from '../form/Constraints';
 
 import DateInput from '../form/DateInput';
 import Input from '../form/Input';
 import PetDetails from './PetDetails';
 
+import moment from 'moment';
+
 interface IVisitsPageProps extends RouteComponentProps {}
 
 interface IVisitsPageState {
-  visit?: IVisit;
-  owner?: IOwner;
+  visit?: IEditableVisit;
+  owner?: Owner;
   error?: IError;
 }
 
@@ -29,14 +32,12 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    fetch(url(`/api/owner/${ownerId}`))
-      .then(response => response.json())
-      .then(owner =>
-        this.setState({
-          owner,
-          visit: { isNew: true, description: '' },
-        })
-      );
+    new OwnerApi().getOwner({ ownerId }).then(owner =>
+      this.setState({
+        owner,
+        visit: { date: '', description: '' },
+      })
+    );
   }
 
   onSubmit(event) {
@@ -52,22 +53,22 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
       throw new Error('Invalid state: no visit');
     }
 
-    const request = {
-      date: visit.date,
+    const request: VisitFields = {
+      date: moment(visit.date, 'YYYY-MM-DD').toDate(),
       description: visit.description,
     };
 
-    const url = '/api/owner/' + owner.id + '/pet/' + petId + '/visit';
-    submitForm('POST', url, request, (status, response) => {
-      if (status === 201) {
+    new VisitApi()
+      .addVisit({ ownerId: owner.id, petId, visitFields: request })
+      .then(() => {
         this.props.history.push({
           pathname: '/owners/' + owner.id,
         });
-      } else {
+      })
+      .catch(response => {
         console.log('ERROR?!...', response);
         this.setState({ error: response });
-      }
-    });
+      });
   }
 
   onInputChange(name: string, value: string) {

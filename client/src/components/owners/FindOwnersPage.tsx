@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { IOwner } from '../../types';
-import { url } from '../../util';
+import { Owner, OwnerApi } from 'petclinic-api';
 
 import OwnersTable from './OwnersTable';
 
@@ -13,7 +12,7 @@ import QueryString from 'query-string';
 interface IFindOwnersPageProps extends RouteComponentProps {}
 
 interface IFindOwnersPageState {
-  owners?: IOwner[];
+  owners?: Owner[];
   filter?: string;
 }
 
@@ -90,14 +89,9 @@ class FindOwnersPage extends React.Component<
    * Actually loads data from the server
    */
   fetchData(filter: string) {
-    const query = filter ? encodeURIComponent(filter) : '';
-    const requestUrl = url('api/owner?lastName=' + query);
-
-    fetch(requestUrl)
-      .then(response => response.json())
-      .then(owners => {
-        this.setState({ owners });
-      });
+    new OwnerApi().listOwners({ lastName: filter || '' }).then(owners => {
+      this.setState({ owners });
+    });
   }
 
   render() {
