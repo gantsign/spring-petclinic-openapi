@@ -3,7 +3,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { IEditablePet, IOwner, ISelectOption } from '../../types';
-
 import LoadingPanel from './LoadingPanel';
 import PetEditor from './PetEditor';
 

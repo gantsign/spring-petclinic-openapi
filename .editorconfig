@@ -11,6 +11,6 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
-[*.{java,gradle,html,js,jsx,ts,tsx,less}]
+[*.{java,gradle,html,js,jsx,ts,tsx,scss}]
 indent_size = 2
 trim_trailing_whitespace = true

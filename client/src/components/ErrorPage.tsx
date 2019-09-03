@@ -29,7 +29,7 @@ export default class ErrorPage extends React.Component<
 
     return (
       <div>
-        <img src="/images/pets.png" />
+        <img src="/images/pets.png" alt="" />
 
         <h2>Something happened...</h2>
         {error ? (

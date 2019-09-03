@@ -28,7 +28,6 @@ export default ({
     const { value } = event.target;
 
     // run validation (if any)
-    const error = null;
     const fieldError =
       constraint.validate(value) === false
         ? { field: name, message: constraint.message }

@@ -7,13 +7,7 @@ import Input from '../form/Input';
 import DateInput from '../form/DateInput';
 import SelectInput from '../form/SelectInput';
 
-import {
-  IEditablePet,
-  IError,
-  IOwner,
-  IPetRequest,
-  ISelectOption,
-} from '../../types';
+import { IEditablePet, IError, IOwner, IPetRequest, ISelectOption } from '../../types';
 
 interface IPetEditorProps extends RouteComponentProps {
   pet: IEditablePet;

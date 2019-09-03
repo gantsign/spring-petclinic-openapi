@@ -2,29 +2,30 @@
   "name": "spring-petclinic-reactjs",
   "version": "0.0.1",
   "description": "Spring Boot Pet Clinic Sample Application with React Frontend",
-  "main": "index.js",
   "repository": "https://github.com/spring-petclinic/spring-petclinic-reactjs",
+  "private": true,
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watchAll --no-cache",
     "prestart": "gts fix",
-    "start": "node server.js",
-    "prebuild:clean": "gts fix",
-    "build:clean": "rimraf ./public/dist && webpack --config webpack.config.js",
-    "prebuild:prod": "gts fix",
-    "build:prod": "rimraf ./public/dist && NODE_ENV=production webpack --config webpack.config.prod.js",
+    "start": "react-scripts start",
+    "prebuild": "gts fix",
+    "build": "react-scripts build",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run check"
+    "posttest": "npm run check",
+    "test": "react-scripts test",
+    "pretest:coverage": "npm run compile",
+    "posttest:coverage": "npm run check",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject"
   },
   "author": "Nils Hartmann",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap-sass": "^3.4.1",
     "moment": "^2.15.1",
     "query-string": "^6.8.3",
     "react": "^16.9.0",
@@ -40,44 +41,30 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^4.3.5",
     "@types/webpack-env": "^1.14.0",
-    "babel-core": "^6.4.0",
-    "babel-loader": "^6.2.1",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
-    "babel-preset-stage-0": "^6.3.13",
-    "chalk": "^1.1.3",
-    "cross-env": "^1.0.7",
-    "css-loader": "^0.23.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.9.0",
     "gts": "^1.1.0",
-    "jest": "^24.9.0",
     "jest-fetch-mock": "^2.1.2",
-    "less": "^2.7.1",
-    "less-loader": "^2.2.3",
+    "node-sass": "^4.12.0",
     "react-addons-test-utils": "^15.3.2",
-    "react-hot-loader": "^3.0.0-beta.0",
+    "react-scripts": "3.1.1",
     "react-test-renderer": "^15.6.2",
-    "rimraf": "^2.5.0",
-    "style-loader": "^0.13.0",
     "ts-jest": "^24.0.2",
-    "ts-loader": "^0.8.2",
-    "typescript": "~3.5.0",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.12.10",
-    "webpack-dev-server": "^1.14.1"
+    "typescript": "~3.5.0"
   },
-  "jest": {
-    "transform": {
-      ".*": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }

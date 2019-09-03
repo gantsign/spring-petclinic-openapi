@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import DatePicker from 'react-datepicker';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import { IError, IInputChangeHandler } from '../../types';
 

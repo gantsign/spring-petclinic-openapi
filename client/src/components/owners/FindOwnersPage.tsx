@@ -111,7 +111,13 @@ class FindOwnersPage extends React.Component<
         <section>
           <h2>Find Owners</h2>
 
-          <form className="form-horizontal" action="javascript:void(0)">
+          <form
+            className="form-horizontal"
+            onSubmit={event => {
+              event.preventDefault();
+              return false;
+            }}
+          >
             <div className="form-group">
               <div className="control-group" id="lastName">
                 <label className="col-sm-2 control-label">Last name </label>

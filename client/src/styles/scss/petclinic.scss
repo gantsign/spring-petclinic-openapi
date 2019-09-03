@@ -11,58 +11,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import "~bootstrap/less/bootstrap.less";
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 
-@icon-font-path:    "~bootstrap/fonts/";
+$spring-green:      #6db33f;
+$spring-dark-green: #5fa134;
+$spring-brown:      #34302D;
+$spring-grey:       #838789;
+$spring-light-grey: #f1f1f1;
 
-@spring-green:      #6db33f;
-@spring-dark-green: #5fa134;
-@spring-brown:      #34302D;
-@spring-grey:       #838789;
-@spring-light-grey: #f1f1f1;
+$body-bg:                           $spring-light-grey;
+$text-color:                        $spring-brown;
+$link-color:                        $spring-dark-green;
+$link-hover-color:                  $spring-dark-green;
 
-@body-bg:                           @spring-light-grey;
-@text-color:                        @spring-brown;
-@link-color:                        @spring-dark-green;
-@link-hover-color:                  @spring-dark-green;
+$navbar-default-link-color:         $spring-light-grey;
+$navbar-default-link-active-color:  $spring-light-grey;
+$navbar-default-link-hover-color:   $spring-light-grey;
+$navbar-default-link-hover-bg:      $spring-green;
+$navbar-default-toggle-icon-bar-bg: $spring-light-grey;
+$navbar-default-toggle-hover-bg:    transparent;
+$navbar-default-link-active-bg:     $spring-green;
 
-@navbar-default-link-color:         @spring-light-grey;
-@navbar-default-link-active-color:  @spring-light-grey;
-@navbar-default-link-hover-color:   @spring-light-grey;
-@navbar-default-link-hover-bg:      @spring-green;
-@navbar-default-toggle-icon-bar-bg: @spring-light-grey;
-@navbar-default-toggle-hover-bg:    transparent;
-@navbar-default-link-active-bg:     @spring-green;
+$border-radius-base:             0;
+$border-radius-large:            0;
+$border-radius-small:            0;
 
-@border-radius-base:             0;
-@border-radius-large:            0;
-@border-radius-small:            0;
+$btn-default-color:              $spring-light-grey;
+$btn-default-bg:                 $spring-brown;
+$btn-default-border:             $spring-green;
 
-@btn-default-color:              @spring-light-grey;
-@btn-default-bg:                 @spring-brown;
-@btn-default-border:             @spring-green;
+$nav-tabs-active-link-hover-color:        $spring-light-grey;
+$nav-tabs-active-link-hover-bg:           $spring-brown;
+$nav-tabs-active-link-hover-border-color: $spring-brown;
+$nav-tabs-border-color:                   $spring-brown;
 
-@nav-tabs-active-link-hover-color:        @spring-light-grey;
-@nav-tabs-active-link-hover-bg:           @spring-brown;
-@nav-tabs-active-link-hover-border-color: @spring-brown;
-@nav-tabs-border-color:                   @spring-brown;
+$pagination-active-bg:                    $spring-brown;
+$pagination-active-border:                $spring-green;
+$table-border-color:                      $spring-brown;
 
-@pagination-active-bg:                    @spring-brown;
-@pagination-active-border:                @spring-green;
-@table-border-color:                      @spring-brown;
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
 .table > thead > tr > th {
-  background-color: lighten(@spring-brown, 3%);
-  color: @spring-light-grey;
+  background-color: lighten($spring-brown, 3%);
+  color: $spring-light-grey;
 }
 
 .table-filter {
-  background-color: @spring-brown;
+  background-color: $spring-brown;
   padding: 9px 12px;
 }
 
 .nav > li > a {
-  color: @spring-grey;
+  color: $spring-grey;
 }
 
 .btn-default {
@@ -77,9 +77,9 @@
   &:focus,
   &:active,
   &.active,
-  .open .dropdown-toggle& {
-    background-color: @spring-brown;
-    border-color: @spring-brown;
+  .open .dropdown-toggle {
+    background-color: $spring-brown;
+    border-color: $spring-brown;
   }
 }
 
@@ -127,8 +127,8 @@ h1 {
 }
 
 .splash {
-  background: @spring-green;
-  color: @spring-brown;
+  background: $spring-green;
+  color: $spring-brown;
   display: none;
 }
 
@@ -156,7 +156,7 @@ table td.action-column {
 }
 
 .help-block {
-  color: lighten(@text-color, 50%); // lighten the text some for contrast
+  color: lighten($text-color, 50%); // lighten the text some for contrast
 }
 
 .xd-containers {
@@ -180,43 +180,43 @@ table td.action-column {
 }
 
 .deployment-status-deployed {
-  .label-success;
+  @extend .label-success;
 }
 
 .deployment-status-incomplete {
-  .label-warning;
+  @extend .label-warning;
 }
 
 .deployment-status-failed {
-  .label-danger;
+  @extend .label-danger;
 }
 
 .deployment-status-deploying {
-  .label-info
+  @extend .label-info;
 }
 .deployment-status-na {
 }
 
 .container-details-table th {
-  background-color: lighten(@spring-brown, 3%);
-  color: @spring-light-grey;
+  background-color: lighten($spring-brown, 3%);
+  color: $spring-light-grey;
 }
 
 .status-help-content-table td {
-  color: @spring-brown;
+  color: $spring-brown;
 }
 
 .alert-success {
-  .alert-variant(fade(@alert-success-bg, 70%); @alert-success-border; @alert-success-text);
+  @include alert-variant(fade($alert-success-bg, 70%), $alert-success-border, $alert-success-text);
 }
 .alert-info {
-  .alert-variant(fade(@alert-info-bg, 70%); @alert-info-border; @alert-info-text);
+  @include alert-variant(fade($alert-info-bg, 70%), $alert-info-border, $alert-info-text);
 }
 .alert-warning {
-  .alert-variant(fade(@alert-warning-bg, 70%); @alert-warning-border; @alert-warning-text);
+  @include alert-variant(fade($alert-warning-bg, 70%), $alert-warning-border, $alert-warning-text);
 }
 .alert-danger {
-  .alert-variant(fade(@alert-danger-bg, 70%); @alert-danger-border; @alert-danger-text);
+  @include alert-variant(fade($alert-danger-bg, 70%), $alert-danger-border, $alert-danger-text);
 }
 
 .myspinner {
@@ -233,13 +233,13 @@ table td.action-column {
 }
 
 hr {
-  border-top: 1px dotted @spring-brown;
+  border-top: 1px dotted $spring-brown;
 }
 
 @import "~react-datepicker/dist/react-datepicker.css";
-@import "typography.less";
-@import "header.less";
-@import "responsive.less";
+@import "typography.scss";
+@import "header.scss";
+@import "responsive.scss";
 
 
 section {

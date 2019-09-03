@@ -1,6 +1,6 @@
-import * as Constraints from '../../../../src/components/form/Constraints';
+import * as Constraints from '../Constraints';
 
-const afunc = ({a}) => {};
+const afunc = ({ a }) => {};
 
 describe('Constraints', () => {
   describe('NotEmpty', () => {
