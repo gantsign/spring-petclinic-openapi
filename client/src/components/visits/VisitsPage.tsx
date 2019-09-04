@@ -29,15 +29,15 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    new OwnerApi().getOwner({ ownerId }).then(owner =>
-      this.setState({
-        owner,
-        visit: { date: '', description: '' },
-      })
-    );
+    const owner = await new OwnerApi().getOwner({ ownerId });
+
+    this.setState({
+      owner,
+      visit: { date: '', description: '' },
+    });
   }
 
   onSubmit(event) {
@@ -58,18 +58,24 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
       description: visit.description,
     };
 
-    new VisitApi()
-      .addVisit({ ownerId: owner.id, petId, visitFields: request })
-      .then(() => {
-        this.props.history.push({
-          pathname: '/owners/' + owner.id,
-        });
-      })
-      .catch(response => {
-        console.log('ERROR?!...', response);
-        this.setState({ error: response });
-      });
+    this.saveVisit(owner.id, petId, request);
   }
+
+  saveVisit = async (
+    ownerId: number,
+    petId: number,
+    visitFields: VisitFields
+  ) => {
+    try {
+      await new VisitApi().addVisit({ ownerId, petId, visitFields });
+    } catch (response) {
+      console.log('ERROR?!...', response);
+      this.setState({ error: response });
+    }
+    this.props.history.push({
+      pathname: '/owners/' + ownerId,
+    });
+  };
 
   onInputChange(name: string, value: string) {
     const { visit } = this.state;

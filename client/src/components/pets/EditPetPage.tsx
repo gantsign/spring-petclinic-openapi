@@ -23,15 +23,14 @@ class EditPetPage extends React.Component<
   IEditPetPageProps,
   IEditPetPageState
 > {
-  componentDidMount() {
+  async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
     const petId = Number(this.props.match.params['petId']);
 
     const loadPetPromise = new PetApi().getPet({ ownerId, petId });
 
-    createPetEditorModel(ownerId, loadPetPromise).then(model =>
-      this.setState(model)
-    );
+    const model = await createPetEditorModel(ownerId, loadPetPromise);
+    this.setState(model);
   }
 
   render() {

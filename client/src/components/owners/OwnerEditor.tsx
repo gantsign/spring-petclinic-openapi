@@ -46,20 +46,24 @@ class OwnerEditor extends React.Component<
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
 
-    (ownerId === undefined
-      ? new OwnerApi().addOwner({ ownerFields: owner })
-      : new OwnerApi().updateOwner({ ownerId, ownerFields: owner })
-    )
-      .then(newOwner =>
-        this.props.history.push({
-          pathname: '/owners/' + newOwner.id,
-        })
-      )
-      .catch(response => {
-        console.log('ERROR?!...', response);
-        this.setState({ error: response });
-      });
+    this.saveOwner(ownerId, owner);
   }
+
+  saveOwner = async (ownerId: number | undefined, ownerFields: OwnerFields) => {
+    let newOwner;
+    try {
+      newOwner = await (ownerId === undefined
+        ? new OwnerApi().addOwner({ ownerFields })
+        : new OwnerApi().updateOwner({ ownerId, ownerFields }));
+    } catch (response) {
+      console.log('ERROR?!...', response);
+      this.setState({ error: response });
+    }
+
+    this.props.history.push({
+      pathname: '/owners/' + newOwner.id,
+    });
+  };
 
   onInputChange(
     name: string,

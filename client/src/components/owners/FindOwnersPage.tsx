@@ -42,7 +42,7 @@ class FindOwnersPage extends React.Component<
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { filter } = this.state;
     if (typeof filter === 'string') {
       // only load data on mount (initially) if filter is specified
@@ -51,7 +51,7 @@ class FindOwnersPage extends React.Component<
     }
   }
 
-  componentWillReceiveProps(nextProps: IFindOwnersPageProps) {
+  async componentWillReceiveProps(nextProps: IFindOwnersPageProps) {
     const { location } = nextProps;
 
     // read the filter from URI
@@ -88,10 +88,10 @@ class FindOwnersPage extends React.Component<
   /**
    * Actually loads data from the server
    */
-  fetchData(filter: string) {
-    new OwnerApi().listOwners({ lastName: filter || '' }).then(owners => {
-      this.setState({ owners });
-    });
+  async fetchData(filter: string) {
+    const owners = await new OwnerApi().listOwners({ lastName: filter || '' });
+
+    this.setState({ owners });
   }
 
   render() {

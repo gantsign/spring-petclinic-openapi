@@ -1,5 +1,5 @@
 import { ISelectOption } from '../../types';
-import { OwnerApi, PetApi, PetType } from 'petclinic-api';
+import { Owner, OwnerApi, PetApi, PetType } from 'petclinic-api';
 
 const toSelectOptions = (petTypes: PetType[]): ISelectOption[] =>
   petTypes.map(petType => ({
@@ -7,17 +7,13 @@ const toSelectOptions = (petTypes: PetType[]): ISelectOption[] =>
     name: petType.name || '',
   }));
 
-export default (
+export default async <T>(
   ownerId: number,
-  petLoaderPromise: Promise<any>
-): Promise<any> => {
-  return Promise.all([
-    new PetApi().listPetTypes().then(toSelectOptions),
-    new OwnerApi().getOwner({ ownerId }),
-    petLoaderPromise,
-  ]).then(results => ({
-    petTypes: results[0],
-    owner: results[1],
-    pet: results[2],
-  }));
+  petLoaderPromise: Promise<T>
+): Promise<{ petTypes: ISelectOption[]; owner: Owner; pet: T }> => {
+  return {
+    petTypes: await new PetApi().listPetTypes().then(toSelectOptions),
+    owner: await new OwnerApi().getOwner({ ownerId }),
+    pet: await petLoaderPromise,
+  };
 };

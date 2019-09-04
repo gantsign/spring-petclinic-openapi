@@ -23,12 +23,11 @@ const NEW_PET: PetFields = {
 };
 
 class NewPetPage extends React.Component<INewPetPageProps, INewPetPageState> {
-  componentDidMount() {
+  async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    createPetEditorModel(ownerId, Promise.resolve(NEW_PET)).then(model =>
-      this.setState(model)
-    );
+    const model = await createPetEditorModel(ownerId, Promise.resolve(NEW_PET));
+    this.setState(model);
   }
 
   render() {

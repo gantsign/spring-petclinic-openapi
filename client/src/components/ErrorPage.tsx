@@ -19,11 +19,12 @@ export default class ErrorPage extends React.Component<
     this.state = {};
   }
 
-  componentDidMount() {
-    new FailingApi()
-      .failingRequest()
-      .catch(response => response.json())
-      .then(error => this.setState({ error }));
+  async componentDidMount() {
+    try {
+      await new FailingApi().failingRequest();
+    } catch (response) {
+      this.setState({ error: response.json() });
+    }
   }
 
   render() {

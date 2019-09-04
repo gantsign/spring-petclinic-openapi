@@ -47,7 +47,6 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
   onSubmit(event) {
     event.preventDefault();
 
-    const { owner } = this.props;
     const { editablePet } = this.state;
 
     if (!editablePet) {
@@ -69,20 +68,25 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     const initialPet = this.props.pet;
     const petId = (initialPet as Pet).id;
 
-    (petId === undefined
-      ? new PetApi().addPet({ ownerId: owner.id, petFields: request })
-      : new PetApi().updatePet({ ownerId: owner.id, petId, petFields: request })
-    )
-      .then(() => {
-        this.props.history.push({
-          pathname: '/owners/' + owner.id,
-        });
-      })
-      .catch(response => {
-        console.log('ERROR?!...', response);
-        this.setState({ error: response });
-      });
+    this.savePet(petId, request);
   }
+
+  savePet = async (petId: number | undefined, petFields: PetFields) => {
+    const { owner } = this.props;
+
+    try {
+      await (petId === undefined
+        ? new PetApi().addPet({ ownerId: owner.id, petFields })
+        : new PetApi().updatePet({ ownerId: owner.id, petId, petFields }));
+    } catch (response) {
+      console.log('ERROR?!...', response);
+      this.setState({ error: response });
+    }
+
+    this.props.history.push({
+      pathname: '/owners/' + owner.id,
+    });
+  };
 
   onInputChange(name: string, value: string) {
     const { editablePet } = this.state;

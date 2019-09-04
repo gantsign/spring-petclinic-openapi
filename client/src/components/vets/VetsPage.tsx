@@ -15,11 +15,11 @@ class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
     this.state = { vets: [] };
   }
 
-  componentDidMount() {
-    new VetApi().listVets().then(vets => {
-      console.log('vets', vets);
-      this.setState({ vets });
-    });
+  async componentDidMount() {
+    const vets = await new VetApi().listVets();
+
+    console.log('vets', vets);
+    this.setState({ vets });
   }
 
   render() {

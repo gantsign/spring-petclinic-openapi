@@ -16,12 +16,12 @@ class EditOwnerPage extends React.Component<
   IEditOwnerPageProps,
   IEditOwnerPageState
 > {
-  componentDidMount() {
+  async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    new OwnerApi()
-      .getOwner({ ownerId })
-      .then(owner => this.setState({ owner }));
+    const owner = await new OwnerApi().getOwner({ ownerId });
+
+    this.setState({ owner });
   }
   render() {
     const owner = this.state && this.state.owner;
