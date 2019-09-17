@@ -1,125 +1,97 @@
 import * as React from 'react';
-import * as Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import FieldFeedbackPanel from '../FieldFeedbackPanel';
-import { IConstraint, IInputChangeHandler } from '../../../types';
+
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+
+import '@testing-library/jest-dom/extend-expect';
+import { fireEvent, render, wait } from '@testing-library/react';
 
 import Input from '../Input';
 
-const shallow = Enzyme.shallow;
-Enzyme.configure({ adapter: new Adapter() });
-
 describe('Input', () => {
-  const onChange: IInputChangeHandler = (name, value, error) => {
-    onChangeResult = { name, value, error };
-  };
-
-  let object: any | null = null;
-  let onChangeResult: any | null = null;
-
-  beforeEach(() => {
-    object = {
-      myField: 'blabla',
+  it('should render correctly without field error', async () => {
+    const result = { values: {} };
+    const onSubmit = values => {
+      result.values = values;
     };
 
-    onChangeResult = null;
-  });
-
-  it('should render correctly without field error', () => {
-    const error = {
-      fieldErrors: {},
-    };
-
-    const input = shallow(
-      <Input
-        object={object}
-        label="My Field"
-        name="myField"
-        error={error}
-        onChange={onChange}
-      />
+    const { getByLabelText, getByText, container } = render(
+      <Formik initialValues={{ myField: 'blabla' }} onSubmit={onSubmit}>
+        <Form id="form">
+          <Input name="myField" label="My Field" />
+          <button type="submit">Submit</button>
+        </Form>
+      </Formik>
     );
 
-    // Make sure label is rendered correctly
-    expect(input.find('.control-label').text()).toBe('My Field');
+    const input = getByLabelText('My Field') as HTMLInputElement;
 
     // Make sure input field's value is correct
-    expect(input.find('input').props().value).toBe('blabla');
+    expect(input.value).toBe('blabla');
 
-    // we don't have any errors
-    expect(input.find('.has-error').length).toBe(0);
-    expect(input.find(FieldFeedbackPanel).props().valid).toBe(true);
+    // We don't have any errors
+    const formGroup = container.getElementsByClassName('form-group')[0];
+    expect(formGroup).not.toHaveClass('has-error');
+    expect(container.getElementsByClassName('help-inline').length).toBe(0);
 
-    // change to new value
-    input
-      .find('input')
-      .simulate('change', { target: { value: 'My new value' } });
-
-    // make sure callback is called
-    expect(onChangeResult).toBeTruthy();
-    expect(onChangeResult.name).toBe('myField');
-    expect(onChangeResult.value).toBe('My new value');
-    expect(onChangeResult.error).toBeFalsy();
-  });
-
-  it('should render correctly with field error', () => {
-    const error = {
-      fieldErrors: {
-        myField: {
-          field: 'myField',
-          message: 'There was an error',
-        },
-      },
-    };
-
-    const input = shallow(
-      <Input
-        object={object}
-        label="My Field"
-        name="myField"
-        error={error}
-        onChange={onChange}
-      />
+    // Change to new value
+    fireEvent.change(input, { target: { value: 'My new value' } });
+    expect(input.value).toBe('My new value');
+    fireEvent(
+      getByText('Submit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
     );
 
-    // Make sure label is rendered correctly
-    expect(input.find('.control-label').text()).toBe('My Field');
+    // Make sure value is changed
+    await wait();
+    expect(result.values['myField']).toBe('My new value');
+  });
+
+  it('should render correctly with field error', async () => {
+    const result = { values: {} };
+    const onSubmit = values => {
+      result.values = values;
+    };
+
+    const { getByLabelText, getByText, container } = render(
+      <Formik
+        initialValues={{ myField: '' }}
+        onSubmit={onSubmit}
+        validationSchema={Yup.object().shape({
+          myField: Yup.string().required('Required'),
+        })}
+      >
+        <Form id="form">
+          <Input name="myField" label="My Field" />
+          <button type="submit">Submit</button>
+        </Form>
+      </Formik>
+    );
+
+    const input = getByLabelText('My Field') as HTMLInputElement;
 
     // Make sure input field's value is correct
-    expect(input.find('input').props().value).toBe('blabla');
+    expect(input.value).toBe('');
 
-    // we don't have any errors
-    expect(input.find('.has-error').length).toBe(1);
-    expect(input.find(FieldFeedbackPanel).props().valid).toBe(false);
-    expect(input.find(FieldFeedbackPanel).props().fieldError).toBe(
-      error.fieldErrors.myField
-    );
-  });
-
-  it('should checked constrains on input change', () => {
-    const error = {
-      fieldErrors: {},
-    };
-
-    const constraint: IConstraint = {
-      message: 'Invalid',
-      validate: jest.fn(),
-    };
-
-    const input = shallow(
-      <Input
-        object={object}
-        label="My Field"
-        name="myField"
-        error={error}
-        onChange={onChange}
-        constraint={constraint as any}
-      />
+    // Submit form
+    fireEvent(
+      getByText('Submit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
     );
 
-    input
-      .find('input')
-      .simulate('change', { target: { value: 'My new value' } });
-    expect(constraint.validate).toHaveBeenCalledWith('My new value');
+    // Check for errors
+    await wait();
+
+    const formGroup = container.getElementsByClassName('form-group')[0];
+    expect(formGroup).toHaveClass('has-error');
+
+    const errorContainer = container.getElementsByClassName('help-inline')[0];
+    expect(errorContainer.innerHTML).toBe('Required');
   });
 });

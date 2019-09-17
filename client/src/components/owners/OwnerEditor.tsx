@@ -2,22 +2,19 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { url } from '../../util';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
 import Input from '../form/Input';
 
-import { Digits, NotEmpty } from '../form/Constraints';
-
-import { IError, IFieldError, IFieldErrors } from '../../types';
-import { Owner, OwnerApi, OwnerFields } from 'petclinic-api';
+import { Owner, OwnerApi, OwnerFields, RestError } from 'petclinic-api';
 
 interface IOwnerEditorProps extends RouteComponentProps {
-  initialOwner?: Owner | OwnerFields;
+  initialOwner: Owner | OwnerFields;
 }
 
 interface IOwnerEditorState {
-  owner?: OwnerFields;
-  error?: IError;
+  error?: RestError;
 }
 
 class OwnerEditor extends React.Component<
@@ -26,30 +23,26 @@ class OwnerEditor extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this.state = {
-      owner: Object.assign({}, props.initialOwner),
-    };
+    this.state = {};
   }
 
-  onSubmit(event) {
-    event.preventDefault();
-
-    const { owner } = this.state;
-
-    if (!owner) {
-      return;
-    }
-
+  async onSubmit(values, { setSubmitting }) {
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
 
-    this.saveOwner(ownerId, owner);
+    try {
+      await this.saveOwner(ownerId, values);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  saveOwner = async (ownerId: number | undefined, ownerFields: OwnerFields) => {
+  saveOwner = async (
+    ownerId: number | undefined,
+    ownerFields: OwnerFields
+  ): Promise<void> => {
     let newOwner;
     try {
       newOwner = await (ownerId === undefined
@@ -65,107 +58,66 @@ class OwnerEditor extends React.Component<
     });
   };
 
-  onInputChange(
-    name: string,
-    value: string,
-    fieldError: IFieldError | undefined
-  ) {
-    const { owner, error } = this.state;
-    const modifiedOwner: OwnerFields = Object.assign({}, owner, {
-      [name]: value,
-    });
-
-    const newState: IOwnerEditorState = { owner: modifiedOwner };
-
-    const newFieldErrors: IFieldErrors | undefined =
-      fieldError === undefined
-        ? undefined
-        : error
-        ? Object.assign({}, error.fieldErrors, { [name]: fieldError })
-        : { [name]: fieldError };
-    const newError: IError | undefined =
-      newFieldErrors === undefined
-        ? undefined
-        : { fieldErrors: newFieldErrors };
-    if (newError) {
-      newState.error = newError;
-    }
-
-    this.setState(newState);
-  }
-
   render() {
-    const { owner, error } = this.state;
-
-    if (!owner) {
-      return;
-    }
-
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
 
     return (
       <div>
         <h2>New Owner</h2>
-        <form
-          className="form-horizontal"
-          method="POST"
-          action={url('/api/owner')}
+        <Formik
+          initialValues={initialOwner}
+          validationSchema={Yup.object().shape({
+            firstName: Yup.string()
+              .matches(
+                /^[a-zA-Z]+$/,
+                'Only ASCII characters A to Z are allowed'
+              )
+              .max(30, 'Must be at most 30 characters')
+              .required('Required'),
+            lastName: Yup.string()
+              .matches(
+                /^[a-zA-Z]+$/,
+                'Only ASCII characters A to Z are allowed'
+              )
+              .max(30, 'Must be at most 30 characters')
+              .required('Required'),
+            address: Yup.string()
+              .max(255, 'Must be at most 255 characters')
+              .required('Required'),
+            city: Yup.string()
+              .max(80, 'Must be at most 80 characters')
+              .required('Required'),
+            telephone: Yup.string()
+              .matches(/^[0-9]+$/, 'Only digits 0 to 9 are allowed')
+              .max(10, 'Must be at most 10 digits')
+              .required('Required'),
+          })}
+          onSubmit={this.onSubmit}
         >
-          <div className="form-group has-feedback">
-            <Input
-              object={owner}
-              error={error}
-              constraint={NotEmpty}
-              label="First Name"
-              name="firstName"
-              onChange={this.onInputChange}
-            />
-            <Input
-              object={owner}
-              error={error}
-              constraint={NotEmpty}
-              label="Last Name"
-              name="lastName"
-              onChange={this.onInputChange}
-            />
-            <Input
-              object={owner}
-              error={error}
-              constraint={NotEmpty}
-              label="Address"
-              name="address"
-              onChange={this.onInputChange}
-            />
-            <Input
-              object={owner}
-              error={error}
-              constraint={NotEmpty}
-              label="City"
-              name="city"
-              onChange={this.onInputChange}
-            />
-            <Input
-              object={owner}
-              error={error}
-              constraint={Digits(10)}
-              label="Telephone"
-              name="telephone"
-              onChange={this.onInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10">
-              <button
-                className="btn btn-default"
-                type="submit"
-                onClick={this.onSubmit}
-              >
-                {ownerId === undefined ? 'Add Owner' : 'Update Owner'}
-              </button>
-            </div>
-          </div>
-        </form>
+          {({ isSubmitting }) => (
+            <Form className="form-horizontal">
+              <div className="form-group has-feedback">
+                <Input name="firstName" label="First Name" />
+                <Input name="lastName" label="Last Name" />
+                <Input name="address" label="Address" />
+                <Input name="city" label="City" />
+                <Input name="telephone" label="Telephone" />
+              </div>
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    className="btn btn-default"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {ownerId === undefined ? 'Add Owner' : 'Update Owner'}
+                  </button>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }

@@ -1,31 +1,32 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { IEditableVisit, IError } from '../../types';
-import { Owner, OwnerApi, VisitApi, VisitFields } from 'petclinic-api';
+import {
+  Owner,
+  OwnerApi,
+  RestError,
+  VisitApi,
+  VisitFields,
+} from 'petclinic-api';
 
-import { url } from '../../util';
-import { NotEmpty } from '../form/Constraints';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
 import DateInput from '../form/DateInput';
 import Input from '../form/Input';
 import PetDetails from './PetDetails';
 
-import moment from 'moment';
-
 interface IVisitsPageProps extends RouteComponentProps {}
 
 interface IVisitsPageState {
-  visit?: IEditableVisit;
-  owner?: Owner;
-  error?: IError;
+  owner: Owner;
+  error?: RestError;
 }
 
 class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   constructor(props) {
     super(props);
 
-    this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -34,31 +35,18 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
 
     const owner = await new OwnerApi().getOwner({ ownerId });
 
-    this.setState({
-      owner,
-      visit: { date: '', description: '' },
-    });
+    this.setState({ owner });
   }
 
-  onSubmit(event) {
-    event.preventDefault();
-
+  async onSubmit(values, { setSubmitting }) {
     const petId = Number(this.props.match.params['petId']);
-    const { owner, visit } = this.state;
+    const { owner } = this.state;
 
-    if (!owner) {
-      throw new Error('Invalid state: no owner');
+    try {
+      await this.saveVisit(owner.id, petId, values);
+    } finally {
+      setSubmitting(false);
     }
-    if (!visit) {
-      throw new Error('Invalid state: no visit');
-    }
-
-    const request: VisitFields = {
-      date: moment(visit.date, 'YYYY-MM-DD').toDate(),
-      description: visit.description,
-    };
-
-    this.saveVisit(owner.id, petId, request);
   }
 
   saveVisit = async (
@@ -77,18 +65,12 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     });
   };
 
-  onInputChange(name: string, value: string) {
-    const { visit } = this.state;
-
-    this.setState({ visit: Object.assign({}, visit, { [name]: value }) });
-  }
-
   render() {
     if (!this.state) {
       return <h2>Loading...</h2>;
     }
 
-    const { owner, error, visit } = this.state;
+    const { owner } = this.state;
     if (!owner) {
       return <h2>Loading...</h2>;
     }
@@ -106,40 +88,38 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
         <b>Pet</b>
         <PetDetails owner={owner} pet={pet} />
 
-        <form
-          className="form-horizontal"
-          method="POST"
-          action={url('/api/owner')}
+        <Formik
+          initialValues={{ date: undefined, description: '' }}
+          validationSchema={Yup.object().shape({
+            date: Yup.date()
+              .nullable()
+              .required('Required'),
+            description: Yup.string()
+              .max(255, 'Must be at most 255 characters')
+              .required('Required'),
+          })}
+          onSubmit={this.onSubmit}
         >
-          <div className="form-group has-feedback">
-            <DateInput
-              object={visit}
-              error={error}
-              label="Date"
-              name="date"
-              onChange={this.onInputChange}
-            />
-            <Input
-              object={visit}
-              error={error}
-              constraint={NotEmpty}
-              label="Description"
-              name="description"
-              onChange={this.onInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10">
-              <button
-                className="btn btn-default"
-                type="submit"
-                onClick={this.onSubmit}
-              >
-                Add Visit
-              </button>
-            </div>
-          </div>
-        </form>
+          {({ isSubmitting }) => (
+            <Form className="form-horizontal">
+              <div className="form-group has-feedback">
+                <DateInput name="date" label="Date" />
+                <Input name="description" label="Description" />
+              </div>
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    className="btn btn-default"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    Add Visit
+                  </button>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }

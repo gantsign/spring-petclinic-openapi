@@ -20,6 +20,8 @@ interface INewPetPageState {
 
 const NEW_PET: PetFields = {
   name: '',
+  birthDate: undefined,
+  typeId: undefined,
 };
 
 class NewPetPage extends React.Component<INewPetPageProps, INewPetPageState> {

@@ -1,63 +1,33 @@
 import * as React from 'react';
 
-import { IConstraint, IError, IInputChangeHandler } from '../../types';
+import { connect, ErrorMessage, Field } from 'formik';
 
-import FieldFeedbackPanel from './FieldFeedbackPanel';
+const Input = ({ name, label, ...rest }) => {
+  const valid = !rest.formik.errors[name];
+  const touched = !!rest.formik.touched[name];
 
-const NoConstraint: IConstraint = {
-  message: '',
-  validate: v => true,
-};
-
-export default ({
-  object,
-  error,
-  name,
-  constraint = NoConstraint,
-  label,
-  onChange,
-}: {
-  object: any;
-  error?: IError;
-  name: string;
-  constraint?: IConstraint;
-  label: string;
-  onChange: IInputChangeHandler;
-}) => {
-  const handleOnChange = event => {
-    const { value } = event.target;
-
-    // run validation (if any)
-    const fieldError =
-      constraint.validate(value) === false
-        ? { field: name, message: constraint.message }
-        : undefined;
-
-    // invoke callback
-    onChange(name, value, fieldError);
-  };
-
-  const value = object[name];
-  const fieldError = error && error.fieldErrors && error.fieldErrors[name];
-  const valid = !fieldError && value !== null && value !== undefined;
-
-  const cssGroup = `form-group ${fieldError ? 'has-error' : ''}`;
+  const warn = touched && !valid;
+  const cssGroup = `form-group ${warn ? 'has-error' : ''}`;
+  const icon = warn ? 'glyphicon-remove' : 'glyphicon-ok';
 
   return (
     <div className={cssGroup}>
-      <label className="col-sm-2 control-label">{label}</label>
+      <label htmlFor={name} className="col-sm-2 control-label">
+        {label}
+      </label>
 
       <div className="col-sm-10">
-        <input
-          type="text"
-          name={name}
-          className="form-control"
-          value={value}
-          onChange={handleOnChange}
-        />
+        <Field id={name} name={name} className="form-control" {...rest} />
 
-        <FieldFeedbackPanel valid={valid} fieldError={fieldError} />
+        <span
+          className={`glyphicon ${icon} form-control-feedback`}
+          aria-hidden="true"
+        ></span>
+
+        <ErrorMessage name={name} component="span" className="help-inline" />
       </div>
     </div>
   );
 };
+
+export default connect(Input);

@@ -1,16 +1,17 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { url } from '../../util';
-import { Owner, Pet, PetApi, PetFields } from 'petclinic-api';
+
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+
+import { Owner, Pet, PetApi, PetFields, RestError } from 'petclinic-api';
 
 import Input from '../form/Input';
 import DateInput from '../form/DateInput';
 import SelectInput from '../form/SelectInput';
 
-import { IEditablePet, IError, IPetTypeId, ISelectOption } from '../../types';
-
-import moment from 'moment';
+import { ISelectOption } from '../../types';
 
 interface IPetEditorProps extends RouteComponentProps {
   pet: Pet | PetFields;
@@ -19,56 +20,32 @@ interface IPetEditorProps extends RouteComponentProps {
 }
 
 interface IPetEditorState {
-  editablePet?: IEditablePet;
-  error?: IError;
+  error?: RestError;
 }
 
 class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
   constructor(props) {
     super(props);
-    this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    const initialPet: Pet | PetFields = props.pet;
-    const birthDate = initialPet.birthDate;
-
-    this.state = {
-      editablePet: {
-        name: initialPet.name || '',
-        birthDate:
-          birthDate !== undefined
-            ? moment(birthDate).format('YYYY-MM-DD')
-            : undefined,
-        typeId: initialPet.typeId as IPetTypeId,
-      },
-    };
+    this.state = {};
   }
 
-  onSubmit(event) {
-    event.preventDefault();
-
-    const { editablePet } = this.state;
-
-    if (!editablePet) {
-      throw new Error('Invalid state: no editablePet');
-    }
-
-    const { typeId = null } = editablePet;
-
-    if (typeId == null) {
-      throw new Error('Invalid state: no typeId');
-    }
-
+  async onSubmit(values, { setSubmitting }) {
     const request: PetFields = {
-      birthDate: new Date(editablePet.birthDate || ''),
-      name: editablePet.name,
-      typeId: Number(typeId),
+      birthDate: values.birthDate,
+      name: values.name,
+      typeId: Number(values.typeId),
     };
 
     const initialPet = this.props.pet;
     const petId = (initialPet as Pet).id;
 
-    this.savePet(petId, request);
+    try {
+      await this.savePet(petId, request);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   savePet = async (petId: number | undefined, petFields: PetFields) => {
@@ -88,20 +65,8 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     });
   };
 
-  onInputChange(name: string, value: string) {
-    const { editablePet } = this.state;
-    const modifiedPet = Object.assign({}, editablePet, { [name]: value });
-
-    this.setState({ editablePet: modifiedPet });
-  }
-
   render() {
     const { owner, petTypes } = this.props;
-    const { editablePet, error } = this.state;
-
-    if (!editablePet) {
-      return <></>;
-    }
 
     const initialPet = this.props.pet;
     const petId = (initialPet as Pet).id;
@@ -111,54 +76,47 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     return (
       <div>
         <h2>{formLabel}</h2>
-        <form
-          className="form-horizontal"
-          method="POST"
-          action={url('/api/owner')}
+        <Formik
+          initialValues={initialPet}
+          validationSchema={Yup.object().shape({
+            name: Yup.string()
+              .max(30, 'Must be at most 30 characters')
+              .required('Required'),
+            birthDate: Yup.date()
+              .nullable()
+              .required('Required'),
+            typeId: Yup.number().required('Required'),
+          })}
+          onSubmit={this.onSubmit}
         >
-          <div className="form-group has-feedback">
-            <div className="form-group">
-              <label className="col-sm-2 control-label">Owner</label>
-              <div className="col-sm-10">
-                {owner.firstName} {owner.lastName}
-              </div>
-            </div>
+          {({ isSubmitting }) => (
+            <Form className="form-horizontal">
+              <div className="form-group has-feedback">
+                <div className="form-group">
+                  <label className="col-sm-2 control-label">Owner</label>
+                  <div className="col-sm-10">
+                    {owner.firstName} {owner.lastName}
+                  </div>
+                </div>
 
-            <Input
-              object={editablePet}
-              error={error}
-              label="Name"
-              name="name"
-              onChange={this.onInputChange}
-            />
-            <DateInput
-              object={editablePet}
-              error={error}
-              label="Birth date"
-              name="birthDate"
-              onChange={this.onInputChange}
-            />
-            <SelectInput
-              object={editablePet}
-              error={error}
-              label="Type"
-              name="typeId"
-              options={petTypes}
-              onChange={this.onInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10">
-              <button
-                className="btn btn-default"
-                type="submit"
-                onClick={this.onSubmit}
-              >
-                {formLabel}
-              </button>
-            </div>
-          </div>
-        </form>
+                <Input name="name" label="Name" />
+                <DateInput name="birthDate" label="Birth date" />
+                <SelectInput name="typeId" label="Type" options={petTypes} />
+              </div>
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button
+                    className="btn btn-default"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {formLabel}
+                  </button>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }

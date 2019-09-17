@@ -9,11 +9,12 @@ import * as H from 'history';
 
 import QueryString from 'query-string';
 
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+
 interface IFindOwnersPageProps extends RouteComponentProps {}
 
 interface IFindOwnersPageState {
-  owners?: Owner[];
-  filter?: string;
+  owners: Owner[];
 }
 
 const getFilterFromLocation = (location: H.Location): string | undefined => {
@@ -34,40 +35,18 @@ class FindOwnersPage extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.onFilterChange = this.onFilterChange.bind(this);
     this.submitSearchForm = this.submitSearchForm.bind(this);
 
-    this.state = {
-      filter: getFilterFromLocation(props.location),
-    };
+    this.state = { owners: [] };
   }
 
   async componentDidMount() {
-    const { filter } = this.state;
+    const filter = getFilterFromLocation(this.props.location);
     if (typeof filter === 'string') {
       // only load data on mount (initially) if filter is specified
       // i.e. lastName query param in URI was set
       this.fetchData(filter);
     }
-  }
-
-  async componentWillReceiveProps(nextProps: IFindOwnersPageProps) {
-    const { location } = nextProps;
-
-    // read the filter from URI
-    const filter = getFilterFromLocation(location);
-
-    // set state
-    this.setState({ filter });
-
-    // load data according to filter
-    this.fetchData(filter || '');
-  }
-
-  onFilterChange(event) {
-    this.setState({
-      filter: event.target.value as string,
-    });
   }
 
   /**
@@ -76,13 +55,15 @@ class FindOwnersPage extends React.Component<
    * This method updates the URL with the entered lastName. The change of the URL
    * leads to new properties and thus results in rendering.
    */
-  submitSearchForm() {
-    const { filter } = this.state;
+  submitSearchForm(values) {
+    const { filter } = values;
 
     this.props.history.push({
       pathname: '/owners/list',
       search: `?lastName=${encodeURIComponent(filter || '')}`,
     });
+
+    this.fetchData(filter);
   }
 
   /**
@@ -95,8 +76,8 @@ class FindOwnersPage extends React.Component<
   }
 
   render() {
-    const filter = this.state.filter || '';
-    const owners = this.state.owners || [];
+    const filter = getFilterFromLocation(this.props.location) || '';
+    const owners = this.state.owners;
 
     const showResults: boolean = filter.length > 0 || owners.length > 0;
 
@@ -104,42 +85,33 @@ class FindOwnersPage extends React.Component<
       <div>
         <section>
           <h2>Find Owners</h2>
-
-          <form
-            className="form-horizontal"
-            onSubmit={event => {
-              event.preventDefault();
-              return false;
-            }}
-          >
-            <div className="form-group">
-              <div className="control-group" id="lastName">
-                <label className="col-sm-2 control-label">Last name </label>
-                <div className="col-sm-10">
-                  <input
-                    className="form-control"
-                    name="filter"
-                    value={filter}
-                    onChange={this.onFilterChange}
-                    size={30}
-                    maxLength={80}
-                  />
-                  {/* <span className='help-inline'><form:errors path='*'/></span> TODO */}
+          <Formik initialValues={{ filter }} onSubmit={this.submitSearchForm}>
+            {() => (
+              <Form className="form-horizontal">
+                <div className="form-group">
+                  <div className="control-group" id="lastName">
+                    <label className="col-sm-2 control-label">Last name </label>
+                    <div className="col-sm-10">
+                      <Field
+                        name="filter"
+                        className="form-control"
+                        size={30}
+                        maxLength={80}
+                      />
+                      <ErrorMessage name="filter" component="div" />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="col-sm-offset-2 col-sm-10">
-                <button
-                  type="button"
-                  onClick={this.submitSearchForm}
-                  className="btn btn-default"
-                >
-                  Find Owner
-                </button>
-              </div>
-            </div>
-          </form>
+                <div className="form-group">
+                  <div className="col-sm-offset-2 col-sm-10">
+                    <button type="submit" className="btn btn-default">
+                      Find Owner
+                    </button>
+                  </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </section>
         {showResults && <OwnersTable owners={owners} />}
         <Link className="btn btn-default" to="/owners/new">
