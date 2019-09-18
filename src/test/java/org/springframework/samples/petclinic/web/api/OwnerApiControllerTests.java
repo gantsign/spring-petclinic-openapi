@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -146,8 +146,6 @@ public class OwnerApiControllerTests extends TestBase {
 
     ObjectMapper mapper = new ObjectMapper();
     String ownerAsJsonString = mapper.writeValueAsString(newOwnerDto);
-    newOwnerDto.setId(666);
-    String newOwnerAsJsonString = mapper.writeValueAsString(newOwnerDto);
 
     webTestClient
         .post()
@@ -254,7 +252,7 @@ public class OwnerApiControllerTests extends TestBase {
   private static List<Owner> setupOwners() {
 
     @SuppressWarnings("TooBroadScope")
-    final List<Owner> owners = new LinkedList<>();
+    final List<Owner> owners = new ArrayList<>();
 
     Owner owner = new Owner();
     owner.setId(0);

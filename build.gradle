@@ -6,6 +6,11 @@ plugins {
   id 'java'
   id 'jacoco'
   id 'com.google.cloud.tools.jib' version '1.4.0'
+  id 'net.ltgt.errorprone' version '0.8.1' apply false
+}
+
+if (!hasProperty('skipErrorProne')) {
+  apply plugin: 'net.ltgt.errorprone'
 }
 
 allprojects {
@@ -63,6 +68,10 @@ dependencies {
   annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
   implementation 'com.atlassian.oai:swagger-request-validator-springmvc:2.5.0'
+
+  if (!hasProperty('skipErrorProne')) {
+    errorproneJavac 'com.google.errorprone:error_prone_core:2.3.3'
+  }
 }
 
 compileJava {

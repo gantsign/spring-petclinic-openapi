@@ -132,7 +132,7 @@ public class ClinicServiceSpringDataJpaTests {
     pet.setName("bowser");
     Collection<PetType> types = clinicService.findPetTypes();
     pet.setType(EntityUtils.getById(types, PetType.class, 2));
-    pet.setBirthDate(LocalDate.now());
+    pet.setBirthDate(LocalDate.of(2019, 1, 2));
     owner6.addPet(pet);
     assertThat(owner6.getPets().size()).isEqualTo(found + 1);
 

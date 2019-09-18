@@ -47,9 +47,4 @@ public class Visit extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "pet_id")
   private Pet pet;
-
-  /** Creates a new instance of Visit for the current date */
-  public Visit() {
-    date = LocalDate.now();
-  }
 }
