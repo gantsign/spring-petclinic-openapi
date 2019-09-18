@@ -12,6 +12,11 @@ allprojects {
   repositories {
     mavenCentral()
   }
+
+  tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+  }
 }
 
 group = 'org.springframework.samples'
