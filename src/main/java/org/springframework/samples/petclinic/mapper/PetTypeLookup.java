@@ -11,6 +11,7 @@ public class PetTypeLookup {
 
   private final ClinicService clinicService;
 
+  /** Returns the PetType for the specified ID. */
   public PetType fromPetTypeId(Integer petTypeId) {
     if (petTypeId == null) {
       return null;
@@ -21,6 +22,7 @@ public class PetTypeLookup {
         .orElseThrow(() -> new MappingValidationException("Unsupported petTypeId: " + petTypeId));
   }
 
+  /** Returns the ID for the specified PetType. */
   public Integer toPetTypeId(PetType petType) {
     if (petType == null) {
       return null;

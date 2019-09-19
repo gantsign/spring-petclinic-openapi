@@ -20,6 +20,8 @@ public class OwnerTests {
     assertThat(owner.toString())
         .matches(
             Pattern.compile(
-                "\\[Owner@[0-9a-f]+ id = 1, new = false, lastName = 'lastName1', firstName = 'firstName1', address = 'address1', city = 'city1', telephone = '01234']"));
+                "\\[Owner@[0-9a-f]+ id = 1, new = false, lastName = 'lastName1', "
+                    + "firstName = 'firstName1', address = 'address1', city = 'city1', "
+                    + "telephone = '01234']"));
   }
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.web.api;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -35,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
+ * REST controller for owner related endpoints.
+ *
  * @author Juergen Hoeller
  * @author Ken Krebs
  * @author Arjen Poutsma
@@ -57,7 +60,7 @@ public class OwnerApiController implements OwnerApi {
     return owner;
   }
 
-  /** Create Owner */
+  /** Create Owner. */
   @Override
   public ResponseEntity<OwnerDto> addOwner(OwnerFieldsDto ownerFieldsDto) {
     Owner owner;
@@ -72,14 +75,14 @@ public class OwnerApiController implements OwnerApi {
     return ResponseEntity.status(CREATED).body(ownerMapper.ownerToOwnerDto(owner));
   }
 
-  /** Read single Owner */
+  /** Read single Owner. */
   @Override
   public ResponseEntity<OwnerDto> getOwner(Integer ownerId) {
     Owner owner = retrieveOwner(ownerId);
     return ResponseEntity.ok(ownerMapper.ownerToOwnerDto(owner));
   }
 
-  /** Read List of Owners */
+  /** Read List of Owners. */
   @Override
   public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
 
@@ -92,7 +95,7 @@ public class OwnerApiController implements OwnerApi {
         .collect(collectingAndThen(toList(), ResponseEntity::ok));
   }
 
-  /** Update Owner */
+  /** Update Owner. */
   @Override
   public ResponseEntity<OwnerDto> updateOwner(Integer ownerId, OwnerFieldsDto ownerFieldsDto) {
     Owner ownerModel = retrieveOwner(ownerId);

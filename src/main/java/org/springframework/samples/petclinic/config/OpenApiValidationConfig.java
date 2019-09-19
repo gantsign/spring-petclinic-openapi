@@ -65,6 +65,7 @@ public class OpenApiValidationConfig extends WebMvcConfigurerAdapter {
         };
   }
 
+  /** Returns an OpenApiValidationFilter that permits all OPTIONS requests. */
   @Bean
   public Filter validationFilter() {
     return new OpenApiValidationFilter(

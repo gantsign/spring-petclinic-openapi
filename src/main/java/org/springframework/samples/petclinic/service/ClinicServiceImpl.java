@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
@@ -33,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Mostly used as a facade for all Petclinic controllers Also a placeholder for @Transactional
- * and @Cacheable annotations
+ * and @Cacheable annotations.
  *
  * @author Michael Isvy
  */

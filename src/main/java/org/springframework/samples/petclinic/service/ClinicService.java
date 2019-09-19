@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
@@ -24,7 +25,7 @@ import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 
 /**
- * Mostly used as a facade so all controllers have a single point of entry
+ * Mostly used as a facade so all controllers have a single point of entry.
  *
  * @author Michael Isvy
  */

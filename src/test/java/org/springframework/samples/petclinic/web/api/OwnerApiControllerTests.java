@@ -129,15 +129,13 @@ public class OwnerApiControllerTests extends TestBase {
   @Test
   public void shouldCreateOwner() throws Exception {
 
-    doAnswer(
-            (Answer<Void>)
-                invocation -> {
-                  Owner receivedOwner = (Owner) invocation.getArguments()[0];
-                  receivedOwner.setId(666);
-                  return null;
-                })
-        .when(clinicService)
-        .saveOwner(any());
+    Answer<Void> setOwnerId =
+        invocation -> {
+          Owner receivedOwner = (Owner) invocation.getArguments()[0];
+          receivedOwner.setId(666);
+          return null;
+        };
+    doAnswer(setOwnerId).when(clinicService).saveOwner(any());
 
     final Owner newOwner = setupOwners().get(0);
     newOwner.setId(null);
@@ -202,7 +200,8 @@ public class OwnerApiControllerTests extends TestBase {
         .expectBody()
         .jsonPath("$.schemaValidationErrors[0].message")
         .isEqualTo(
-            "[Path '/lastName'] Instance type (null) does not match any allowed primitive type (allowed: [\"string\"])");
+            "[Path '/lastName'] Instance type (null) does not match any allowed primitive type "
+                + "(allowed: [\"string\"])");
   }
 
   @Test

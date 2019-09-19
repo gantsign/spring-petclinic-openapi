@@ -16,6 +16,7 @@ public interface SpecialtyMapper {
 
   SpecialtyDto specialtyToSpecialtyDto(Specialty specialty);
 
+  /** Converts a set of Specialties to a list of SpecialtyDtos sorted by name. */
   default List<SpecialtyDto> specialtiesToSpecialtyDtos(Set<Specialty> specialties) {
     return specialties.stream()
         .map(this::specialtyToSpecialtyDto)

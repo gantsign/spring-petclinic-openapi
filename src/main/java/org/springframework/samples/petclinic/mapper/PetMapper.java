@@ -26,6 +26,7 @@ public interface PetMapper {
   @Mapping(target = "visits", ignore = true)
   void updatePetFromPetFieldsDto(@MappingTarget Pet pet, PetFieldsDto petFieldsDto);
 
+  /** Converts a set of Pets to a list of PetDtos sorted by name. */
   default List<PetDto> petsToPetDtos(Set<Pet> pets) {
     return pets.stream()
         .map(this::petToPetDto)

@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Profile;
 @Profile("production")
 public class CacheConfig {
 
+  /** Configures Ehcache. */
   @SuppressWarnings({"MagicNumber", "resource"})
   @Bean
   public JCacheManagerCustomizer cacheManagerCustomizer() {

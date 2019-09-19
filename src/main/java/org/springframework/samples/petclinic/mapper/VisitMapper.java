@@ -22,6 +22,7 @@ public interface VisitMapper {
   @Mapping(target = "pet", ignore = true)
   Visit visitFieldsDtoToVisit(VisitFieldsDto visitFieldsDto);
 
+  /** Converts a set of Visits to a list of VisitDtos sorted by date. */
   default List<VisitDto> visitsToVisitDtos(Set<Visit> visits) {
     return visits.stream()
         .map(this::visitToVisitDto)

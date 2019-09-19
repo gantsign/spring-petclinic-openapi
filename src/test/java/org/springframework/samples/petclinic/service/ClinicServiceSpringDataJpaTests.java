@@ -75,7 +75,7 @@ public class ClinicServiceSpringDataJpaTests {
   @Transactional
   public void shouldInsertOwner() {
     Collection<Owner> owners = clinicService.findOwnerByLastName("Schultz");
-    int found = owners.size();
+    final int found = owners.size();
 
     Owner owner = new Owner();
     owner.setFirstName("Sam");
@@ -126,7 +126,7 @@ public class ClinicServiceSpringDataJpaTests {
   @Transactional
   public void shouldInsertPetIntoDatabaseAndGenerateId() {
     Owner owner6 = clinicService.findOwnerById(6);
-    int found = owner6.getPets().size();
+    final int found = owner6.getPets().size();
 
     Pet pet = new Pet();
     pet.setName("bowser");
@@ -174,7 +174,7 @@ public class ClinicServiceSpringDataJpaTests {
   @Transactional
   public void shouldAddNewVisitForPet() {
     Pet pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
-    int found = pet7.getVisits().size();
+    final int found = pet7.getVisits().size();
     Visit visit = new Visit();
     pet7.addVisit(visit);
     visit.setDescription("test");

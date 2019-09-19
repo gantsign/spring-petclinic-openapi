@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.web.api;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -38,7 +39,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-/** @author Nils Hartmann */
+/**
+ * REST controller for pet related endpoints.
+ *
+ * @author Nils Hartmann
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Controller

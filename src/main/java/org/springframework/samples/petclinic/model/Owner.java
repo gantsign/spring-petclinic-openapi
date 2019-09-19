@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.samples.petclinic.model;
 
 import java.util.HashSet;
@@ -52,6 +53,7 @@ public class Owner extends Person {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private @NonNull Set<Pet> pets = new HashSet<>();
 
+  /** Associates the specified pet with this owner. */
   public void addPet(Pet pet) {
     if (pet.isNew()) {
       pets.add(pet);
