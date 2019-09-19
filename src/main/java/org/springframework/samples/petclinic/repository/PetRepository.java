@@ -42,9 +42,9 @@ public interface PetRepository extends Repository<Pet, Integer> {
   List<PetType> findPetTypes();
 
   /**
-   * Retrieve a {@link Pet} from the data store by id.
+   * Retrieve a {@link Pet} from the data store by ID.
    *
-   * @param id the id to search for
+   * @param id the ID to search for
    * @return the {@link Pet} if found
    */
   Pet findById(int id);

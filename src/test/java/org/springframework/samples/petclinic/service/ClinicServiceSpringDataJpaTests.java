@@ -141,7 +141,7 @@ public class ClinicServiceSpringDataJpaTests {
 
     owner6 = clinicService.findOwnerById(6);
     assertThat(owner6.getPets().size()).isEqualTo(found + 1);
-    // checks that id has been generated
+    // checks that ID has been generated
     assertThat(pet.getId()).isNotNull();
   }
 

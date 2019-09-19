@@ -45,9 +45,9 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
   Collection<Owner> findByLastName(@Param("lastName") String lastName);
 
   /**
-   * Retrieve an {@link Owner} from the data store by id.
+   * Retrieve an {@link Owner} from the data store by ID.
    *
-   * @param id the id to search for
+   * @param id the ID to search for
    * @return the {@link Owner} if found
    */
   @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")

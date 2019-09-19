@@ -23,7 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Simple JavaBean domain object with an id property. Used as a base class for objects needing this
+ * Simple JavaBean domain object with an ID property. Used as a base class for objects needing this
  * property.
  *
  * @author Ken Krebs
