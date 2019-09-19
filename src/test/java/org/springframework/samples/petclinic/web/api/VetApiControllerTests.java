@@ -33,7 +33,7 @@ public class VetApiControllerTests {
   @MockBean ClinicService clinicService;
 
   @Test
-  public void shouldGetAListOfVetsInJSonFormat() throws Exception {
+  public void shouldListVets() throws Exception {
 
     Vet vet = new Vet();
     vet.setId(1);

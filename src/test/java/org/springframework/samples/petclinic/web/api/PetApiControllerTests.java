@@ -35,7 +35,7 @@ public class PetApiControllerTests {
   @MockBean ClinicService clinicService;
 
   @Test
-  public void shouldGetAPetInJSonFormat() throws Exception {
+  public void shouldGetPetByPetIdAndOwnerId() throws Exception {
 
     Pet pet = setupPet();
 
