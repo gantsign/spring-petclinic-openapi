@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.web.api;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class OwnerApiControllerTests {
+public class OwnerApiControllerTests extends TestBase {
 
   @Autowired WebTestClient webTestClient;
 
@@ -141,6 +142,8 @@ public class OwnerApiControllerTests {
         .isEqualTo("1234567")
         .jsonPath("$.pets")
         .isArray();
+
+    verify(clinicService).saveOwner(any());
   }
 
   @Test
@@ -170,6 +173,50 @@ public class OwnerApiControllerTests {
         .isEqualTo("lastName")
         .jsonPath("$.errors[0].defaultMessage")
         .isEqualTo("may not be empty");
+  }
+
+  @Test
+  public void shouldUpdateOwner() throws Exception {
+
+    List<Owner> owners = setupOwners();
+    final Owner owner = owners.get(0);
+
+    when(clinicService.findOwnerById(0)).thenReturn(owner);
+
+    OwnerDto ownerDto = ownerMapper.ownerToOwnerDto(owner);
+    ownerDto.setLastName("NewLastName");
+
+    ObjectMapper mapper = new ObjectMapper();
+    String ownerAsJsonString = mapper.writeValueAsString(ownerDto);
+
+    webTestClient
+        .put()
+        .uri("/api/owner/0")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .syncBody(ownerAsJsonString)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .expectBody()
+        .jsonPath("$.id")
+        .isEqualTo(0)
+        .jsonPath("$.firstName")
+        .isEqualTo("Klaus-Dieter")
+        .jsonPath("$.lastName")
+        .isEqualTo("NewLastName")
+        .jsonPath("$.address")
+        .isEqualTo("My Street 123")
+        .jsonPath("$.city")
+        .isEqualTo("Hamburg")
+        .jsonPath("$.telephone")
+        .isEqualTo("1234567")
+        .jsonPath("$.pets")
+        .isArray();
+
+    verify(clinicService).saveOwner(any());
   }
 
   private static List<Owner> setupOwners() {
