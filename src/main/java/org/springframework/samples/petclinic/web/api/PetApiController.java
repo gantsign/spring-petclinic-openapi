@@ -73,7 +73,7 @@ public class PetApiController extends AbstractResourceController {
     Pet pet = new Pet();
     Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
-      throw new BadRequestException("Owner with Id '" + ownerId + "' is unknown.");
+      throw new BadRequestException("Owner with ID '" + ownerId + "' is unknown.");
     }
     owner.addPet(pet);
 

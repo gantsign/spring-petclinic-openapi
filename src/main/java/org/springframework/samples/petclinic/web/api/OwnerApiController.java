@@ -52,7 +52,7 @@ public class OwnerApiController extends AbstractResourceController {
   private Owner retrieveOwner(int ownerId) {
     Owner owner = clinicService.findOwnerById(ownerId);
     if (owner == null) {
-      throw new BadRequestException("Owner with Id '" + ownerId + "' is unknown.");
+      throw new BadRequestException("Owner with ID '" + ownerId + "' is unknown.");
     }
     return owner;
   }

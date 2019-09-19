@@ -56,7 +56,7 @@ public class VisitApiController extends AbstractResourceController {
 
     final Pet pet = clinicService.findPetById(petId);
     if (pet == null) {
-      throw new BadRequestException("Pet with Id '" + petId + "' is unknown.");
+      throw new BadRequestException("Pet with ID '" + petId + "' is unknown.");
     }
 
     Visit visit = visitMapper.visitFieldsDtoToVisit(visitFieldsDto);
