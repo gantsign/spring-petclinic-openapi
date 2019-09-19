@@ -1,6 +1,6 @@
 package org.springframework.samples.petclinic.web.api;
 
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +38,7 @@ public class VetApiControllerTests {
     Vet vet = new Vet();
     vet.setId(1);
 
-    given(clinicService.findVets()).willReturn(Collections.singletonList(vet));
+    when(clinicService.findVets()).thenReturn(Collections.singletonList(vet));
 
     mvc.perform(get("/api/vets").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

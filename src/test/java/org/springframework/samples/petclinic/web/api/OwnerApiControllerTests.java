@@ -1,8 +1,8 @@
 package org.springframework.samples.petclinic.web.api;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -55,7 +55,7 @@ public class OwnerApiControllerTests {
 
   @Test
   public void shouldGetOwnerById() throws Exception {
-    given(clinicService.findOwnerById(1)).willReturn(setupOwners().get(1));
+    when(clinicService.findOwnerById(1)).thenReturn(setupOwners().get(1));
 
     mvc.perform(
             get("/api/owner/1") //
@@ -71,7 +71,7 @@ public class OwnerApiControllerTests {
   public void shouldFindOwners() throws Exception {
     final List<Owner> owners = setupOwners();
     owners.remove(1);
-    given(clinicService.findOwnerByLastName("mueller")).willReturn(owners);
+    when(clinicService.findOwnerByLastName("mueller")).thenReturn(owners);
     mvc.perform(
             get("/api/owner/list/?lastName=mueller") //
                 .accept(MediaType.APPLICATION_JSON)) //
@@ -93,7 +93,7 @@ public class OwnerApiControllerTests {
                   return null;
                 })
         .when(clinicService)
-        .saveOwner(anyObject());
+        .saveOwner(any());
 
     final Owner newOwner = setupOwners().get(0);
     newOwner.setId(null);
