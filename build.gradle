@@ -23,6 +23,8 @@ allprojects {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
   }
+
+  test { jvmArgs '-XX:TieredStopAtLevel=1' }
 }
 
 group = 'org.springframework.samples'
