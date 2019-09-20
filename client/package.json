@@ -25,6 +25,7 @@
   "author": "Nils Hartmann",
   "license": "ISC",
   "dependencies": {
+    "@loadable/component": "^5.10.2",
     "bootstrap-sass": "^3.4.1",
     "formik": "^1.5.8",
     "moment": "^2.24.0",

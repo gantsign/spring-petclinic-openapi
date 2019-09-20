@@ -1,20 +1,25 @@
 import * as React from 'react';
+import loadable from '@loadable/component';
 import { Route, Switch } from 'react-router-dom';
 
 import App from './components/App';
 
-import WelcomePage from './components/WelcomePage';
-import FindOwnersPage from './components/owners/FindOwnersPage';
-import OwnersPage from './components/owners/OwnersPage';
-import NewOwnerPage from './components/owners/NewOwnerPage';
-import EditOwnerPage from './components/owners/EditOwnerPage';
-import NewPetPage from './components/pets/NewPetPage';
-import EditPetPage from './components/pets/EditPetPage';
-import VisitsPage from './components/visits/VisitsPage';
-import VetsPage from './components/vets/VetsPage';
-import ErrorPage from './components/ErrorPage';
+const WelcomePage = loadable(() => import('./components/WelcomePage'));
+const FindOwnersPage = loadable(() =>
+  import('./components/owners/FindOwnersPage')
+);
+const OwnersPage = loadable(() => import('./components/owners/OwnersPage'));
+const NewOwnerPage = loadable(() => import('./components/owners/NewOwnerPage'));
+const EditOwnerPage = loadable(() =>
+  import('./components/owners/EditOwnerPage')
+);
+const NewPetPage = loadable(() => import('./components/pets/NewPetPage'));
+const EditPetPage = loadable(() => import('./components/pets/EditPetPage'));
+const VisitsPage = loadable(() => import('./components/visits/VisitsPage'));
+const VetsPage = loadable(() => import('./components/vets/VetsPage'));
+const ErrorPage = loadable(() => import('./components/ErrorPage'));
 
-import NotFoundPage from './components/NotFoundPage';
+const NotFoundPage = loadable(() => import('./components/NotFoundPage'));
 
 export default () => (
   <Route
