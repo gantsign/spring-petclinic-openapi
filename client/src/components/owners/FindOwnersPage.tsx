@@ -35,7 +35,6 @@ class FindOwnersPage extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.submitSearchForm = this.submitSearchForm.bind(this);
 
     this.state = { owners: [] };
   }
@@ -55,7 +54,7 @@ class FindOwnersPage extends React.Component<
    * This method updates the URL with the entered lastName. The change of the URL
    * leads to new properties and thus results in rendering.
    */
-  submitSearchForm(values) {
+  submitSearchForm = values => {
     const { filter } = values;
 
     this.props.history.push({
@@ -64,7 +63,7 @@ class FindOwnersPage extends React.Component<
     });
 
     this.fetchData(filter);
-  }
+  };
 
   /**
    * Actually loads data from the server

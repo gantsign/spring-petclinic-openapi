@@ -26,12 +26,11 @@ interface IPetEditorState {
 class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {};
   }
 
-  async onSubmit(values, { setSubmitting }) {
+  onSubmit = async (values, { setSubmitting }) => {
     const request: PetFields = {
       birthDate: values.birthDate,
       name: values.name,
@@ -46,7 +45,7 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   savePet = async (petId: number | undefined, petFields: PetFields) => {
     const { owner } = this.props;

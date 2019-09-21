@@ -23,12 +23,11 @@ class OwnerEditor extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {};
   }
 
-  async onSubmit(values, { setSubmitting }) {
+  onSubmit = async (values, { setSubmitting }) => {
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
 
@@ -37,7 +36,7 @@ class OwnerEditor extends React.Component<
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   saveOwner = async (
     ownerId: number | undefined,

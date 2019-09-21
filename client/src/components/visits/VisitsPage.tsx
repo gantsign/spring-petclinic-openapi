@@ -24,12 +24,6 @@ interface IVisitsPageState {
 }
 
 class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
-  constructor(props) {
-    super(props);
-
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
   async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
@@ -38,7 +32,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     this.setState({ owner });
   }
 
-  async onSubmit(values, { setSubmitting }) {
+  onSubmit = async (values, { setSubmitting }) => {
     const petId = Number(this.props.match.params['petId']);
     const { owner } = this.state;
 
@@ -47,7 +41,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   saveVisit = async (
     ownerId: number,
