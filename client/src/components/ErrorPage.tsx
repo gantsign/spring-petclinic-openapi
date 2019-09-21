@@ -32,7 +32,7 @@ export default class ErrorPage extends React.Component<void, IErrorPageState> {
           <p><b>Message:</b> {error.message}</p>
         </span>
         :
-        <p><b>Unkown error</b></p>
+        <p><b>Unknown error</b></p>
       }
     </span>;
   }

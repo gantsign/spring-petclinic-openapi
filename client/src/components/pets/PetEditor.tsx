@@ -12,7 +12,7 @@ import { IError, IOwner, IPetRequest, IEditablePet, IPet, IPetType, IRouterConte
 interface IPetEditorProps {
   pet: IEditablePet;
   owner: IOwner;
-  pettypes: ISelectOption[];
+  petTypes: ISelectOption[];
 }
 
 interface IPetEditorState {
@@ -69,7 +69,7 @@ export default class PetEditor extends React.Component<IPetEditorProps, IPetEdit
   }
 
   render() {
-    const { owner, pettypes } = this.props;
+    const { owner, petTypes } = this.props;
     const { editablePet, error } = this.state;
 
     const formLabel = editablePet.isNew ? 'Add Pet' : 'Update Pet';
@@ -86,7 +86,7 @@ export default class PetEditor extends React.Component<IPetEditorProps, IPetEdit
 
             <Input object={editablePet} error={error} label='Name' name='name' onChange={this.onInputChange} />
             <DateInput object={editablePet} error={error} label='Birth date' name='birthDate' onChange={this.onInputChange} />
-            <SelectInput object={editablePet} error={error} label='Type' name='typeId' options={pettypes} onChange={this.onInputChange} />
+            <SelectInput object={editablePet} error={error} label='Type' name='typeId' options={petTypes} onChange={this.onInputChange} />
           </div>
           <div className='form-group'>
             <div className='col-sm-offset-2 col-sm-10'>

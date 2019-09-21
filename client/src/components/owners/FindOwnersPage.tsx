@@ -40,8 +40,8 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
   componentDidMount() {
     const { filter } = this.state;
     if (typeof filter === 'string') {
-      // only load data on mount (initialy) if filter is specified
-      // i.e. lastName query param in uri was set
+      // only load data on mount (initially) if filter is specified
+      // i.e. lastName query param in URI was set
       this.fetchData(filter);
     }
   }
@@ -49,7 +49,7 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
   componentWillReceiveProps(nextProps: IFindOwnersPageProps) {
     const { location } = nextProps;
 
-    // read the filter from uri
+    // read the filter from URI
     const filter = getFilterFromLocation(location);
 
     // set state
@@ -69,7 +69,7 @@ export default class FindOwnersPage extends React.Component<IFindOwnersPageProps
    * Invoked when the submit button was pressed.
    * 
    * This method updates the URL with the entered lastName. The change of the URL
-   * leads to new properties and thus results in rerending
+   * leads to new properties and thus results in rendering.
    */
   submitSearchForm() {
     const { filter } = this.state;

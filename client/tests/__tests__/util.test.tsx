@@ -26,7 +26,7 @@ describe('util', () => {
         expect(fetchMock.mock.calls[0][1].method).toBe('POST');
         expect(fetchMock.mock.calls[0][1].body).toEqual(JSON.stringify({ name: 'Test' }));
 
-        // make sure response from fetch ist corrently passed to the onSuccess callback
+        // make sure response from fetch is correctly passed to the onSuccess callback
         expect(status).toBe(200);
         expect(response).toEqual({ 'x': 'y' });
       });
