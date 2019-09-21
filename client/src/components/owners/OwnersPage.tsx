@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Owner, OwnerApi } from 'petclinic-api';
+import { Owner } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
 
 import OwnerInformation from './OwnerInformation';
 import PetsTable from './PetsTable';
@@ -11,7 +12,7 @@ import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
-interface IOwnersPageProps extends RouteComponentProps {}
+interface IOwnersPageProps extends RouteComponentProps, WithOwnerApiProps {}
 
 interface IOwnerPageState {
   error?: IError;
@@ -23,7 +24,7 @@ class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
     const ownerId = Number(this.props.match.params['ownerId']);
 
     try {
-      const owner = await new OwnerApi().getOwner({ ownerId });
+      const owner = await this.props.ownerApi.getOwner({ ownerId });
 
       this.setState({ owner });
     } catch (response) {
@@ -52,4 +53,4 @@ class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
   }
 }
 
-export default withRouter(OwnersPage);
+export default withOwnerApi(withRouter(OwnersPage));

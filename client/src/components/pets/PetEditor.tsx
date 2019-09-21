@@ -5,7 +5,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Owner, Pet, PetApi, PetFields } from 'petclinic-api';
+import { Owner, Pet, PetFields, PetType } from 'petclinic-api';
+import { withPetApi, WithPetApiProps } from '../../data/PetApiProvider';
 
 import Input from '../form/Input';
 import DateInput from '../form/DateInput';
@@ -15,7 +16,13 @@ import { IError, ISelectOption } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
-interface IPetEditorProps extends RouteComponentProps {
+export const toSelectOptions = (petTypes: PetType[]): ISelectOption[] =>
+  petTypes.map(petType => ({
+    value: petType.id,
+    name: petType.name || '',
+  }));
+
+interface IPetEditorProps extends RouteComponentProps, WithPetApiProps {
   pet: Pet | PetFields;
   owner: Owner;
   petTypes: ISelectOption[];
@@ -44,12 +51,12 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
   };
 
   savePet = async (petId: number | undefined, petFields: PetFields) => {
-    const { owner } = this.props;
+    const { owner, petApi } = this.props;
 
     try {
       await (petId === undefined
-        ? new PetApi().addPet({ ownerId: owner.id, petFields })
-        : new PetApi().updatePet({ ownerId: owner.id, petId, petFields }));
+        ? petApi.addPet({ ownerId: owner.id, petFields })
+        : petApi.updatePet({ ownerId: owner.id, petId, petFields }));
       this.setState({});
     } catch (response) {
       const error = await extractError(response);
@@ -121,4 +128,4 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
   }
 }
 
-export default withRouter(PetEditor);
+export default withPetApi(withRouter(PetEditor));

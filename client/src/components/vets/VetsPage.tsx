@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Vet, VetApi } from 'petclinic-api';
+import { Vet } from 'petclinic-api';
+import { withVetApi, WithVetApiProps } from '../../data/VetApiProvider';
 
 import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
@@ -13,10 +14,12 @@ interface IVetsPageState {
   vets?: Vet[];
 }
 
-class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
+interface IVetsPageProps extends RouteComponentProps, WithVetApiProps {}
+
+class VetsPage extends React.Component<IVetsPageProps, IVetsPageState> {
   async componentDidMount() {
     try {
-      const vets = await new VetApi().listVets();
+      const vets = await this.props.vetApi.listVets();
 
       console.log('vets', vets);
       this.setState({ vets });
@@ -69,4 +72,4 @@ class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
   }
 }
 
-export default withRouter(VetsPage);
+export default withVetApi(withRouter(VetsPage));

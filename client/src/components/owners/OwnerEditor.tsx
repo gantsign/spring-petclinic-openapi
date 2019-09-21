@@ -7,12 +7,13 @@ import * as Yup from 'yup';
 
 import Input from '../form/Input';
 
-import { Owner, OwnerApi, OwnerFields } from 'petclinic-api';
+import { Owner, OwnerFields } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
 
 import PageErrorMessage from '../PageErrorMessage';
 import { IError } from '../../types';
 
-interface IOwnerEditorProps extends RouteComponentProps {
+interface IOwnerEditorProps extends RouteComponentProps, WithOwnerApiProps {
   initialOwner: Owner | OwnerFields;
 }
 
@@ -39,11 +40,12 @@ class OwnerEditor extends React.Component<
     ownerId: number | undefined,
     ownerFields: OwnerFields
   ): Promise<void> => {
+    const { ownerApi } = this.props;
     let newOwner;
     try {
       newOwner = await (ownerId === undefined
-        ? new OwnerApi().addOwner({ ownerFields })
-        : new OwnerApi().updateOwner({ ownerId, ownerFields }));
+        ? ownerApi.addOwner({ ownerFields })
+        : ownerApi.updateOwner({ ownerId, ownerFields }));
       this.setState({});
     } catch (response) {
       console.log('ERROR?!...', response);
@@ -123,4 +125,4 @@ class OwnerEditor extends React.Component<
   }
 }
 
-export default withRouter(OwnerEditor);
+export default withOwnerApi(withRouter(OwnerEditor));

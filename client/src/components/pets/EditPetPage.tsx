@@ -4,17 +4,20 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { IError, ISelectOption } from '../../types';
 
-import { Owner, Pet, PetApi } from 'petclinic-api';
+import { Owner, Pet } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
+import { withPetApi, WithPetApiProps } from '../../data/PetApiProvider';
 
 import LoadingPanel from './LoadingPanel';
-import PetEditor from './PetEditor';
-
-import createPetEditorModel from './createPetEditorModel';
+import PetEditor, { toSelectOptions } from './PetEditor';
 
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
-interface IEditPetPageProps extends RouteComponentProps {}
+interface IEditPetPageProps
+  extends RouteComponentProps,
+    WithOwnerApiProps,
+    WithPetApiProps {}
 
 interface IPetData {
   pet: Pet;
@@ -35,12 +38,20 @@ class EditPetPage extends React.Component<
     const ownerId = Number(this.props.match.params['ownerId']);
     const petId = Number(this.props.match.params['petId']);
 
+    const { ownerApi, petApi } = this.props;
+
     try {
-      const loadPetPromise = new PetApi().getPet({ ownerId, petId });
+      const loadPetTypesPromise = petApi.listPetTypes().then(toSelectOptions);
+      const loadOwnerPromise = ownerApi.getOwner({ ownerId });
+      const loadPetPromise = petApi.getPet({ ownerId, petId });
 
-      const data = await createPetEditorModel(ownerId, loadPetPromise);
-
-      this.setState({ data });
+      this.setState({
+        data: {
+          petTypes: await loadPetTypesPromise,
+          owner: await loadOwnerPromise,
+          pet: await loadPetPromise,
+        },
+      });
     } catch (response) {
       const error = await extractError(response);
       this.setState({ error });
@@ -64,4 +75,4 @@ class EditPetPage extends React.Component<
   }
 }
 
-export default withRouter(EditPetPage);
+export default withOwnerApi(withPetApi(withRouter(EditPetPage)));

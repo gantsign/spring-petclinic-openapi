@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { Owner, OwnerApi } from 'petclinic-api';
+import { Owner } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
 
 import OwnersTable from './OwnersTable';
 
@@ -15,7 +16,7 @@ import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
-interface IFindOwnersPageProps extends RouteComponentProps {}
+interface IFindOwnersPageProps extends RouteComponentProps, WithOwnerApiProps {}
 
 interface IFindOwnersPageState {
   error?: IError;
@@ -69,7 +70,7 @@ class FindOwnersPage extends React.Component<
    */
   async fetchData(filter: string) {
     try {
-      const owners = await new OwnerApi().listOwners({
+      const owners = await this.props.ownerApi.listOwners({
         lastName: filter || '',
       });
 
@@ -131,4 +132,4 @@ class FindOwnersPage extends React.Component<
   }
 }
 
-export default withRouter(FindOwnersPage);
+export default withOwnerApi(withRouter(FindOwnersPage));

@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Owner, OwnerApi, VisitApi, VisitFields } from 'petclinic-api';
+import { Owner, VisitFields } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
+import { withVisitApi, WithVisitApiProps } from '../../data/VisitApiProvider';
 
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -14,7 +16,10 @@ import PageErrorMessage from '../PageErrorMessage';
 import { IError } from '../../types';
 import extractError from '../../data/extractError';
 
-interface IVisitsPageProps extends RouteComponentProps {}
+interface IVisitsPageProps
+  extends RouteComponentProps,
+    WithOwnerApiProps,
+    WithVisitApiProps {}
 
 interface IVisitsPageState {
   error?: IError;
@@ -26,7 +31,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     const ownerId = Number(this.props.match.params['ownerId']);
 
     try {
-      const owner = await new OwnerApi().getOwner({ ownerId });
+      const owner = await this.props.ownerApi.getOwner({ ownerId });
       this.setState({ owner });
     } catch (response) {
       const error = await extractError(response);
@@ -54,7 +59,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     visitFields: VisitFields
   ) => {
     try {
-      await new VisitApi().addVisit({ ownerId, petId, visitFields });
+      await this.props.visitApi.addVisit({ ownerId, petId, visitFields });
     } catch (response) {
       const error = await extractError(response);
       const { owner } = this.state || {};
@@ -127,4 +132,4 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   }
 }
 
-export default withRouter(VisitsPage);
+export default withOwnerApi(withVisitApi(withRouter(VisitsPage)));

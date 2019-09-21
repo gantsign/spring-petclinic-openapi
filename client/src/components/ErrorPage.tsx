@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { FailingApi } from 'petclinic-api';
+import {
+  withFailingApi,
+  WithFailingApiProps,
+} from '../data/FailingApiProvider';
 
 import { IError } from '../types';
 import PageErrorMessage from './PageErrorMessage';
@@ -9,20 +12,12 @@ interface IErrorPageState {
   error?: IError;
 }
 
-interface IErrorPageProps {}
+interface IErrorPageProps extends WithFailingApiProps {}
 
-export default class ErrorPage extends React.Component<
-  IErrorPageProps,
-  IErrorPageState
-> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
+class ErrorPage extends React.Component<IErrorPageProps, IErrorPageState> {
   async componentDidMount() {
     try {
-      await new FailingApi().failingRequest();
+      await this.props.failingApi.failingRequest();
     } catch (response) {
       const error = await extractError(response);
       this.setState({ error });
@@ -41,3 +36,5 @@ export default class ErrorPage extends React.Component<
     );
   }
 }
+
+export default withFailingApi(ErrorPage);

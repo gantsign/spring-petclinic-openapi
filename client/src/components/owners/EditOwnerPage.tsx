@@ -4,13 +4,14 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import OwnerEditor from './OwnerEditor';
 
-import { Owner, OwnerApi } from 'petclinic-api';
+import { Owner } from 'petclinic-api';
+import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
 
 import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
-interface IEditOwnerPageProps extends RouteComponentProps {}
+interface IEditOwnerPageProps extends RouteComponentProps, WithOwnerApiProps {}
 
 interface IEditOwnerPageState {
   error?: IError;
@@ -25,7 +26,7 @@ class EditOwnerPage extends React.Component<
     const ownerId = Number(this.props.match.params['ownerId']);
 
     try {
-      const owner = await new OwnerApi().getOwner({ ownerId });
+      const owner = await this.props.ownerApi.getOwner({ ownerId });
       this.setState({ owner });
     } catch (response) {
       const error = await extractError(response);
@@ -48,4 +49,4 @@ class EditOwnerPage extends React.Component<
   }
 }
 
-export default withRouter(EditOwnerPage);
+export default withOwnerApi(withRouter(EditOwnerPage));
