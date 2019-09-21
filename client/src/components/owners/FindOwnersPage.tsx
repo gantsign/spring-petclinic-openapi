@@ -100,7 +100,7 @@ export default class FindOwnersPage extends React.Component<
     const { filter, owners } = this.state;
 
     return (
-      <span>
+      <div>
         <section>
           <h2>Find Owners</h2>
 
@@ -139,7 +139,7 @@ export default class FindOwnersPage extends React.Component<
           {' '}
           Add Owner
         </Link>
-      </span>
+      </div>
     );
   }
 }

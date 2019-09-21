@@ -43,10 +43,10 @@ export default class OwnersPage extends React.Component<
     }
 
     return (
-      <span>
+      <div>
         <OwnerInformation owner={owner} />
         <PetsTable owner={owner} />
-      </span>
+      </div>
     );
   }
 }

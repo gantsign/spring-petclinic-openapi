@@ -34,7 +34,7 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
     }
 
     return (
-      <span>
+      <div>
         <h2>Veterinarians</h2>
         <table className="table table-striped">
           <thead>
@@ -60,7 +60,7 @@ export default class VetsPage extends React.Component<void, IVetsPageState> {
             ))}
           </tbody>
         </table>
-      </span>
+      </div>
     );
   }
 }

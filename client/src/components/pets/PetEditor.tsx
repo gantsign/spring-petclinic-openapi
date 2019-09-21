@@ -90,7 +90,7 @@ export default class PetEditor extends React.Component<
     const formLabel = editablePet.isNew ? 'Add Pet' : 'Update Pet';
 
     return (
-      <span>
+      <div>
         <h2>{formLabel}</h2>
         <form
           className="form-horizontal"
@@ -140,7 +140,7 @@ export default class PetEditor extends React.Component<
             </div>
           </div>
         </form>
-      </span>
+      </div>
     );
   }
 }

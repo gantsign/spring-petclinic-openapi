@@ -71,7 +71,7 @@ export default class OwnerEditor extends React.Component<
   render() {
     const { owner, error } = this.state;
     return (
-      <span>
+      <div>
         <h2>New Owner</h2>
         <form
           className="form-horizontal"
@@ -132,7 +132,7 @@ export default class OwnerEditor extends React.Component<
             </div>
           </div>
         </form>
-      </span>
+      </div>
     );
   }
 }

@@ -23,25 +23,25 @@ export default class ErrorPage extends React.Component<void, IErrorPageState> {
     const { error } = this.state;
 
     return (
-      <span>
+      <div>
         <img src="/images/pets.png" />
 
         <h2>Something happened...</h2>
         {error ? (
-          <span>
+          <div>
             <p>
               <b>Status:</b> {error.error}
             </p>
             <p>
               <b>Message:</b> {error.message}
             </p>
-          </span>
+          </div>
         ) : (
           <p>
             <b>Unknown error</b>
           </p>
         )}
-      </span>
+      </div>
     );
   }
 }
