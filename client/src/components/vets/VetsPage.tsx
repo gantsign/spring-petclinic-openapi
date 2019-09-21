@@ -4,26 +4,34 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { Vet, VetApi } from 'petclinic-api';
 
+import { IError } from '../../types';
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
+
 interface IVetsPageState {
-  vets: Vet[];
+  error?: IError;
+  vets?: Vet[];
 }
 
 class VetsPage extends React.Component<RouteComponentProps, IVetsPageState> {
-  constructor(props) {
-    super(props);
-
-    this.state = { vets: [] };
-  }
-
   async componentDidMount() {
-    const vets = await new VetApi().listVets();
+    try {
+      const vets = await new VetApi().listVets();
 
-    console.log('vets', vets);
-    this.setState({ vets });
+      console.log('vets', vets);
+      this.setState({ vets });
+    } catch (response) {
+      const error = await extractError(response);
+      this.setState({ error });
+    }
   }
 
   render() {
-    const { vets } = this.state;
+    const { error, vets = [] } = this.state || {};
+
+    if (error) {
+      return <PageErrorMessage error={error} />;
+    }
 
     if (!vets) {
       return <h2>Veterinarians</h2>;

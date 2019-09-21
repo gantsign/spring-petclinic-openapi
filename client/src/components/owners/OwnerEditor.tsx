@@ -7,26 +7,23 @@ import * as Yup from 'yup';
 
 import Input from '../form/Input';
 
-import { Owner, OwnerApi, OwnerFields, RestError } from 'petclinic-api';
+import { Owner, OwnerApi, OwnerFields } from 'petclinic-api';
+
+import PageErrorMessage from '../PageErrorMessage';
+import { IError } from '../../types';
 
 interface IOwnerEditorProps extends RouteComponentProps {
   initialOwner: Owner | OwnerFields;
 }
 
 interface IOwnerEditorState {
-  error?: RestError;
+  error?: IError;
 }
 
 class OwnerEditor extends React.Component<
   IOwnerEditorProps,
   IOwnerEditorState
 > {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
   onSubmit = async (values, { setSubmitting }) => {
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
@@ -47,6 +44,7 @@ class OwnerEditor extends React.Component<
       newOwner = await (ownerId === undefined
         ? new OwnerApi().addOwner({ ownerFields })
         : new OwnerApi().updateOwner({ ownerId, ownerFields }));
+      this.setState({});
     } catch (response) {
       console.log('ERROR?!...', response);
       this.setState({ error: response });
@@ -60,9 +58,12 @@ class OwnerEditor extends React.Component<
   render() {
     const { initialOwner } = this.props;
     const ownerId = (initialOwner as Owner).id;
+    const { error } = this.state || {};
 
     return (
       <div>
+        <PageErrorMessage error={error} />
+
         <h2>New Owner</h2>
         <Formik
           initialValues={initialOwner}

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { FailingApi } from 'petclinic-api';
 
+import { IError } from '../types';
+import PageErrorMessage from './PageErrorMessage';
+import extractError from '../data/extractError';
+
 interface IErrorPageState {
-  error?: {
-    error: string;
-    message: string;
-  };
+  error?: IError;
 }
 
 interface IErrorPageProps {}
@@ -23,32 +24,19 @@ export default class ErrorPage extends React.Component<
     try {
       await new FailingApi().failingRequest();
     } catch (response) {
-      this.setState({ error: response.json() });
+      const error = await extractError(response);
+      this.setState({ error });
     }
   }
 
   render() {
-    const { error } = this.state;
+    const { error } = this.state || {};
 
     return (
       <div>
-        <img src="/images/pets.png" alt="" />
+        <PageErrorMessage error={error} />
 
-        <h2>Something happened...</h2>
-        {error ? (
-          <div>
-            <p>
-              <b>Status:</b> {error.error}
-            </p>
-            <p>
-              <b>Message:</b> {error.message}
-            </p>
-          </div>
-        ) : (
-          <p>
-            <b>Unknown error</b>
-          </p>
-        )}
+        <img src="/images/pets.png" alt="" />
       </div>
     );
   }

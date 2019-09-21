@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { ISelectOption } from '../../types';
+import { IError, ISelectOption } from '../../types';
 import { Owner, PetFields } from 'petclinic-api';
 
 import LoadingPanel from './LoadingPanel';
@@ -10,12 +10,20 @@ import PetEditor from './PetEditor';
 
 import createPetEditorModel from './createPetEditorModel';
 
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
+
 interface INewPetPageProps extends RouteComponentProps {}
 
+interface IPetData {
+  pet: PetFields;
+  owner: Owner;
+  petTypes: ISelectOption[];
+}
+
 interface INewPetPageState {
-  pet?: PetFields;
-  owner?: Owner;
-  petTypes?: ISelectOption[];
+  error?: IError;
+  data?: IPetData;
 }
 
 const NEW_PET: PetFields = {
@@ -28,26 +36,30 @@ class NewPetPage extends React.Component<INewPetPageProps, INewPetPageState> {
   async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    const model = await createPetEditorModel(ownerId, Promise.resolve(NEW_PET));
-    this.setState(model);
+    try {
+      const data = await createPetEditorModel(
+        ownerId,
+        Promise.resolve(NEW_PET)
+      );
+      this.setState({ data });
+    } catch (response) {
+      const error = await extractError(response);
+      this.setState({ error });
+    }
   }
 
   render() {
-    if (!this.state) {
+    const { error, data } = this.state || {};
+
+    if (error) {
+      return <PageErrorMessage error={error} />;
+    }
+
+    if (!data) {
       return <LoadingPanel />;
     }
 
-    const { pet, owner, petTypes } = this.state;
-
-    if (!pet) {
-      return <LoadingPanel />;
-    }
-    if (!owner) {
-      return <LoadingPanel />;
-    }
-    if (!petTypes) {
-      return <LoadingPanel />;
-    }
+    const { pet, owner, petTypes } = data;
 
     return <PetEditor pet={pet} owner={owner} petTypes={petTypes} />;
   }

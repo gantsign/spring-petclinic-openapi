@@ -5,13 +5,15 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Owner, Pet, PetApi, PetFields, RestError } from 'petclinic-api';
+import { Owner, Pet, PetApi, PetFields } from 'petclinic-api';
 
 import Input from '../form/Input';
 import DateInput from '../form/DateInput';
 import SelectInput from '../form/SelectInput';
 
-import { ISelectOption } from '../../types';
+import { IError, ISelectOption } from '../../types';
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
 
 interface IPetEditorProps extends RouteComponentProps {
   pet: Pet | PetFields;
@@ -20,16 +22,10 @@ interface IPetEditorProps extends RouteComponentProps {
 }
 
 interface IPetEditorState {
-  error?: RestError;
+  error?: IError;
 }
 
 class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
   onSubmit = async (values, { setSubmitting }) => {
     const request: PetFields = {
       birthDate: values.birthDate,
@@ -54,9 +50,10 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
       await (petId === undefined
         ? new PetApi().addPet({ ownerId: owner.id, petFields })
         : new PetApi().updatePet({ ownerId: owner.id, petId, petFields }));
+      this.setState({});
     } catch (response) {
-      console.log('ERROR?!...', response);
-      this.setState({ error: response });
+      const error = await extractError(response);
+      this.setState({ error });
     }
 
     this.props.history.push({
@@ -66,6 +63,7 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
 
   render() {
     const { owner, petTypes } = this.props;
+    const { error } = this.state || {};
 
     const initialPet = this.props.pet;
     const petId = (initialPet as Pet).id;
@@ -74,6 +72,8 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
 
     return (
       <div>
+        <PageErrorMessage error={error} />
+
         <h2>{formLabel}</h2>
         <Formik
           initialValues={initialPet}

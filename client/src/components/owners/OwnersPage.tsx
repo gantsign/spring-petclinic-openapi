@@ -7,29 +7,37 @@ import { Owner, OwnerApi } from 'petclinic-api';
 import OwnerInformation from './OwnerInformation';
 import PetsTable from './PetsTable';
 
+import { IError } from '../../types';
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
+
 interface IOwnersPageProps extends RouteComponentProps {}
 
 interface IOwnerPageState {
+  error?: IError;
   owner?: Owner;
 }
 
 class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
   async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    const owner = await new OwnerApi().getOwner({ ownerId });
+    try {
+      const owner = await new OwnerApi().getOwner({ ownerId });
 
-    this.setState({ owner });
+      this.setState({ owner });
+    } catch (response) {
+      const error = await extractError(response);
+      this.setState({ error });
+    }
   }
 
   render() {
-    const { owner } = this.state;
+    const { error, owner } = this.state || {};
+
+    if (error) {
+      return <PageErrorMessage error={error} />;
+    }
 
     if (!owner) {
       return <h2>No Owner loaded</h2>;

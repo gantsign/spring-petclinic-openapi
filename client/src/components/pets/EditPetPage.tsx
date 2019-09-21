@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { ISelectOption } from '../../types';
+import { IError, ISelectOption } from '../../types';
 
 import { Owner, Pet, PetApi } from 'petclinic-api';
 
@@ -11,12 +11,20 @@ import PetEditor from './PetEditor';
 
 import createPetEditorModel from './createPetEditorModel';
 
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
+
 interface IEditPetPageProps extends RouteComponentProps {}
 
+interface IPetData {
+  pet: Pet;
+  owner: Owner;
+  petTypes: ISelectOption[];
+}
+
 interface IEditPetPageState {
-  pet?: Pet;
-  owner?: Owner;
-  petTypes?: ISelectOption[];
+  error?: IError;
+  data?: IPetData;
 }
 
 class EditPetPage extends React.Component<
@@ -27,28 +35,30 @@ class EditPetPage extends React.Component<
     const ownerId = Number(this.props.match.params['ownerId']);
     const petId = Number(this.props.match.params['petId']);
 
-    const loadPetPromise = new PetApi().getPet({ ownerId, petId });
+    try {
+      const loadPetPromise = new PetApi().getPet({ ownerId, petId });
 
-    const model = await createPetEditorModel(ownerId, loadPetPromise);
-    this.setState(model);
+      const data = await createPetEditorModel(ownerId, loadPetPromise);
+
+      this.setState({ data });
+    } catch (response) {
+      const error = await extractError(response);
+      this.setState({ error });
+    }
   }
 
   render() {
-    if (!this.state) {
+    const { error, data } = this.state || {};
+
+    if (error) {
+      return <PageErrorMessage error={error} />;
+    }
+
+    if (!data) {
       return <LoadingPanel />;
     }
 
-    const { pet, owner, petTypes } = this.state;
-
-    if (!pet) {
-      return <LoadingPanel />;
-    }
-    if (!owner) {
-      return <LoadingPanel />;
-    }
-    if (!petTypes) {
-      return <LoadingPanel />;
-    }
+    const { pet, owner, petTypes } = data;
 
     return <PetEditor pet={pet} owner={owner} petTypes={petTypes} />;
   }

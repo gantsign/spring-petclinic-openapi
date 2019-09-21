@@ -11,10 +11,15 @@ import QueryString from 'query-string';
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 
+import { IError } from '../../types';
+import PageErrorMessage from '../PageErrorMessage';
+import extractError from '../../data/extractError';
+
 interface IFindOwnersPageProps extends RouteComponentProps {}
 
 interface IFindOwnersPageState {
-  owners: Owner[];
+  error?: IError;
+  owners?: Owner[];
 }
 
 const getFilterFromLocation = (location: H.Location): string | undefined => {
@@ -33,12 +38,6 @@ class FindOwnersPage extends React.Component<
   IFindOwnersPageProps,
   IFindOwnersPageState
 > {
-  constructor(props) {
-    super(props);
-
-    this.state = { owners: [] };
-  }
-
   async componentDidMount() {
     const filter = getFilterFromLocation(this.props.location);
     if (typeof filter === 'string') {
@@ -69,19 +68,29 @@ class FindOwnersPage extends React.Component<
    * Actually loads data from the server
    */
   async fetchData(filter: string) {
-    const owners = await new OwnerApi().listOwners({ lastName: filter || '' });
+    try {
+      const owners = await new OwnerApi().listOwners({
+        lastName: filter || '',
+      });
 
-    this.setState({ owners });
+      this.setState({ owners });
+    } catch (response) {
+      const error = await extractError(response);
+      const { owners } = this.state || {};
+      this.setState({ error, owners });
+    }
   }
 
   render() {
     const filter = getFilterFromLocation(this.props.location) || '';
-    const owners = this.state.owners;
+    const { error, owners = [] } = this.state || {};
 
     const showResults: boolean = filter.length > 0 || owners.length > 0;
 
     return (
       <div>
+        <PageErrorMessage error={error} />
+
         <section>
           <h2>Find Owners</h2>
           <Formik initialValues={{ filter }} onSubmit={this.submitSearchForm}>

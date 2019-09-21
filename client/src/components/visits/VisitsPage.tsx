@@ -1,13 +1,7 @@
 import * as React from 'react';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import {
-  Owner,
-  OwnerApi,
-  RestError,
-  VisitApi,
-  VisitFields,
-} from 'petclinic-api';
+import { Owner, OwnerApi, VisitApi, VisitFields } from 'petclinic-api';
 
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -16,25 +10,36 @@ import DateInput from '../form/DateInput';
 import Input from '../form/Input';
 import PetDetails from './PetDetails';
 
+import PageErrorMessage from '../PageErrorMessage';
+import { IError } from '../../types';
+import extractError from '../../data/extractError';
+
 interface IVisitsPageProps extends RouteComponentProps {}
 
 interface IVisitsPageState {
-  owner: Owner;
-  error?: RestError;
+  error?: IError;
+  owner?: Owner;
 }
 
 class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   async componentDidMount() {
     const ownerId = Number(this.props.match.params['ownerId']);
 
-    const owner = await new OwnerApi().getOwner({ ownerId });
-
-    this.setState({ owner });
+    try {
+      const owner = await new OwnerApi().getOwner({ ownerId });
+      this.setState({ owner });
+    } catch (response) {
+      const error = await extractError(response);
+      this.setState({ error });
+    }
   }
 
   onSubmit = async (values, { setSubmitting }) => {
     const petId = Number(this.props.match.params['petId']);
     const { owner } = this.state;
+    if (!owner) {
+      throw new Error('Invalid state: owner undefined');
+    }
 
     try {
       await this.saveVisit(owner.id, petId, values);
@@ -51,8 +56,9 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
     try {
       await new VisitApi().addVisit({ ownerId, petId, visitFields });
     } catch (response) {
-      console.log('ERROR?!...', response);
-      this.setState({ error: response });
+      const error = await extractError(response);
+      const { owner } = this.state || {};
+      this.setState({ error, owner });
     }
     this.props.history.push({
       pathname: '/owners/' + ownerId,
@@ -60,12 +66,12 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
   };
 
   render() {
-    if (!this.state) {
-      return <h2>Loading...</h2>;
-    }
+    const { error, owner } = this.state || {};
 
-    const { owner } = this.state;
     if (!owner) {
+      if (error) {
+        return <PageErrorMessage error={error} />;
+      }
       return <h2>Loading...</h2>;
     }
 
@@ -73,11 +79,13 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
 
     const pet = owner.pets.find(candidate => candidate.id === petId);
     if (!pet) {
-      return <h2>Loading...</h2>;
+      return <PageErrorMessage error={{ message: 'Pet not found' }} />;
     }
 
     return (
       <div>
+        <PageErrorMessage error={error} />
+
         <h2>Visits</h2>
         <b>Pet</b>
         <PetDetails owner={owner} pet={pet} />
