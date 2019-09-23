@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Welcome
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-12"
+    >
+      <img
+        alt=""
+        className="img-responsive"
+        src="/images/pets.png"
+      />
+    </div>
+  </div>
+</div>
+`;

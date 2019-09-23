@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="alert alert-warning"
+    role="alert"
+  >
+    <strong>
+      Error!
+    </strong>
+     
+    error1
+  </div>
+  <img
+    alt=""
+    src="/images/pets.png"
+  />
+</div>
+`;

@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <section>
+    <h2>
+      Find Owners
+    </h2>
+    <form
+      className="form-horizontal"
+      onReset={[Function]}
+      onSubmit={[Function]}
+    >
+      <div
+        className="form-group"
+      >
+        <div
+          className="control-group"
+          id="lastName"
+        >
+          <label
+            className="col-sm-2 control-label"
+          >
+            Last name 
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <input
+              className="form-control"
+              maxLength={80}
+              name="filter"
+              onBlur={[Function]}
+              onChange={[Function]}
+              size={30}
+              value="lastName1"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group"
+      >
+        <div
+          className="col-sm-offset-2 col-sm-10"
+        >
+          <button
+            className="btn btn-default"
+            type="submit"
+          >
+            Find Owner
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+  <section>
+    <h2>
+      1
+       Owners found
+    </h2>
+    <table
+      className="table table-striped"
+    >
+      <thead>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th
+            className="hidden-sm hidden-xs"
+          >
+            Address
+          </th>
+          <th>
+            City
+          </th>
+          <th>
+            Telephone
+          </th>
+          <th
+            className="hidden-xs"
+          >
+            Pets
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a
+              href="/owners/1"
+            >
+              firstName1
+               
+              lastName1
+            </a>
+          </td>
+          <td
+            className="hidden-sm hidden-xs"
+          >
+            address1
+          </td>
+          <td>
+            city1
+          </td>
+          <td>
+            012345
+          </td>
+          <td
+            className="hidden-xs"
+          >
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <a
+    className="btn btn-default"
+    href="/owners/new"
+    onClick={[Function]}
+  >
+     
+    Add Owner
+  </a>
+</div>
+`;

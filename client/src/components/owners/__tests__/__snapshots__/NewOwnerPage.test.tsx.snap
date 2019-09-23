@@ -1,0 +1,164 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    New Owner
+  </h2>
+  <form
+    className="form-horizontal"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="form-group has-feedback"
+    >
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="firstName"
+        >
+          First Name
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="firstName"
+            name="firstName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="lastName"
+        >
+          Last Name
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="lastName"
+            name="lastName"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="address"
+        >
+          Address
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="address"
+            name="address"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="city"
+        >
+          City
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="city"
+            name="city"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="telephone"
+        >
+          Telephone
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="telephone"
+            name="telephone"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-group"
+    >
+      <div
+        className="col-sm-offset-2 col-sm-10"
+      >
+        <button
+          className="btn btn-default"
+          disabled={false}
+          type="submit"
+        >
+          Add Owner
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

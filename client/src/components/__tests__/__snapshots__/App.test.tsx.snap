@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <nav
+    className="navbar navbar-default"
+    role="navigation"
+  >
+    <div
+      className="container"
+    >
+      <div
+        className="navbar-header"
+      >
+        <a
+          className="navbar-brand"
+          href="/"
+        >
+          <span />
+        </a>
+        <button
+          className="navbar-toggle"
+          data-target="#main-navbar"
+          data-toggle="collapse"
+          type="button"
+        >
+          <span
+            className="icon-bar"
+          />
+          <span
+            className="icon-bar"
+          />
+          <span
+            className="icon-bar"
+          />
+        </button>
+      </div>
+      <div
+        className="navbar-collapse collapse"
+        id="main-navbar"
+      >
+        <ul
+          className="nav navbar-nav navbar-right"
+        >
+          <li
+            className="active"
+          >
+            <a
+              href="/"
+              title="home page"
+            >
+              <span
+                aria-hidden="true"
+                className="glyphicon glyphicon-home"
+              />
+               
+              <span>
+                Home
+              </span>
+            </a>
+          </li>
+          <li
+            className=""
+          >
+            <a
+              href="/owners/list"
+              title="find owners"
+            >
+              <span
+                aria-hidden="true"
+                className="glyphicon glyphicon-search"
+              />
+               
+              <span>
+                Find owners
+              </span>
+            </a>
+          </li>
+          <li
+            className=""
+          >
+            <a
+              href="/vets"
+              title="veterinarians"
+            >
+              <span
+                aria-hidden="true"
+                className="glyphicon glyphicon-th-list"
+              />
+               
+              <span>
+                Veterinarians
+              </span>
+            </a>
+          </li>
+          <li
+            className=""
+          >
+            <a
+              href="/error"
+              title="trigger a RuntimeException to see how it is handled"
+            >
+              <span
+                aria-hidden="true"
+                className="glyphicon glyphicon-warning-sign"
+              />
+               
+              <span>
+                Error
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div
+    className="container-fluid"
+  >
+    <div
+      className="container xd-container"
+    >
+      <div>
+        <h2>
+          Welcome
+        </h2>
+        <div
+          className="row"
+        >
+          <div
+            className="col-md-12"
+          >
+            <img
+              alt=""
+              className="img-responsive"
+              src="/images/pets.png"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="container"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-12 text-center"
+          >
+            <img
+              alt="Sponsored by Pivotal"
+              src="/images/spring-pivotal-logo.png"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

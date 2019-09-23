@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Visits
+  </h2>
+  <b>
+    Pet
+  </b>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Birth Date
+        </th>
+        <th>
+          Type
+        </th>
+        <th>
+          Owner
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          petName2
+        </td>
+        <td>
+          2019-01-01
+        </td>
+        <td>
+          typeName3
+        </td>
+        <td>
+          firstName1
+           
+          lastName1
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <form
+    className="form-horizontal"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="form-group has-feedback"
+    >
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="date"
+        >
+          Date
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <div
+            className="react-datepicker-wrapper"
+          >
+            <div
+              className="react-datepicker__input-container"
+            >
+              <input
+                className="form-control"
+                disabled={false}
+                id="date"
+                name="date"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="description"
+        >
+          Description
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="description"
+            name="description"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-group"
+    >
+      <div
+        className="col-sm-offset-2 col-sm-10"
+      >
+        <button
+          className="btn btn-default"
+          disabled={false}
+          type="submit"
+        >
+          Add Visit
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

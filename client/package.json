@@ -57,7 +57,8 @@
     "react-scripts": "3.1.2",
     "react-test-renderer": "^16.9.0",
     "ts-jest": "^24.1.0",
-    "typescript": "~3.6.3"
+    "typescript": "~3.6.3",
+    "wait-for-expect": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,0 +1,144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Update Pet
+  </h2>
+  <form
+    className="form-horizontal"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="form-group has-feedback"
+    >
+      <div
+        className="form-group"
+      >
+        <label
+          className="col-sm-2 control-label"
+        >
+          Owner
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          firstName1
+           
+          lastName1
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="name"
+        >
+          Name
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <input
+            className="form-control"
+            id="name"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value="petName2"
+          />
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="birthDate"
+        >
+          Birth date
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <div
+            className="react-datepicker-wrapper"
+          >
+            <div
+              className="react-datepicker__input-container"
+            >
+              <input
+                className="form-control"
+                disabled={false}
+                id="birthDate"
+                name="birthDate"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                readOnly={false}
+                type="text"
+                value="2019-01-01"
+              />
+            </div>
+          </div>
+          <span
+            aria-hidden="true"
+            className="glyphicon glyphicon-ok form-control-feedback"
+          />
+        </div>
+      </div>
+      <div
+        className="form-group "
+      >
+        <label
+          className="col-sm-2 control-label"
+          htmlFor="typeId"
+        >
+          Type
+        </label>
+        <div
+          className="col-sm-10"
+        >
+          <select
+            className="form-control"
+            name="typeId"
+            onBlur={[Function]}
+            onChange={[Function]}
+            size={5}
+            value={3}
+          >
+            <option
+              value={3}
+            >
+              typeName3
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-group"
+    >
+      <div
+        className="col-sm-offset-2 col-sm-10"
+      >
+        <button
+          className="btn btn-default"
+          disabled={false}
+          type="submit"
+        >
+          Update Pet
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

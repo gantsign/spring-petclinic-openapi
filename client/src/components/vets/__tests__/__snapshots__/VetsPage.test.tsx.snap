@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Veterinarians
+  </h2>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Specialties
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          firstName1
+           
+          lastName1
+        </td>
+        <td>
+          specialtyName2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

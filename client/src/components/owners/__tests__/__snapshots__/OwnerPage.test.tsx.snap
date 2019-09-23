@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <section>
+    <h2>
+      Owner Information
+    </h2>
+    <table
+      className="table table-striped"
+    >
+      <tbody>
+        <tr>
+          <th>
+            Name
+          </th>
+          <td>
+            <b>
+              firstName1
+               
+              lastName1
+            </b>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            Address
+          </th>
+          <td>
+            address1
+          </td>
+        </tr>
+        <tr>
+          <th>
+            City
+          </th>
+          <td>
+            city1
+          </td>
+        </tr>
+        <tr>
+          <th>
+            Telephone
+          </th>
+          <td>
+            012345
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <a
+      className="btn btn-default"
+      href="/owners/1/edit"
+      onClick={[Function]}
+    >
+      Edit Owner
+    </a>
+     
+    <a
+      className="btn btn-default"
+      href="/owners/1/pets/new"
+      onClick={[Function]}
+    >
+      Add New Pet
+    </a>
+  </section>
+  <section>
+    <h2>
+      Pets and Visits
+    </h2>
+    <table
+      className="table table-striped"
+    >
+      <tbody>
+        <tr>
+          <td
+            style={
+              Object {
+                "verticalAlign": "top",
+              }
+            }
+          >
+            <dl
+              className="dl-horizontal"
+            >
+              <dt>
+                Name
+              </dt>
+              <dd>
+                petName2
+              </dd>
+              <dt>
+                Birth Date
+              </dt>
+              <dd>
+                2019-01-01
+              </dd>
+              <dt>
+                Type
+              </dt>
+              <dd>
+                typeName3
+              </dd>
+            </dl>
+          </td>
+          <td
+            style={
+              Object {
+                "verticalAlign": "top",
+              }
+            }
+          >
+            <table
+              className="table-condensed"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Visit Date
+                  </th>
+                  <th>
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    2019-02-02
+                  </td>
+                  <td>
+                    description4
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="/owners/1/pets/2/edit"
+                      onClick={[Function]}
+                    >
+                      Edit Pet
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      href="/owners/1/pets/2/visits/new"
+                      onClick={[Function]}
+                    >
+                      Add Visit
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+`;
