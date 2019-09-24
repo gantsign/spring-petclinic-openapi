@@ -12,6 +12,8 @@ import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
+import Loading from '../Loading';
+
 interface IOwnersPageProps extends RouteComponentProps, WithOwnerApiProps {}
 
 interface IOwnerPageState {
@@ -41,7 +43,7 @@ class OwnersPage extends React.Component<IOwnersPageProps, IOwnerPageState> {
     }
 
     if (!owner) {
-      return <h2>No Owner loaded</h2>;
+      return <Loading />;
     }
 
     return (

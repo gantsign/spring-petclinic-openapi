@@ -11,6 +11,8 @@ import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
+import Loading from '../Loading';
+
 interface IEditOwnerPageProps extends RouteComponentProps, WithOwnerApiProps {}
 
 interface IEditOwnerPageState {
@@ -42,7 +44,7 @@ class EditOwnerPage extends React.Component<
     }
 
     if (!owner) {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
 
     return <OwnerEditor initialOwner={owner} />;

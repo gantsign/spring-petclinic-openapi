@@ -16,6 +16,8 @@ import PageErrorMessage from '../PageErrorMessage';
 import { IError } from '../../types';
 import extractError from '../../data/extractError';
 
+import Loading from '../Loading';
+
 interface IVisitsPageProps
   extends RouteComponentProps,
     WithOwnerApiProps,
@@ -77,7 +79,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
       if (error) {
         return <PageErrorMessage error={error} />;
       }
-      return <h2>Loading...</h2>;
+      return <Loading />;
     }
 
     const petId = Number(this.props.match.params['petId']);

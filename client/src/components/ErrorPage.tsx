@@ -8,6 +8,8 @@ import { IError } from '../types';
 import PageErrorMessage from './PageErrorMessage';
 import extractError from '../data/extractError';
 
+import Loading from './Loading';
+
 interface IErrorPageState {
   error?: IError;
 }
@@ -26,6 +28,10 @@ class ErrorPage extends React.Component<IErrorPageProps, IErrorPageState> {
 
   render() {
     const { error } = this.state || {};
+
+    if (!error) {
+      return <Loading />;
+    }
 
     return (
       <div>

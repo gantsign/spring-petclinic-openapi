@@ -8,7 +8,7 @@ import { Owner, Pet } from 'petclinic-api';
 import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
 import { withPetApi, WithPetApiProps } from '../../data/PetApiProvider';
 
-import LoadingPanel from './LoadingPanel';
+import Loading from '../Loading';
 import PetEditor, { toSelectOptions } from './PetEditor';
 
 import PageErrorMessage from '../PageErrorMessage';
@@ -66,7 +66,7 @@ class EditPetPage extends React.Component<
     }
 
     if (!data) {
-      return <LoadingPanel />;
+      return <Loading />;
     }
 
     const { pet, owner, petTypes } = data;

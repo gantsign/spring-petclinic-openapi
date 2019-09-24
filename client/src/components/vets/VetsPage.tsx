@@ -9,6 +9,8 @@ import { IError } from '../../types';
 import PageErrorMessage from '../PageErrorMessage';
 import extractError from '../../data/extractError';
 
+import Loading from '../Loading';
+
 interface IVetsPageState {
   error?: IError;
   vets?: Vet[];
@@ -30,14 +32,14 @@ class VetsPage extends React.Component<IVetsPageProps, IVetsPageState> {
   }
 
   render() {
-    const { error, vets = [] } = this.state || {};
+    const { error, vets } = this.state || {};
 
     if (error) {
       return <PageErrorMessage error={error} />;
     }
 
     if (!vets) {
-      return <h2>Veterinarians</h2>;
+      return <Loading />;
     }
 
     return (

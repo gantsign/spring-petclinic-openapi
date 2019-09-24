@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IError, ISelectOption } from '../../types';
 import { Owner, PetFields } from 'petclinic-api';
 
-import LoadingPanel from './LoadingPanel';
+import Loading from '../Loading';
 import PetEditor, { toSelectOptions } from './PetEditor';
 
 import { withOwnerApi, WithOwnerApiProps } from '../../data/OwnerApiProvider';
@@ -67,7 +67,7 @@ class NewPetPage extends React.Component<INewPetPageProps, INewPetPageState> {
     }
 
     if (!data) {
-      return <LoadingPanel />;
+      return <Loading />;
     }
 
     const { pet, owner, petTypes } = data;
