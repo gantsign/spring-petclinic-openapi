@@ -43,7 +43,7 @@ class NewPetPage extends React.Component<INewPetPageProps, INewPetPageState> {
     const { ownerApi, petApi } = this.props;
 
     try {
-      const loadPetTypesPromise = petApi.listPetTypes().then(toSelectOptions);
+      const loadPetTypesPromise = petApi.listPetTypes({}).then(toSelectOptions);
       const loadOwnerPromise = ownerApi.getOwner({ ownerId });
 
       this.setState({

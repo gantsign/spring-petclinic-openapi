@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class FailingApiController implements FailingApi {
 
   @Override
-  public ResponseEntity<String> failingRequest() {
+  public ResponseEntity<String> failingRequest(String ifNoneMatch) {
     throw new ResponseStatusException(
         BAD_REQUEST,
         "Expected: controller used to showcase what happens when an exception is thrown");

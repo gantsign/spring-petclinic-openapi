@@ -55,7 +55,7 @@ public class PetApiController implements PetApi {
   private final PetMapper petMapper;
 
   @Override
-  public ResponseEntity<List<PetTypeDto>> listPetTypes() {
+  public ResponseEntity<List<PetTypeDto>> listPetTypes(String ifNoneMatch) {
     return clinicService.findPetTypes().stream()
         .map(petTypeMapper::petTypeToPetTypeDto)
         .collect(collectingAndThen(toList(), ResponseEntity::ok));
@@ -106,7 +106,7 @@ public class PetApiController implements PetApi {
 
   @SuppressWarnings("IfCanBeAssertion")
   @Override
-  public ResponseEntity<PetDto> getPet(Integer ownerId, Integer petId) {
+  public ResponseEntity<PetDto> getPet(Integer ownerId, Integer petId, String ifNoneMatch) {
     final Pet pet = clinicService.findPetByIdAndOwnerId(petId, ownerId);
     if (pet == null) {
       throw new ResponseStatusException(

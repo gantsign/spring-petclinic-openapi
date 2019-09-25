@@ -19,7 +19,7 @@ interface IErrorPageProps extends WithFailingApiProps {}
 class ErrorPage extends React.Component<IErrorPageProps, IErrorPageState> {
   async componentDidMount() {
     try {
-      await this.props.failingApi.failingRequest();
+      await this.props.failingApi.failingRequest({});
     } catch (response) {
       const error = await extractError(response);
       this.setState({ error });

@@ -41,7 +41,7 @@ class EditPetPage extends React.Component<
     const { ownerApi, petApi } = this.props;
 
     try {
-      const loadPetTypesPromise = petApi.listPetTypes().then(toSelectOptions);
+      const loadPetTypesPromise = petApi.listPetTypes({}).then(toSelectOptions);
       const loadOwnerPromise = ownerApi.getOwner({ ownerId });
       const loadPetPromise = petApi.getPet({ ownerId, petId });
 

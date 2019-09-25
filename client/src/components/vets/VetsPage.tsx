@@ -21,7 +21,7 @@ interface IVetsPageProps extends RouteComponentProps, WithVetApiProps {}
 class VetsPage extends React.Component<IVetsPageProps, IVetsPageState> {
   async componentDidMount() {
     try {
-      const vets = await this.props.vetApi.listVets();
+      const vets = await this.props.vetApi.listVets({});
 
       console.log('vets', vets);
       this.setState({ vets });

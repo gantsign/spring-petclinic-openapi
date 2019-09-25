@@ -77,14 +77,14 @@ public class OwnerApiController implements OwnerApi {
 
   /** Read single Owner. */
   @Override
-  public ResponseEntity<OwnerDto> getOwner(Integer ownerId) {
+  public ResponseEntity<OwnerDto> getOwner(Integer ownerId, String ifNoneMatch) {
     Owner owner = retrieveOwner(ownerId);
     return ResponseEntity.ok(ownerMapper.ownerToOwnerDto(owner));
   }
 
   /** Read List of Owners. */
   @Override
-  public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
+  public ResponseEntity<List<OwnerDto>> listOwners(String lastName, String ifNoneMatch) {
 
     if (lastName == null) {
       lastName = "";

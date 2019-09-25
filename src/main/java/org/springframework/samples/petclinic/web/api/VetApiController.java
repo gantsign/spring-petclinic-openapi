@@ -37,7 +37,7 @@ public class VetApiController implements VetApi {
   private final VetMapper vetMapper;
 
   @Override
-  public ResponseEntity<List<VetDto>> listVets() {
+  public ResponseEntity<List<VetDto>> listVets(String ifNoneMatch) {
     return clinicService.findVets().stream()
         .map(vetMapper::vetToVetDto)
         .collect(collectingAndThen(toList(), ResponseEntity::ok));
