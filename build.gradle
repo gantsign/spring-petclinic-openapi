@@ -131,6 +131,13 @@ jacocoTestCoverageVerification {
   }
 }
 
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    xml.destination file("${buildDir}/reports/jacoco/report.xml")
+  }
+}
+
 jib {
   to {
     tags = ['latest']
@@ -142,11 +149,12 @@ afterEvaluate {
     tasks.checkstyleMain.dependsOn tasks.spotlessApply
     tasks.checkstyleTest.dependsOn tasks.spotlessApply
     tasks.spotlessCheck.dependsOn tasks.spotlessApply
-  } else{
+  } else {
     tasks.checkstyleMain.dependsOn tasks.spotlessCheck
     tasks.checkstyleTest.dependsOn tasks.spotlessCheck
   }
-  if (System.env['CI']=='true') {
-    tasks.check.dependsOn tasks.jacocoTestCoverageVerification
+  if (System.env['CI'] == 'true') {
+    tasks.jacocoTestReport.dependsOn tasks.jacocoTestCoverageVerification
+    tasks.check.dependsOn tasks.jacocoTestReport
   }
 }
