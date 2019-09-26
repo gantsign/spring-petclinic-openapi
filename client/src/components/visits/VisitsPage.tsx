@@ -68,7 +68,7 @@ class VisitsPage extends React.Component<IVisitsPageProps, IVisitsPageState> {
       this.setState({ error, owner });
     }
     this.props.history.push({
-      pathname: '/owners/' + ownerId,
+      pathname: `/owners/${ownerId}`,
     });
   };
 

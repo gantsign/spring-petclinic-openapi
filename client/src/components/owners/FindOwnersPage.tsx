@@ -54,7 +54,7 @@ class FindOwnersPage extends React.Component<
    * This method updates the URL with the entered lastName. The change of the URL
    * leads to new properties and thus results in rendering.
    */
-  submitSearchForm = values => {
+  submitSearchForm = async values => {
     const { filter } = values;
 
     this.props.history.push({
@@ -62,7 +62,7 @@ class FindOwnersPage extends React.Component<
       search: `?lastName=${encodeURIComponent(filter || '')}`,
     });
 
-    this.fetchData(filter);
+    return this.fetchData(filter);
   };
 
   /**

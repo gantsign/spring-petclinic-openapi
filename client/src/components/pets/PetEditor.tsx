@@ -64,7 +64,7 @@ class PetEditor extends React.Component<IPetEditorProps, IPetEditorState> {
     }
 
     this.props.history.push({
-      pathname: '/owners/' + owner.id,
+      pathname: `/owners/${owner.id}`,
     });
   };
 

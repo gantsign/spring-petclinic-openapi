@@ -53,7 +53,7 @@ class OwnerEditor extends React.Component<
     }
 
     this.props.history.push({
-      pathname: '/owners/' + newOwner.id,
+      pathname: `/owners/${newOwner.id}`,
     });
   };
 
