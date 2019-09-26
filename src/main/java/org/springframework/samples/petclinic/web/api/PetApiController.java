@@ -16,10 +16,14 @@
 
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.CacheControl.maxAge;
+import static org.springframework.http.CacheControl.noCache;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.List;
@@ -58,7 +62,10 @@ public class PetApiController implements PetApi {
   public ResponseEntity<List<PetTypeDto>> listPetTypes(String ifNoneMatch) {
     return clinicService.findPetTypes().stream()
         .map(petTypeMapper::petTypeToPetTypeDto)
-        .collect(collectingAndThen(toList(), ResponseEntity::ok));
+        .collect(
+            collectingAndThen(
+                toList(),
+                body -> ResponseEntity.status(OK).cacheControl(maxAge(5, MINUTES)).body(body)));
   }
 
   @SuppressWarnings("IfCanBeAssertion")
@@ -113,6 +120,6 @@ public class PetApiController implements PetApi {
           NOT_FOUND, "Pet with ID '" + petId + "' and Owner ID '" + ownerId + "' is unknown.");
     }
 
-    return ResponseEntity.ok(petMapper.petToPetDto(pet));
+    return ResponseEntity.status(OK).cacheControl(noCache()).body(petMapper.petToPetDto(pet));
   }
 }

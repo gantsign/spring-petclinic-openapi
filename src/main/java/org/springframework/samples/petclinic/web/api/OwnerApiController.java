@@ -18,8 +18,10 @@ package org.springframework.samples.petclinic.web.api;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.CacheControl.noCache;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import java.util.List;
@@ -79,7 +81,9 @@ public class OwnerApiController implements OwnerApi {
   @Override
   public ResponseEntity<OwnerDto> getOwner(Integer ownerId, String ifNoneMatch) {
     Owner owner = retrieveOwner(ownerId);
-    return ResponseEntity.ok(ownerMapper.ownerToOwnerDto(owner));
+    return ResponseEntity.status(OK)
+        .cacheControl(noCache())
+        .body(ownerMapper.ownerToOwnerDto(owner));
   }
 
   /** Read List of Owners. */
@@ -92,7 +96,9 @@ public class OwnerApiController implements OwnerApi {
 
     return clinicService.findOwnerByLastName(lastName).stream()
         .map(ownerMapper::ownerToOwnerDto)
-        .collect(collectingAndThen(toList(), ResponseEntity::ok));
+        .collect(
+            collectingAndThen(
+                toList(), body -> ResponseEntity.status(OK).cacheControl(noCache()).body(body)));
   }
 
   /** Update Owner. */

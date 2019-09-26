@@ -16,8 +16,11 @@
 
 package org.springframework.samples.petclinic.web.api;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.CacheControl.maxAge;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,9 @@ public class VetApiController implements VetApi {
   public ResponseEntity<List<VetDto>> listVets(String ifNoneMatch) {
     return clinicService.findVets().stream()
         .map(vetMapper::vetToVetDto)
-        .collect(collectingAndThen(toList(), ResponseEntity::ok));
+        .collect(
+            collectingAndThen(
+                toList(),
+                body -> ResponseEntity.status(OK).cacheControl(maxAge(5, MINUTES)).body(body)));
   }
 }
