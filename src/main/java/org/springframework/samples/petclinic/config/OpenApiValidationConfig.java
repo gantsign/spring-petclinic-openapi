@@ -19,11 +19,11 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
-public class OpenApiValidationConfig extends WebMvcConfigurerAdapter {
+public class OpenApiValidationConfig implements WebMvcConfigurer {
   private final OpenApiValidationInterceptor validationInterceptor;
 
   /** Creates an instance of OpenApiValidationConfig that permits all OPTIONS requests. */

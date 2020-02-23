@@ -1,12 +1,12 @@
 package org.springframework.samples.petclinic.config;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import org.ehcache.config.CacheConfiguration;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
-import org.ehcache.expiry.Duration;
-import org.ehcache.expiry.Expirations;
 import org.ehcache.jsr107.Eh107Configuration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
@@ -30,7 +30,8 @@ public class CacheConfig {
                   Object.class,
                   Object.class,
                   ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES))
-              .withExpiry(Expirations.timeToLiveExpiration(Duration.of(60, TimeUnit.SECONDS)))
+              .withExpiry(
+                  ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(60, ChronoUnit.SECONDS)))
               .build();
       cacheManager.createCache("vets", Eh107Configuration.fromEhcacheCacheConfiguration(config));
     };
