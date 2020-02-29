@@ -28,10 +28,10 @@ openApiGenerate {
   configOptions = [
     configPackage: 'org.springframework.samples.petclinic.swagger',
     dateLibrary: 'java8',
-    java8: true,
-    hideGenerationTimestamp: true,
-    useTags: true,
-    useBeanValidation: false
+    java8: 'true',
+    hideGenerationTimestamp: 'true',
+    useTags: 'true',
+    useBeanValidation: 'false'
   ]
 }
 
