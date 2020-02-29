@@ -42,7 +42,6 @@ sourceSets {
 }
 
 spotless {
-  java { googleJavaFormat('1.7') }
   groovyGradle {
     paddedCell() // Avoid cyclic ambiguities
     greclipse().configFile("$rootDir/config/eclipse-java-google-style.xml")
@@ -50,6 +49,5 @@ spotless {
 }
 
 afterEvaluate {
-  spotlessApply.dependsOn(tasks.openApiGenerate)
-  compileJava.dependsOn(spotlessApply)
+  compileJava.dependsOn(tasks.openApiGenerate)
 }
