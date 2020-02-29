@@ -22,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple JavaBean domain object with an ID property. Used as a base class for objects needing this
@@ -36,7 +37,7 @@ import lombok.Setter;
 public class BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  protected Integer id;
+  protected @Nullable Integer id;
 
   public boolean isNew() {
     return id == null;

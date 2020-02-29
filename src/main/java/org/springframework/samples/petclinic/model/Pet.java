@@ -30,6 +30,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple business object representing a pet.
@@ -45,15 +46,15 @@ import lombok.Setter;
 public class Pet extends NamedEntity {
 
   @Column(name = "birth_date")
-  private LocalDate birthDate;
+  private @Nullable LocalDate birthDate;
 
-  @ManyToOne
   @JoinColumn(name = "type_id")
-  private PetType type;
-
   @ManyToOne
+  private @Nullable PetType type;
+
   @JoinColumn(name = "owner_id")
-  private Owner owner;
+  @ManyToOne
+  private @Nullable Owner owner;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
   private @NonNull Set<Visit> visits = new HashSet<>();

@@ -26,12 +26,12 @@ openApiGenerate {
   modelNameSuffix = 'Dto'
   ignoreFileOverride = "$projectDir/src/main/openapi-generator/.openapi-generator-ignore".toString()
   configOptions = [
-    configPackage: 'org.springframework.samples.petclinic.swagger',
-    dateLibrary: 'java8',
-    java8: 'true',
+    configPackage          : 'org.springframework.samples.petclinic.swagger',
+    dateLibrary            : 'java8',
+    java8                  : 'true',
     hideGenerationTimestamp: 'true',
-    useTags: 'true',
-    useBeanValidation: 'false'
+    useTags                : 'true',
+    useBeanValidation      : 'false'
   ]
 }
 

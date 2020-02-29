@@ -16,10 +16,12 @@
 
 package org.springframework.samples.petclinic.model;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple JavaBean domain object adds a name property to {@code BaseEntity}. Used as a base class
@@ -34,10 +36,10 @@ import lombok.Setter;
 public class NamedEntity extends BaseEntity {
 
   @Column(name = "name")
-  private String name;
+  private @Nullable String name;
 
   @Override
   public String toString() {
-    return getName();
+    return Objects.toString(getName(), "unspecified");
   }
 }

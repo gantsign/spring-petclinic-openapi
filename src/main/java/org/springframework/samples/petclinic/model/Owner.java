@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -42,13 +43,13 @@ import org.springframework.core.style.ToStringCreator;
 @Table(name = "owners")
 public class Owner extends Person {
   @Column(name = "address")
-  private String address;
+  private @Nullable String address;
 
   @Column(name = "city")
-  private String city;
+  private @Nullable String city;
 
   @Column(name = "telephone")
-  private String telephone;
+  private @Nullable String telephone;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private @NonNull Set<Pet> pets = new HashSet<>();

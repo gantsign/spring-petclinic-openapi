@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -38,14 +39,14 @@ public class Visit extends BaseEntity {
 
   /** Holds value of property date. */
   @Column(name = "visit_date")
-  private LocalDate date;
+  private @Nullable LocalDate date;
 
   /** Holds value of property description. */
   @Column(name = "description")
-  private String description;
+  private @Nullable String description;
 
   /** Holds value of property pet. */
-  @ManyToOne
   @JoinColumn(name = "pet_id")
-  private Pet pet;
+  @ManyToOne
+  private @Nullable Pet pet;
 }

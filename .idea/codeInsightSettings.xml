@@ -25,6 +25,7 @@
       <name>javax.annotation.ParametersAreNonnullByDefault</name>
       <name>javax.annotation.ParametersAreNullableByDefault</name>
       <name>javax.swing</name>
+      <name>javax.validation.constraints.NotNull</name>
       <name>jdk.nashorn.internal</name>
       <name>joptsimple.internal</name>
       <name>junit</name>
@@ -53,6 +54,8 @@
       <name>org.assertj.core.annotations</name>
       <name>org.assertj.core.internal</name>
       <name>org.assertj.core.util</name>
+      <name>org.checkerframework.checker.nullness.qual.NonNull</name>
+      <name>org.checkerframework.checker.nullness.qual.Nullable</name>
       <name>org.dom4j.util</name>
       <name>org.ehcache.core.util.CollectionUtil</name>
       <name>org.ehcache.shadow</name>
@@ -63,6 +66,7 @@
       <name>org.hibernate.validator.internal</name>
       <name>org.hsqldb</name>
       <name>org.jboss.logging</name>
+      <name>org.jetbrains.annotations.Nullable</name>
       <name>org.junit.jupiter.api.Assertions.assertAll</name>
       <name>org.junit.jupiter.api.Assertions.assertArrayEquals</name>
       <name>org.junit.jupiter.api.Assertions.assertEquals</name>
@@ -92,6 +96,8 @@
       <name>org.yaml.snakeyaml.external</name>
       <name>reactor.util.Logger</name>
       <name>reactor.util.annotation</name>
+      <name>shadow.checkerframework.checker.nullness.qual.NonNull</name>
+      <name>shadow.checkerframework.checker.nullness.qual.Nullable</name>
       <name>sun.misc.BASE64Decoder</name>
       <name>sun.misc.BASE64Encoder</name>
       <name>sun.misc.IOUtils</name>

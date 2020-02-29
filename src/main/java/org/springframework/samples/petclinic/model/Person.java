@@ -20,6 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 /**
  * Simple JavaBean domain object representing an person.
@@ -32,8 +33,8 @@ import lombok.Setter;
 public class Person extends BaseEntity {
 
   @Column(name = "first_name")
-  private String firstName;
+  private @Nullable String firstName;
 
   @Column(name = "last_name")
-  private String lastName;
+  private @Nullable String lastName;
 }

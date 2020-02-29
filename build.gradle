@@ -66,6 +66,9 @@ dependencies {
   compileOnly "org.projectlombok:lombok:${lombokVersion}"
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
   annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+  gradleLint.ignore('duplicate-dependency-class') {
+    annotationProcessor 'com.uber.nullaway:nullaway:0.7.9'
+  }
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 
@@ -84,6 +87,9 @@ dependencies {
 
   implementation 'com.atlassian.oai:swagger-request-validator-springmvc:2.5.0'
 
+  compileOnly 'org.jetbrains:annotations:19.0.0'
+  compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
   checkstyleConfig("com.puppycrawl.tools:checkstyle:${checkstyleVersion}") { transitive = false }
   if (!hasProperty('skipErrorProne')) {
     errorprone 'com.google.errorprone:error_prone_core:2.3.4'
@@ -97,6 +103,22 @@ compileJava {
     '-Amapstruct.suppressGeneratorVersionInfoComment=true',
     '-Amapstruct.defaultComponentModel=spring'
   ]
+}
+
+import net.ltgt.gradle.errorprone.CheckSeverity
+
+tasks.withType(JavaCompile) {
+  if (!hasProperty('skipErrorProne')) {
+    options.errorprone.disableWarningsInGeneratedCode = true
+
+    if (!name.toLowerCase().contains("test")) {
+      options.errorprone {
+        check('NullAway', CheckSeverity.ERROR)
+        option('NullAway:AnnotatedPackages', 'org.springframework.samples.petclinic')
+        option('NullAway:TreatGeneratedAsUnannotated')
+      }
+    }
+  }
 }
 
 spotless {

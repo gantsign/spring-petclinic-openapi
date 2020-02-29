@@ -27,6 +27,7 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.samples.petclinic.mapper.MappingValidationException;
 import org.springframework.samples.petclinic.mapper.OwnerMapper;
 import org.springframework.samples.petclinic.model.Owner;
@@ -88,7 +89,7 @@ public class OwnerApiController implements OwnerApi {
 
   /** Read List of Owners. */
   @Override
-  public ResponseEntity<List<OwnerDto>> listOwners(String lastName, String ifNoneMatch) {
+  public ResponseEntity<List<OwnerDto>> listOwners(@Nullable String lastName, String ifNoneMatch) {
 
     if (lastName == null) {
       lastName = "";
