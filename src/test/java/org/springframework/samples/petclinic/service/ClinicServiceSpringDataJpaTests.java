@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.util.EntityUtils;
@@ -51,24 +50,24 @@ import org.springframework.transaction.annotation.Transactional;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class ClinicServiceSpringDataJpaTests {
 
+  private static final LocalDate DATE_2019_1_2 = LocalDate.of(2019, 1, 2);
+
   @Autowired protected ClinicService clinicService;
 
   @Test
   public void shouldFindOwnersByLastName() {
     Collection<Owner> owners = clinicService.findOwnerByLastName("Davis");
-    assertThat(owners.size()).isEqualTo(2);
+    assertThat(owners).hasSize(2);
 
     owners = clinicService.findOwnerByLastName("Daviss");
-    assertThat(owners.isEmpty()).isTrue();
+    assertThat(owners).isEmpty();
   }
 
   @Test
   public void shouldFindSingleOwnerWithPet() {
     Owner owner = clinicService.findOwnerById(1);
     assertThat(owner.getLastName()).startsWith("Franklin");
-    assertThat(owner.getPets().size()).isEqualTo(1);
-    assertThat(owner.getPets().iterator().next().getType()).isNotNull();
-    assertThat(owner.getPets().iterator().next().getType().getName()).isEqualTo("cat");
+    assertThat(owner.getPets()).extracting("type.name").containsExactly("cat");
   }
 
   @Test
@@ -87,7 +86,7 @@ public class ClinicServiceSpringDataJpaTests {
     assertThat(owner.getId().longValue()).isNotEqualTo(0);
 
     owners = clinicService.findOwnerByLastName("Schultz");
-    assertThat(owners.size()).isEqualTo(found + 1);
+    assertThat(owners).hasSize(found + 1);
   }
 
   @Test
@@ -132,15 +131,15 @@ public class ClinicServiceSpringDataJpaTests {
     pet.setName("bowser");
     Collection<PetType> types = clinicService.findPetTypes();
     pet.setType(EntityUtils.getById(types, PetType.class, 2));
-    pet.setBirthDate(LocalDate.of(2019, 1, 2));
+    pet.setBirthDate(DATE_2019_1_2);
     owner6.addPet(pet);
-    assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+    assertThat(owner6.getPets()).hasSize(found + 1);
 
     clinicService.savePet(pet);
     clinicService.saveOwner(owner6);
 
     owner6 = clinicService.findOwnerById(6);
-    assertThat(owner6.getPets().size()).isEqualTo(found + 1);
+    assertThat(owner6.getPets()).hasSize(found + 1);
     // checks that ID has been generated
     assertThat(pet.getId()).isNotNull();
   }
@@ -166,7 +165,8 @@ public class ClinicServiceSpringDataJpaTests {
     Vet vet = EntityUtils.getById(vets, Vet.class, 3);
     assertThat(vet.getLastName()).isEqualTo("Douglas");
     assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-    assertThat(vet.getSpecialties().stream().map(Specialty::getName))
+    assertThat(vet.getSpecialties())
+        .extracting("name")
         .containsExactlyInAnyOrder("dentistry", "surgery");
   }
 
@@ -182,14 +182,14 @@ public class ClinicServiceSpringDataJpaTests {
     clinicService.savePet(pet7);
 
     pet7 = clinicService.findPetByIdAndOwnerId(7, 6);
-    assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
+    assertThat(pet7.getVisits()).hasSize(found + 1);
     assertThat(visit.getId()).isNotNull();
   }
 
   @Test
   public void shouldFindVisitsByPetId() throws Exception {
     Collection<Visit> visits = clinicService.findVisitsByPetId(7);
-    assertThat(visits.size()).isEqualTo(2);
+    assertThat(visits).hasSize(2);
     Visit[] visitArr = visits.toArray(new Visit[0]);
     assertThat(visitArr[0].getPet()).isNotNull();
     assertThat(visitArr[0].getDate()).isNotNull();

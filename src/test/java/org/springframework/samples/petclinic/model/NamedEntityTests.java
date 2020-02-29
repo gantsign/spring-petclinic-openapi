@@ -11,6 +11,6 @@ public class NamedEntityTests {
     Specialty specialty = new Specialty();
     specialty.setName("spec1");
 
-    assertThat(specialty.toString()).isEqualTo("spec1");
+    assertThat(specialty).hasToString("spec1");
   }
 }

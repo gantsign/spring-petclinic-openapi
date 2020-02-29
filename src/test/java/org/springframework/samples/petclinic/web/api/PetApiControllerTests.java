@@ -33,6 +33,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWebTestClient
 public class PetApiControllerTests extends TestBase {
 
+  private static final LocalDate DATE_2019_8_22 = LocalDate.of(2019, 8, 22);
+
   @Autowired WebTestClient webTestClient;
 
   @Autowired PetMapper petMapper;
@@ -114,13 +116,10 @@ public class PetApiControllerTests extends TestBase {
 
     ArgumentCaptor<Pet> arg = ArgumentCaptor.forClass(Pet.class);
     verify(clinicService).savePet(arg.capture());
-    Pet actualPet = arg.getValue();
-    assertThat(actualPet.getOwner().getId()).isEqualTo(1);
-    assertThat(actualPet.getOwner().getFirstName()).isEqualTo("George");
-    assertThat(actualPet.getOwner().getLastName()).isEqualTo("Bush");
-    assertThat(actualPet.getName()).isEqualTo("Basil");
-    assertThat(actualPet.getBirthDate()).isEqualTo(LocalDate.of(2019, 8, 22));
-    assertThat(actualPet.getType().getId()).isEqualTo(6);
+
+    assertThat(arg.getValue())
+        .extracting("owner.id", "owner.firstName", "owner.lastName", "name", "birthDate", "type.id")
+        .containsExactly(1, "George", "Bush", "Basil", DATE_2019_8_22, 6);
   }
 
   @Test
@@ -199,13 +198,10 @@ public class PetApiControllerTests extends TestBase {
 
     ArgumentCaptor<Pet> arg = ArgumentCaptor.forClass(Pet.class);
     verify(clinicService).savePet(arg.capture());
-    Pet actualPet = arg.getValue();
-    assertThat(actualPet.getOwner().getId()).isEqualTo(1);
-    assertThat(actualPet.getOwner().getFirstName()).isEqualTo("George");
-    assertThat(actualPet.getOwner().getLastName()).isEqualTo("Bush");
-    assertThat(actualPet.getName()).isEqualTo("NewName");
-    assertThat(actualPet.getBirthDate()).isEqualTo(LocalDate.of(2019, 8, 22));
-    assertThat(actualPet.getType().getId()).isEqualTo(6);
+
+    assertThat(arg.getValue())
+        .extracting("owner.id", "owner.firstName", "owner.lastName", "name", "birthDate", "type.id")
+        .containsExactly(1, "George", "Bush", "NewName", DATE_2019_8_22, 6);
   }
 
   @Test
@@ -270,7 +266,7 @@ public class PetApiControllerTests extends TestBase {
 
     pet.setName("Basil");
     pet.setId(2);
-    pet.setBirthDate(LocalDate.of(2019, 8, 22));
+    pet.setBirthDate(DATE_2019_8_22);
 
     PetType petType = new PetType();
     petType.setId(6);

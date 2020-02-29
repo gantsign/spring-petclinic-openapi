@@ -28,6 +28,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWebTestClient
 public class VisitApiControllerTests extends TestBase {
 
+  private static final LocalDate DATE_2019_8_22 = LocalDate.of(2019, 8, 22);
+  private static final LocalDate DATE_2019_8_23 = LocalDate.of(2019, 8, 23);
+
   @Autowired WebTestClient webTestClient;
 
   @Autowired VisitMapper visitMapper;
@@ -58,17 +61,18 @@ public class VisitApiControllerTests extends TestBase {
 
     ArgumentCaptor<Visit> arg = ArgumentCaptor.forClass(Visit.class);
     verify(clinicService).saveVisit(arg.capture());
-    Visit actualVisit = arg.getValue();
-    Pet actualPet = actualVisit.getPet();
-    Owner actualOwner = actualPet.getOwner();
-    assertThat(actualOwner.getId()).isEqualTo(1);
-    assertThat(actualOwner.getFirstName()).isEqualTo("George");
-    assertThat(actualOwner.getLastName()).isEqualTo("Bush");
-    assertThat(actualPet.getName()).isEqualTo("Basil");
-    assertThat(actualPet.getBirthDate()).isEqualTo(LocalDate.of(2019, 8, 22));
-    assertThat(actualPet.getType().getId()).isEqualTo(6);
-    assertThat(actualVisit.getDate()).isEqualTo(LocalDate.of(2019, 8, 23));
-    assertThat(actualVisit.getDescription()).isEqualTo("desc1");
+
+    assertThat(arg.getValue())
+        .extracting(
+            "pet.owner.id",
+            "pet.owner.firstName",
+            "pet.owner.lastName",
+            "pet.name",
+            "pet.birthDate",
+            "pet.type.id",
+            "date",
+            "description")
+        .containsExactly(1, "George", "Bush", "Basil", DATE_2019_8_22, 6, DATE_2019_8_23, "desc1");
   }
 
   @Test
@@ -106,7 +110,7 @@ public class VisitApiControllerTests extends TestBase {
 
     pet.setName("Basil");
     pet.setId(2);
-    pet.setBirthDate(LocalDate.of(2019, 8, 22));
+    pet.setBirthDate(DATE_2019_8_22);
 
     PetType petType = new PetType();
     petType.setId(6);
@@ -117,7 +121,7 @@ public class VisitApiControllerTests extends TestBase {
 
     Visit visit = new Visit();
     visit.setId(3);
-    visit.setDate(LocalDate.of(2019, 8, 23));
+    visit.setDate(DATE_2019_8_23);
     visit.setDescription("desc1");
     pet.addVisit(visit);
 

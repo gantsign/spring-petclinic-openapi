@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LanguageInjectionConfiguration">
+    <injection language="RegExp" injector-id="java">
+      <display-name>AbstractCharSequenceAssert.doesNotMatch (org.assertj.core.api)</display-name>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("doesNotMatch").withParameters("java.lang.CharSequence").definedInClass("org.assertj.core.api.AbstractCharSequenceAssert"))]]></place>
+    </injection>
+    <injection language="RegExp" injector-id="java">
+      <display-name>AbstractCharSequenceAssert.matches (org.assertj.core.api)</display-name>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("matches").withParameters("java.lang.CharSequence").definedInClass("org.assertj.core.api.AbstractCharSequenceAssert"))]]></place>
+    </injection>
+  </component>
+</project>
