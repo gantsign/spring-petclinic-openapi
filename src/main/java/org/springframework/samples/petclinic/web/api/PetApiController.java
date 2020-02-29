@@ -16,7 +16,6 @@
 
 package org.springframework.samples.petclinic.web.api;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.CacheControl.maxAge;
@@ -26,6 +25,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
+import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,10 @@ public class PetApiController implements PetApi {
         .collect(
             collectingAndThen(
                 toList(),
-                body -> ResponseEntity.status(OK).cacheControl(maxAge(5, MINUTES)).body(body)));
+                body ->
+                    ResponseEntity.status(OK)
+                        .cacheControl(maxAge(Duration.ofMinutes(5)))
+                        .body(body)));
   }
 
   @SuppressWarnings("IfCanBeAssertion")
