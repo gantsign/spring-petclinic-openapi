@@ -8,7 +8,7 @@ plugins {
   id 'jacoco'
   id 'com.google.cloud.tools.jib' version '1.4.0'
   id 'nebula.lint' version '16.2.3'
-  id 'net.ltgt.errorprone' version '0.8.1' apply false
+  id 'net.ltgt.errorprone' version '1.1.1' apply false
 }
 
 if (!hasProperty('skipErrorProne')) {
