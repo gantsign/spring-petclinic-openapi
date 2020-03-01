@@ -9,5 +9,18 @@
       <display-name>AbstractCharSequenceAssert.matches (org.assertj.core.api)</display-name>
       <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("matches").withParameters("java.lang.CharSequence").definedInClass("org.assertj.core.api.AbstractCharSequenceAssert"))]]></place>
     </injection>
+    <injection language="RegExp" injector-id="java">
+      <display-name>ArchConditions.haveNameNotMatching (com.tngtech.archunit.lang.conditions)</display-name>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("haveNameNotMatching").withParameters("java.lang.String").definedInClass("com.tngtech.archunit.lang.conditions.ArchConditions"))]]></place>
+    </injection>
+    <injection language="RegExp" injector-id="java">
+      <display-name>ClassesThat (com.tngtech.archunit.lang.syntax.elements)</display-name>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("haveNameMatching").withParameters("java.lang.String").definedInClass("com.tngtech.archunit.lang.syntax.elements.ClassesThat"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("haveNameNotMatching").withParameters("java.lang.String").definedInClass("com.tngtech.archunit.lang.syntax.elements.ClassesThat"))]]></place>
+    </injection>
+    <injection language="RegExp" injector-id="java">
+      <display-name>Predicates.nameMatching (com.tngtech.archunit.core.domain.properties.HasName)</display-name>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("nameMatching").withParameters("java.lang.String").definedInClass("com.tngtech.archunit.core.domain.properties.HasName.Predicates"))]]></place>
+    </injection>
   </component>
 </project>

@@ -55,6 +55,7 @@ ext {
   set('checkstyleVersion', '8.30')
   set('mapstructVersion', '1.3.0.Final')
   set('lombokVersion', '1.18.12')
+  set('jetbrainsAnnotationsVersion', '19.0.0')
 }
 
 dependencies {
@@ -69,8 +70,10 @@ dependencies {
   gradleLint.ignore('duplicate-dependency-class') {
     annotationProcessor 'com.uber.nullaway:nullaway:0.7.9'
   }
+  testImplementation "org.projectlombok:lombok:${lombokVersion}"
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+  testImplementation 'com.tngtech.archunit:archunit-junit4:0.13.1'
 
   implementation project(':server-generated')
 
@@ -87,7 +90,8 @@ dependencies {
 
   implementation 'com.atlassian.oai:swagger-request-validator-springmvc:2.5.0'
 
-  compileOnly 'org.jetbrains:annotations:19.0.0'
+  compileOnly "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
+  testImplementation "org.jetbrains:annotations:${jetbrainsAnnotationsVersion}"
   compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
   checkstyleConfig("com.puppycrawl.tools:checkstyle:${checkstyleVersion}") { transitive = false }
@@ -132,6 +136,7 @@ spotless {
 checkstyle {
   toolVersion = "${checkstyleVersion}"
   config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
+  configProperties['org.checkstyle.google.suppressionfilter.config'] = file("${project.rootDir}/config/checkstyle-suppressions.xml").absolutePath
   ignoreFailures = false
   maxWarnings = 0
 }
