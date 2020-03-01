@@ -52,7 +52,7 @@ configurations {
 }
 
 ext {
-  set('checkstyleVersion', '8.24')
+  set('checkstyleVersion', '8.30')
   set('mapstructVersion', '1.3.0.Final')
   set('lombokVersion', '1.18.12')
 }
