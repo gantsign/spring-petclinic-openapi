@@ -4,6 +4,12 @@ plugins {
   id 'java'
 }
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
+}
+
 dependencies {
   implementation platform('org.springframework.boot:spring-boot-dependencies:2.1.7.RELEASE')
 
@@ -18,7 +24,7 @@ dependencies {
 openApiGenerate {
   generatorName = 'spring'
   library = 'spring-boot'
-  inputSpec = "$rootDir/src/main/resources/schema/petclinic.openapi.yaml".toString()
+  inputSpec = "$rootDir/server/src/main/resources/schema/petclinic.openapi.yaml".toString()
   outputDir = "$buildDir/generated".toString()
   apiPackage = 'org.springframework.samples.petclinic.web.api'
   invokerPackage = 'org.springframework.samples.petclinic.invoker'

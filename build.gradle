@@ -1,0 +1,42 @@
+plugins {
+  id 'com.diffplug.gradle.spotless' version '3.27.1'
+  id 'org.openapi.generator' version '4.3.1' apply false
+  id 'org.springframework.boot' version '2.4.0' apply false
+  id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
+  id 'nebula.lint' version '16.2.3'
+  id 'net.ltgt.errorprone' version '1.3.0' apply false
+  id "com.github.node-gradle.node" version "2.2.4" apply false
+}
+allprojects {
+  repositories {
+    mavenCentral()
+  }
+
+  tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+  }
+
+  gradleLint {
+    rules = [
+      'all-nebula-renames',
+      'duplicate-dependency-class',
+      'unused-exclude-by-dep'
+    ]
+  }
+}
+
+group = 'org.springframework.samples'
+version = '1.0.0-SNAPSHOT'
+
+spotless {
+  groovyGradle {
+    paddedCell() // Avoid cyclic ambiguities
+    greclipse().configFile('config/eclipse-java-google-style.xml')
+  }
+}
+
+afterEvaluate {
+  spotlessCheck.dependsOn spotlessApply
+  build.dependsOn spotlessCheck
+}

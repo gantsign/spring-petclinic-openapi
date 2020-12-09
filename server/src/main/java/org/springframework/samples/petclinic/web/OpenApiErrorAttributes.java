@@ -4,6 +4,7 @@ import com.atlassian.oai.validator.springmvc.InvalidRequestException;
 import com.atlassian.oai.validator.springmvc.InvalidResponseException;
 import java.util.Collections;
 import java.util.Map;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
@@ -12,8 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 public class OpenApiErrorAttributes extends DefaultErrorAttributes {
 
   @Override
-  public Map<String, Object> getErrorAttributes(WebRequest request, boolean includeStackTrace) {
-    Map<String, Object> errorAttributes = super.getErrorAttributes(request, includeStackTrace);
+  public Map<String, Object> getErrorAttributes(WebRequest request, ErrorAttributeOptions options) {
+    Map<String, Object> errorAttributes = super.getErrorAttributes(request, options);
 
     Throwable throwable = getError(request);
     if (throwable instanceof InvalidRequestException) {

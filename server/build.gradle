@@ -1,14 +1,12 @@
 plugins {
   id 'checkstyle'
-  id 'com.diffplug.gradle.spotless' version '3.27.1'
-  id 'org.openapi.generator' version '4.2.3'
-  id 'org.springframework.boot' version '2.2.4.RELEASE'
-  id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+  id 'com.diffplug.gradle.spotless'
+  id 'org.openapi.generator'
+  id 'org.springframework.boot'
+  id 'io.spring.dependency-management'
   id 'java'
   id 'jacoco'
-  id 'com.google.cloud.tools.jib' version '1.4.0'
-  id 'nebula.lint' version '16.2.3'
-  id 'net.ltgt.errorprone' version '1.1.1' apply false
+  id 'nebula.lint'
 }
 
 if (!hasProperty('skipErrorProne')) {
@@ -36,9 +34,11 @@ allprojects {
   }
 }
 
-group = 'org.springframework.samples'
-version = '1.0.0-SNAPSHOT'
-sourceCompatibility = '1.8'
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
+}
 
 configurations {
   checkstyleConfig
@@ -49,6 +49,22 @@ configurations {
   compileOnly {
     extendsFrom annotationProcessor
   }
+}
+
+tasks.register('processClientResources', Copy) {
+  def clientBuildDir = file("${project(':client').buildDir}")
+  def clientResourcesDir = file("${project.buildDir}/resources/main/META-INF/web")
+
+  group 'Client'
+  description 'Process client resources'
+  dependsOn ':client:assemble'
+
+  from clientBuildDir
+  into clientResourcesDir
+}
+
+tasks.named('processResources') {
+  dependsOn tasks.named('processClientResources')
 }
 
 ext {
@@ -96,8 +112,7 @@ dependencies {
 
   checkstyleConfig("com.puppycrawl.tools:checkstyle:${checkstyleVersion}") { transitive = false }
   if (!hasProperty('skipErrorProne')) {
-    errorprone 'com.google.errorprone:error_prone_core:2.3.4'
-    errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
+    errorprone 'com.google.errorprone:error_prone_core:2.4.0'
   }
 }
 
@@ -109,18 +124,46 @@ compileJava {
   ]
 }
 
-import net.ltgt.gradle.errorprone.CheckSeverity
-
 tasks.withType(JavaCompile) {
   if (!hasProperty('skipErrorProne')) {
     options.errorprone.disableWarningsInGeneratedCode = true
 
     if (!name.toLowerCase().contains("test")) {
       options.errorprone {
-        check('NullAway', CheckSeverity.ERROR)
+        error("NullAway")
         option('NullAway:AnnotatedPackages', 'org.springframework.samples.petclinic')
         option('NullAway:TreatGeneratedAsUnannotated')
       }
+    }
+  }
+}
+
+bootJar {
+  layered {
+    application {
+      intoLayer("spring-boot-loader") {
+        include "org/springframework/boot/loader/**"
+      }
+      intoLayer("client") {
+        include "META-INF/web/**"
+      }
+      intoLayer("application")
+    }
+    dependencies {
+      intoLayer("application") {
+        includeProjectDependencies()
+      }
+      intoLayer("snapshot-dependencies") {
+        include "*:*:*SNAPSHOT"
+      }
+      intoLayer("dependencies")
+      layerOrder = [
+        "spring-boot-loader",
+        "dependencies",
+        "snapshot-dependencies",
+        "application",
+        "client",
+      ]
     }
   }
 }
@@ -129,7 +172,7 @@ spotless {
   java { googleJavaFormat('1.7') }
   groovyGradle {
     paddedCell() // Avoid cyclic ambiguities
-    greclipse().configFile('config/eclipse-java-google-style.xml')
+    greclipse().configFile("${project.rootDir}/config/eclipse-java-google-style.xml")
   }
 }
 
@@ -167,12 +210,6 @@ jacocoTestReport {
   }
 }
 
-jib {
-  to {
-    tags = ['latest']
-  }
-}
-
 afterEvaluate {
   if (!hasProperty('skipFormat')) {
     tasks.checkstyleMain.dependsOn tasks.spotlessApply
@@ -186,4 +223,5 @@ afterEvaluate {
     tasks.jacocoTestReport.dependsOn tasks.jacocoTestCoverageVerification
     tasks.check.dependsOn tasks.jacocoTestReport
   }
+  processResources.dependsOn ':client:assemble'
 }

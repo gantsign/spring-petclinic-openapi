@@ -4,6 +4,3 @@ dist/
 typings/
 
 npm-debug.log
-
-/generated
-

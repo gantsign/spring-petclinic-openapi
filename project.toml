@@ -1,0 +1,12 @@
+[project]
+id = "org.gantsign"
+name = "pet-clinic"
+version = "1.0.0"
+
+[[build.env]]
+name='BP_JVM_VERSION'
+value='11.*'
+
+[[build.env]]
+name='BP_GRADLE_BUILT_MODULE'
+value='server'

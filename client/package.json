@@ -29,7 +29,7 @@
     "bootstrap-sass": "^3.4.1",
     "formik": "^1.5.8",
     "moment": "^2.24.0",
-    "petclinic-api": "file:./generated",
+    "petclinic-api": "file:../client-generated/generated",
     "query-string": "^6.8.3",
     "react": "^16.9.0",
     "react-datepicker": "^2.9.6",

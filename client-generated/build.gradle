@@ -1,6 +1,8 @@
 plugins {
+  id 'base'
   id 'com.diffplug.gradle.spotless'
   id 'org.openapi.generator'
+  id "com.github.node-gradle.node"
 }
 
 task ensureTypeScriptDirectory {
@@ -15,10 +17,10 @@ clean.doLast {
 
 openApiGenerate {
   generatorName = 'typescript-fetch'
-  inputSpec = "$rootDir/src/main/resources/schema/petclinic.openapi.yaml".toString()
+  inputSpec = "$rootDir/server/src/main/resources/schema/petclinic.openapi.yaml".toString()
   outputDir = "$projectDir/generated".toString()
   configOptions = [
-    npmName: 'petclinic-api',
+    npmName   : 'petclinic-api',
     npmVersion: '1.0.0'
   ]
 }
@@ -30,8 +32,24 @@ spotless {
   }
 }
 
+node {
+  download = true
+  version = "12.20.0"
+  nodeModulesDir = file("${project.projectDir}/generated")
+}
+
+npm_run_build {
+  inputs.files fileTree('generated/src')
+
+  inputs.file 'generated/package.json'
+  inputs.file 'generated/package-lock.json'
+
+  outputs.dir 'generated/build'
+}
+
 afterEvaluate {
   spotlessCheck.dependsOn spotlessApply
   tasks.openApiGenerate.dependsOn tasks.ensureTypeScriptDirectory
-  build.dependsOn tasks.openApiGenerate
+  npmInstall.dependsOn tasks.openApiGenerate
+  assemble.dependsOn npm_run_build
 }
